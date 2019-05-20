@@ -3,6 +3,10 @@
 const KeyedObjectSet = require('../../src/collections/keyed-object-set');
 
 describe('a keyed object set', () => {
+    const obj1 = {'key': 123, 'value': 2};
+    const obj2 = {'key': 456, 'value': 3};
+    const obj3 = {'key': 789, 'value': 4};
+
     let objectSet;
 
     beforeEach(() => {
@@ -14,47 +18,39 @@ describe('a keyed object set', () => {
     });
 
     it('can add an object', () => {
-        const obj = {'key': 123};
-
-        expect(() => objectSet.add(obj)).not.toThrow();
+        expect(() => objectSet.add(obj1)).not.toThrow();
         expect(objectSet.size).toBe(1);
     });
 
     it('can fetch an object after adding it', () => {
-        const obj = {'key': 123};
-
         expect(objectSet.hasKey(123)).toBe(false);
-        objectSet.add(obj);
+        objectSet.add(obj1);
 
         expect(objectSet.hasKey(123)).toBe(true);
-        expect(objectSet.getByKey(123)).toBe(obj);
+        expect(objectSet.getByKey(123)).toBe(obj1);
     });
 
     it('can remove an object', () => {
-        const obj = {'key': 123};
-
         expect(objectSet.hasKey(123)).toBe(false);
-        objectSet.add(obj);
-        objectSet.add(obj);
+        objectSet.add(obj1);
+        objectSet.add(obj1);
 
         expect(objectSet.hasKey(123)).toBe(true);
-        expect(objectSet.getByKey(123)).toBe(obj);
+        expect(objectSet.getByKey(123)).toBe(obj1);
 
-        objectSet.remove(obj);
+        objectSet.remove(obj1);
 
         expect(objectSet.hasKey(123)).toBe(false);
         expect(objectSet.getByKey(123)).toBe(null);
     });
 
     it('can remove an object by key', () => {
-        const obj = {'key': 123};
-
         expect(objectSet.hasKey(123)).toBe(false);
-        objectSet.add(obj);
-        objectSet.add(obj);
+        objectSet.add(obj1);
+        objectSet.add(obj1);
 
         expect(objectSet.hasKey(123)).toBe(true);
-        expect(objectSet.getByKey(123)).toBe(obj);
+        expect(objectSet.getByKey(123)).toBe(obj1);
 
         objectSet.removeByKey(123);
 
@@ -63,8 +59,7 @@ describe('a keyed object set', () => {
     });
 
     it('can remove a non-existing object', () => {
-        const obj = {'key': 123};
-        expect(() => objectSet.remove(obj)).not.toThrow();
+        expect(() => objectSet.remove(obj1)).not.toThrow();
     });
 
     it('can remove a non-existing key', () => {
@@ -79,9 +74,6 @@ describe('a keyed object set', () => {
     });
 
     it('can map all of its objects', () => {
-        const obj1 = {'key': 123, 'value': 2};
-        const obj2 = {'key': 456, 'value': 3};
-
         objectSet.add(obj1);
         objectSet.add(obj2);
 
@@ -90,9 +82,6 @@ describe('a keyed object set', () => {
     });
 
     it('can run a function on all of its objects', () => {
-        const obj1 = {'key': 123, 'value': 2};
-        const obj2 = {'key': 456, 'value': 3};
-
         objectSet.add(obj1);
         objectSet.add(obj2);
 
@@ -105,10 +94,6 @@ describe('a keyed object set', () => {
     });
 
     it('can run a function on all of its objects and stop on the first true', () => {
-        const obj1 = {'key': 123, 'value': 2};
-        const obj2 = {'key': 456, 'value': 3};
-        const obj3 = {'key': 789, 'value': 4};
-
         objectSet.add(obj1);
         objectSet.add(obj2);
         objectSet.add(obj3);

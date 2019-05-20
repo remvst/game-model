@@ -1,8 +1,11 @@
 'use strict';
 
-class KeyedObjectSet {
+const BaseObjectSet = require('./base-object-set');
+
+class KeyedObjectSet extends BaseObjectSet {
 
     constructor(getKey) {
+        super();
         this.getKey = getKey;
         this.list = [];
         this.objectMap = {};
@@ -17,15 +20,15 @@ class KeyedObjectSet {
             return;
         }
 
-        const id = this.getKey(object);
-        if (id in this.objectMap) {
+        const key = this.getKey(object);
+        if (key in this.objectMap) {
             return;
         }
 
         this.list.push(object);
-        this.objectMap[id] = object;
+        this.objectMap[key] = object;
 
-        this.didAdd(object);
+        return true;
     }
 
     remove(object) {
@@ -33,8 +36,8 @@ class KeyedObjectSet {
             return;
         }
 
-        const id = this.getKey(object);
-        if (!(id in this.objectMap)) {
+        const key = this.getKey(object);
+        if (!(key in this.objectMap)) {
             return;
         }
 
@@ -43,9 +46,7 @@ class KeyedObjectSet {
             this.list.splice(index, 1);
         }
 
-        delete this.objectMap[id];
-
-        this.didRemove(object);
+        delete this.objectMap[key];
 
         return object;
     }
@@ -74,12 +75,6 @@ class KeyedObjectSet {
 
     map(fn) {
         return this.list.map(fn);
-    }
-
-    didAdd(object) { // jshint ignore:line
-    }
-
-    didRemove(object) { // jshint ignore:line
     }
 
 }

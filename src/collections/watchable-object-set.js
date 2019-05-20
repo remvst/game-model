@@ -1,33 +1,41 @@
 'use strict';
 
-const Rx = require('rxjs/Rx');
+const Rx = require('rxjs');
 
-const BucketedObjectSet = require('./bucketed-object-set');
+const BaseObjectSet = require('./base-object-set');
 
-class WatchableObjectSet extends BucketedObjectSet {
+class WatchableObjectSet extends BaseObjectSet {
 
     constructor(wrappedSet) {
         super();
         this.wrappedSet = wrappedSet;
 
         this.additions = new Rx.Subject();
-        this.deletions = new Rx.Subject();
+        this.removals = new Rx.Subject();
+    }
+
+    get size() {
+        return this.wrappedSet.size;
     }
 
     add(object) {
-        this.wrappedSet.add(object);
-        this.additions.next(object);
+        const added = this.wrappedSet.add(object);
+        if (added) {
+            this.additions.next(object);
+        }
     }
 
     remove(object) {
-        this.wrappedSet.remove(object);
-        this.deletions.next(object);
+        const removed = this.wrappedSet.remove(object);
+        if (removed) {
+            this.removals.next(object);
+        }
     }
 
     removeByKey(key) {
         const object = this.wrappedSet.removeByKey(key);
         if (object) {
-            this.deletions.next(object);
+            this.removals.next(object);
         }
         return object;
     }

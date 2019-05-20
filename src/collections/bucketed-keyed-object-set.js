@@ -10,9 +10,32 @@ class BucketedKeyedObjectSet extends KeyedObjectSet {
         this.bucketMap = {};
     }
 
-    didAdd(object) {
-        super.didAdd(object);
+    add(object) {
+        if (!super.add(object)) {
+            return;
+        }
 
+        this.didAdd(object);
+    }
+
+    remove(object) {
+        if (!super.remove(object)) {
+            return;
+        }
+
+        this.didRemove(object);
+    }
+
+    removeByKey(key) {
+        const removed = super.removeByKey(key);
+        if (!removed) {
+            return;
+        }
+
+        this.didRemove(removed);
+    }
+
+    didAdd(object) {
         const buckets = this.getBuckets(object);
         buckets.forEach(bucketKey => {
             let bucket = this.bucketMap[bucketKey];
@@ -26,8 +49,6 @@ class BucketedKeyedObjectSet extends KeyedObjectSet {
     }
 
     didRemove(object) {
-        super.didRemove(object);
-
         const buckets = this.getBuckets(object);
         buckets.forEach(bucketKey => {
             const bucket = this.bucketMap[bucketKey];

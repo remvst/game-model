@@ -1,0 +1,15 @@
+{
+    "strict": true,
+    "unused": true,
+    "esversion": 6,
+    "node": true,
+    "globals": {
+        "it": true,
+       "describe": true,
+       "jasmine": true,
+       "spyOn": true,
+       "expect": true,
+       "beforeEach": true,
+       "afterEach": true
+    }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@remvst/game-model",
+  "version": "1.0.0",
+  "description": "Game models",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/jasmine/bin/jasmine.js",
+    "coverage": "istanbul cover ./node_modules/jasmine/bin/jasmine.js"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "jasmine": "^3.4.0"
+  }
+}

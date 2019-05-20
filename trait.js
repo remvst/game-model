@@ -1,0 +1,45 @@
+'use strict';
+
+class Trait {
+
+    constructor() {
+        this.entity = null;
+        this.enabled = true;
+    }
+
+    bind(entity) {
+        this.entity = entity;
+    }
+
+    postBind() {
+        // to be implemented in subtraits
+    }
+
+    dependency(traitId) {
+        const trait = this.entity.traits.getByKey(traitId);
+        if (!trait) {
+            throw new Error('Trait ' + this.key + ' depends on trait ' + traitId + ' but trait was not found');
+        }
+
+        return trait;
+    }
+
+    get key() {
+        throw new Error('Must implement key()');
+    }
+
+    maybeCycle(elapsed) {
+        if (!this.enabled) {
+            return;
+        }
+
+        this.cycle(elapsed);
+    }
+
+    cycle(elapsed) { // jshint ignore:line
+        // to be implemented in subtraits
+    }
+
+}
+
+module.exports = Trait;

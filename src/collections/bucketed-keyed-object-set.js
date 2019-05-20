@@ -11,28 +11,27 @@ class BucketedKeyedObjectSet extends KeyedObjectSet {
     }
 
     add(object) {
-        if (!super.add(object)) {
-            return;
+        const added = super.add(object);
+        if (added) {
+            this.didAdd(object);
         }
-
-        this.didAdd(object);
+        return added;
     }
 
     remove(object) {
-        if (!super.remove(object)) {
-            return;
+        const removed = super.remove(object);
+        if (removed) {
+            this.didRemove(object);
         }
-
-        this.didRemove(object);
+        return removed;
     }
 
     removeByKey(key) {
         const removed = super.removeByKey(key);
-        if (!removed) {
-            return;
+        if (removed) {
+            this.didRemove(removed);
         }
-
-        this.didRemove(removed);
+        return removed;
     }
 
     didAdd(object) {

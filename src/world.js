@@ -14,7 +14,7 @@ class World {
             entity => entity.id,
             entity => entity.traits.map(trait => trait.key)
         ));
-        this.entities.additions.subscribe(object => object.world = this);
+        this.entities.additions.subscribe(entity => entity.bind(this));
         // this.entities.deletions.subscribe(object => object.world = null);
     }
 

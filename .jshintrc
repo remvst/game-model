@@ -8,6 +8,7 @@
        "describe": true,
        "jasmine": true,
        "spyOn": true,
+       "spyOnProperty": true,
        "expect": true,
        "beforeEach": true,
        "afterEach": true

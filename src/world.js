@@ -2,7 +2,7 @@
 
 const Rectangle = require('@remvst/geometry/rectangle');
 
-const WatchableObjectSet = require('./collections/watchable-object-set');
+const WatchableBucketedObjectSet = require('./collections/watchable-bucketed-object-set');
 const BucketedKeyedObjectSet = require('./collections/bucketed-keyed-object-set');
 
 class World {
@@ -10,7 +10,7 @@ class World {
     constructor() {
         this.bounds = new Rectangle(0, 0, 4000, 1600);
 
-        this.entities = new WatchableObjectSet(new BucketedKeyedObjectSet(
+        this.entities = new WatchableBucketedObjectSet(new BucketedKeyedObjectSet(
             entity => entity.id,
             entity => entity.traits.map(trait => trait.key)
         ));

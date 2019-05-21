@@ -5,7 +5,6 @@ module.exports = {
     'Trait': require('./src/traits/trait'),
     'AgingTrait': require('./src/traits/aging-trait'),
     'World': require('./src/world'),
-    'KeyedObjectSet': require('./src/collections/keyed-object-set'),
-    'BucketedKeyedObjectSet': require('./src/collections/bucketed-keyed-object-set'),
+    'ObjectSet': require('./src/collections/object-set'),
     'WatchableObjectSet': require('./src/collections/watchable-object-set'),
 };

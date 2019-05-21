@@ -4,7 +4,7 @@ const uuid = require('uuid');
 
 const AgingTrait = require('./traits/aging-trait');
 
-const KeyedObjectSet = require('./collections/keyed-object-set');
+const ObjectSet = require('./collections/object-set');
 
 class Entity {
 
@@ -17,7 +17,7 @@ class Entity {
         this.id = id;
         this.world = null;
 
-        this.traits = new KeyedObjectSet(trait => trait.key);
+        this.traits = new ObjectSet(trait => trait.key);
 
         traits.concat([new AgingTrait()]).forEach(trait => {
             this.traits.add(trait);

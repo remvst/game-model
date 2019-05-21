@@ -1,6 +1,6 @@
 'use strict';
 
-const KeyedObjectSet = require('../../src/collections/keyed-object-set');
+const ObjectSet = require('../../src/collections/object-set');
 
 describe('a keyed object set', () => {
     const obj1 = {'key': 123, 'value': 2};
@@ -10,7 +10,7 @@ describe('a keyed object set', () => {
     let objectSet;
 
     beforeEach(() => {
-        objectSet = new KeyedObjectSet(obj => obj.key);
+        objectSet = new ObjectSet(obj => obj.key);
     });
 
     it('has the right initial size', () => {

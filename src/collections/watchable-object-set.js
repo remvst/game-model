@@ -56,6 +56,10 @@ class WatchableObjectSet extends BaseObjectSet {
         return this.wrappedSet.map(fn);
     }
 
+    forEachItemInBucket(bucketKey, fn) {
+        return this.wrappedSet.forEachItemInBucket(bucketKey, fn);
+    }
+
 }
 
 module.exports = WatchableObjectSet;

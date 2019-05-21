@@ -1,6 +1,6 @@
 'use strict';
 
-const KeyedObjectSet = require('../../src/collections/keyed-object-set');
+const ObjectSet = require('../../src/collections/object-set');
 const WatchableObjectSet = require('../../src/collections/watchable-object-set');
 
 describe('a watchable keyed object set', () => {
@@ -11,7 +11,7 @@ describe('a watchable keyed object set', () => {
     const obj3 = {'key': 789, 'value': 4};
 
     beforeEach(() => {
-        objectSet = new WatchableObjectSet(new KeyedObjectSet(obj => obj.key));
+        objectSet = new WatchableObjectSet(new ObjectSet(obj => obj.key));
     });
 
     it('does not fire addition/removal until an addition actually happens', () => {

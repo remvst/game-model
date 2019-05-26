@@ -1,5 +1,6 @@
 'use strict';
 
+const Rx = require('rxjs');
 const Rectangle = require('@remvst/geometry/rectangle');
 
 const WatchableObjectSet = require('./collections/watchable-object-set');
@@ -16,12 +17,18 @@ class World {
         ));
         this.entities.additions.subscribe(entity => entity.bind(this));
         // this.entities.deletions.subscribe(object => object.world = null);
+
+        this.events = new Rx.Subject();
     }
 
     cycle(elapsed) {
         this.entities.forEach(entity => {
             entity.cycle(elapsed);
         });
+    }
+
+    addEvent(event) {
+        this.events.next(event);
     }
 
 }

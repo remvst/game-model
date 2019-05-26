@@ -28,7 +28,7 @@ class World {
     }
 
     addEvent(event) {
-        this.event.apply(this);
+        event.apply(this);
         this.events.next(event);
     }
 

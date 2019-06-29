@@ -1,8 +1,7 @@
 'use strict';
 
 const Entity = require('../src/entity');
-
-const Trait = require('../src/traits/trait');
+const Trait = require('../src/trait');
 const World = require('../src/world');
 
 describe('an entity', () => {
@@ -10,8 +9,24 @@ describe('an entity', () => {
     it('can be initialized with no traits', () => {
         const entity = new Entity([]);
 
-        expect(entity.traits.size).toBe(1);
-        expect(entity.traits.map(trait => trait)[0].key).toBe('aging');
+        expect(entity.x).toBe(0);
+        expect(entity.y).toBe(0);
+        expect(entity.age).toBe(0);
+        expect(entity.world).toBe(null);
+        expect(entity.traits.size).toBe(0);
+    });
+
+    it('can be initialized with an ID', () => {
+        const entity = new Entity('myid', []);
+
+        expect(entity.id).toBe('myid');
+    });
+
+    it('updates its age on cycle', () => {
+        const entity = new Entity([]);
+
+        entity.cycle(123);
+        expect(entity.age).toBe(123);
     });
 
     it('calls bind() then postBind() on all traits', () => {
@@ -29,7 +44,7 @@ describe('an entity', () => {
     it('calls maybeCycle() on all traits', () => {
         const testTrait = new Trait();
         spyOnProperty(testTrait, 'key').and.returnValue('zeetest');
-        spyOn(testTrait, 'maybeCycle');
+        spyOn(testTrait, 'maybeCycle').and.callThrough();
 
         const entity = new Entity([testTrait]);
         entity.cycle(123);
@@ -54,5 +69,10 @@ describe('an entity', () => {
         entity.remove();
 
         expect(world.entities.size).toBe(0);
+    });
+
+    it('does not throw if removed from a world before being added', () => {
+        const entity = new Entity([]);
+        expect(() => entity.remove()).not.toThrow();
     });
 });

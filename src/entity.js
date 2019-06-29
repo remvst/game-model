@@ -2,8 +2,6 @@
 
 const uuid = require('uuid');
 
-const AgingTrait = require('./traits/aging-trait');
-
 const ObjectSet = require('./collections/object-set');
 
 class Entity {
@@ -17,9 +15,14 @@ class Entity {
         this.id = id;
         this.world = null;
 
+        this.x = 0;
+        this.y = 0;
+        this.angle = 0;
+        this.age = 0;
+
         this.traits = new ObjectSet(trait => trait.key);
 
-        traits.concat([new AgingTrait()]).forEach(trait => {
+        traits.forEach(trait => {
             this.traits.add(trait);
             trait.bind(this);
         });
@@ -32,6 +35,8 @@ class Entity {
     }
 
     cycle(elapsed) {
+        this.age += elapsed;
+
         this.traits.forEach(trait => {
             trait.maybeCycle(elapsed);
         });

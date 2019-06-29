@@ -4,7 +4,7 @@ const Rx = require('rxjs');
 
 const BaseObjectSet = require('./base-object-set');
 
-class WatchableObjectSet extends BaseObjectSet {
+module.exports = class WatchableObjectSet extends BaseObjectSet {
 
     constructor(wrappedSet) {
         super();
@@ -60,6 +60,4 @@ class WatchableObjectSet extends BaseObjectSet {
         return this.wrappedSet.forEachItemInBucket(bucketKey, fn);
     }
 
-}
-
-module.exports = WatchableObjectSet;
+};

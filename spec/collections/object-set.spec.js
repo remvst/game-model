@@ -3,14 +3,14 @@
 const ObjectSet = require('../../src/collections/object-set');
 
 describe('a keyed object set', () => {
-    const obj1 = {'key': 123, 'value': 2};
-    const obj2 = {'key': 456, 'value': 3};
-    const obj3 = {'key': 789, 'value': 4};
+    const obj1 = {'key': 123, 'value': 2, 'buckets': ['bucket1']};
+    const obj2 = {'key': 456, 'value': 3, 'buckets': ['bucket1', 'bucket2']};
+    const obj3 = {'key': 789, 'value': 4, 'buckets': ['bucket2']};
 
     let objectSet;
 
     beforeEach(() => {
-        objectSet = new ObjectSet(obj => obj.key);
+        objectSet = new ObjectSet(obj => obj.key, obj => obj.buckets);
     });
 
     it('has the right initial size', () => {
@@ -104,6 +104,35 @@ describe('a keyed object set', () => {
 
         expect(spy).toHaveBeenCalledWith(obj1);
         expect(spy).toHaveBeenCalledWith(obj2);
+        expect(spy).not.toHaveBeenCalledWith(obj3);
+    });
+
+    it('can run a function on a bucket', () => {
+        objectSet.add(obj1);
+        objectSet.add(obj2);
+        objectSet.add(obj3);
+
+        const bucket1 = [];
+        const bucket2 = [];
+        objectSet.forEachItemInBucket('bucket1', obj => bucket1.push(obj) && false);
+        objectSet.forEachItemInBucket('bucket2', obj => bucket2.push(obj) && false);
+
+        expect(bucket1).toEqual([obj1, obj2]);
+        expect(bucket2).toEqual([obj2, obj3]);
+    });
+
+    it('can run a function on a bucket and stop at the first one that runs true', () => {
+        objectSet.add(obj1);
+        objectSet.add(obj2);
+        objectSet.add(obj3);
+
+        const spy = jasmine.createSpy().and.returnValue(true);
+
+        const bucket1 = [];
+        objectSet.forEachItemInBucket('bucket1', spy);
+
+        expect(spy).toHaveBeenCalledWith(obj1);
+        expect(spy).not.toHaveBeenCalledWith(obj2);
         expect(spy).not.toHaveBeenCalledWith(obj3);
     });
 });

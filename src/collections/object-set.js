@@ -2,7 +2,7 @@
 
 const BaseObjectSet = require('./base-object-set');
 
-class ObjectSet extends BaseObjectSet {
+module.exports = class ObjectSet extends BaseObjectSet {
 
     constructor(getKey, getBuckets) {
         super();
@@ -30,7 +30,17 @@ class ObjectSet extends BaseObjectSet {
         this.list.push(object);
         this.objectMap[key] = object;
 
-        this.didAdd(object);
+        if (this.getBuckets) {
+            this.getBuckets(object).forEach(bucketKey => {
+                let bucket = this.bucketMap[bucketKey];
+                if (!bucket) {
+                    bucket = [];
+                    this.bucketMap[bucketKey] = bucket;
+                }
+
+                bucket.push(object);
+            });
+        }
 
         return true;
     }
@@ -52,45 +62,21 @@ class ObjectSet extends BaseObjectSet {
 
         delete this.objectMap[key];
 
-        this.didRemove(object);
+        if (this.getBuckets) {
+            this.getBuckets(object).forEach(bucketKey => {
+                const bucket = this.bucketMap[bucketKey];
+                if (!bucket) {
+                    return;
+                }
+
+                const indexInBucket = bucket.indexOf(object);
+                if (indexInBucket >= 0) {
+                    bucket.splice(indexInBucket, 1);
+                }
+            });
+        }
 
         return object;
-    }
-
-    didAdd(object) {
-        if (!this.getBuckets) {
-            return;
-        }
-
-        const buckets = this.getBuckets(object);
-        buckets.forEach(bucketKey => {
-            let bucket = this.bucketMap[bucketKey];
-            if (!bucket) {
-                bucket = [];
-                this.bucketMap[bucketKey] = bucket;
-            }
-
-            bucket.push(object);
-        });
-    }
-
-    didRemove(object) {
-        if (!this.getBuckets) {
-            return;
-        }
-
-        const buckets = this.getBuckets(object);
-        buckets.forEach(bucketKey => {
-            const bucket = this.bucketMap[bucketKey];
-            if (!bucket) {
-                return;
-            }
-
-            const indexInBucket = bucket.indexOf(object);
-            if (indexInBucket >= 0) {
-                bucket.splice(indexInBucket, 1);
-            }
-        });
     }
 
     forEachItemInBucket(bucketKey, fn) {
@@ -132,6 +118,4 @@ class ObjectSet extends BaseObjectSet {
         return this.list.map(fn);
     }
 
-}
-
-module.exports = ObjectSet;
+};

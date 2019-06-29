@@ -2,7 +2,7 @@
 
 module.exports = {
     'Entity': require('./src/entity'),
-    'Trait': require('./src/traits/trait'),
+    'Trait': require('./src/trait'),
     'AgingTrait': require('./src/traits/aging-trait'),
     'World': require('./src/world'),
     'WorldEvent': require('./src/events/world-event'),

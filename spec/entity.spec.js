@@ -1,8 +1,8 @@
 'use strict';
 
-const Entity = require('../src/entity');
-const Trait = require('../src/trait');
-const World = require('../src/world');
+const Entity = require('../index').Entity;
+const Trait = require('../index').Trait;
+const World = require('../index').World;
 
 describe('an entity', () => {
 

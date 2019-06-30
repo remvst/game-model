@@ -1,7 +1,7 @@
 'use strict';
 
-const Entity = require('../src/entity');
-const Trait = require('../src/trait');
+const Entity = require('../index').Entity;
+const Trait = require('../index').Trait;
 
 describe('a trait', () => {
 

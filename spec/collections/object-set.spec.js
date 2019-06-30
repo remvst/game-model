@@ -1,6 +1,6 @@
 'use strict';
 
-const ObjectSet = require('../../src/collections/object-set');
+const ObjectSet = require('../../index').ObjectSet;
 
 describe('a keyed object set', () => {
     const obj1 = {'key': 123, 'value': 2, 'buckets': ['bucket1']};

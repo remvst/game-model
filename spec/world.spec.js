@@ -1,9 +1,9 @@
 'use strict';
 
-const Entity = require('../src/entity');
-const Trait = require('../src/trait');
-const World = require('../src/world');
-const WorldEvent = require('../src/world-event');
+const Entity = require('../index').Entity;
+const Trait = require('../index').Trait;
+const World = require('../index').World;
+const WorldEvent = require('../index').WorldEvent;
 
 describe('a world', () => {
     class TestTrait extends Trait {

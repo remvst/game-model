@@ -1,7 +1,7 @@
 'use strict';
 
-const ObjectSet = require('../../src/collections/object-set');
-const WatchableObjectSet = require('../../src/collections/watchable-object-set');
+const ObjectSet = require('../../index').ObjectSet;
+const WatchableObjectSet = require('../../index').WatchableObjectSet;
 
 describe('a watchable keyed object set', () => {
     let objectSet;

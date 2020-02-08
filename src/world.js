@@ -6,7 +6,7 @@ const Rectangle = require('@remvst/geometry/rectangle');
 const WatchableObjectSet = require('./collections/watchable-object-set');
 const ObjectSet = require('./collections/object-set');
 
-class World {
+module.exports = class World {
 
     constructor() {
         this.bounds = new Rectangle(0, 0, 4000, 1600);
@@ -32,6 +32,8 @@ class World {
         this.events.next(event);
     }
 
-}
+    entity(entityId) {
+        return this.entities.getByKey(entityId);
+    }
 
-module.exports = World;
+};

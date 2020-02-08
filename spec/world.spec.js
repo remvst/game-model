@@ -12,6 +12,15 @@ describe('a world', () => {
         }
     }
 
+    it('can fetch an entity after it\'s been added', () => {
+        const entity = new Entity([new TestTrait()]);
+
+        const world = new World();
+        world.entities.add(entity);
+
+        expect(world.entity(entity.id)).toBe(entity);
+    });
+
     it('will cycle all its entities', () => {
         const entity = new Entity([new TestTrait()]);
 

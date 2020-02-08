@@ -48,6 +48,10 @@ class Entity {
         }
     }
 
+    trait(traitKey) {
+        return this.traits.getByKey(traitKey);
+    }
+
 }
 
 module.exports = Entity;

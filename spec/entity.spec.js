@@ -75,4 +75,13 @@ describe('an entity', () => {
         const entity = new Entity([]);
         expect(() => entity.remove()).not.toThrow();
     });
+
+    it('can fetch a trait', () => {
+        const testTrait = new Trait();
+        spyOnProperty(testTrait, 'key').and.returnValue('foo');
+
+        const entity = new Entity([testTrait]);
+
+        expect(entity.trait('foo')).toBe(testTrait);
+    });
 });

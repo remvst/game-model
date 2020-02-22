@@ -9,14 +9,14 @@ const ObjectSet = require('./collections/object-set');
 module.exports = class World {
 
     constructor() {
-        this.bounds = new Rectangle(0, 0, 4000, 1600);
+        this.bounds = new Rectangle(0, 0, 1000, 1000);
 
         this.entities = new WatchableObjectSet(new ObjectSet(
             entity => entity.id,
             entity => entity.traits.map(trait => trait.key)
         ));
         this.entities.additions.subscribe(entity => entity.bind(this));
-        // this.entities.deletions.subscribe(object => object.world = null);
+        this.entities.removals.subscribe(object => object.unbind());
 
         this.events = new Rx.Subject();
     }

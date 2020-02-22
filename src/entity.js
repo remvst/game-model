@@ -34,6 +34,10 @@ class Entity {
         this.world = world;
     }
 
+    unbind() {
+        this.world = null;
+    }
+
     cycle(elapsed) {
         this.age += elapsed;
 

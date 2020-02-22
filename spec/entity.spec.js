@@ -60,6 +60,15 @@ describe('an entity', () => {
         expect(entity.world).toBe(world);
     });
 
+    it('can be unbound from its world', () => {
+        const world = new World();
+        const entity = new Entity([]);
+        entity.bind(world);
+        entity.unbind(world);
+
+        expect(entity.world).toBe(null);
+    });
+
     it('can be removed from the world', () => {
         const world = new World();
 

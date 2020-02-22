@@ -21,6 +21,18 @@ describe('a world', () => {
         expect(world.entity(entity.id)).toBe(entity);
     });
 
+    it('can remove an entity after it\'s been added', () => {
+        const entity = new Entity([new TestTrait()]);
+
+        const world = new World();
+        world.entities.add(entity);
+
+        spyOn(entity, 'unbind');
+        world.entities.remove(entity);
+
+        expect(entity.unbind).toHaveBeenCalled();
+    });
+
     it('will cycle all its entities', () => {
         const entity = new Entity([new TestTrait()]);
 

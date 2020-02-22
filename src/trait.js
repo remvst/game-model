@@ -33,6 +33,10 @@ class Trait {
             return;
         }
 
+        if (!this.entity.world) {
+            return;
+        }
+
         this.cycle(elapsed);
     }
 

@@ -39,22 +39,25 @@ describe('a trait', () => {
         expect(() => new Entity([new Trait1()])).toThrow();
     });
 
-    it('cycles if enabled', () => {
+    it('cycles if enabled and entity has a world', () => {
         const trait1 = new Trait1();
         const trait2 = new Trait2();
 
-        new Entity([trait1, trait2]);
+        const entity = new Entity([trait1, trait2]);
 
         spyOn(trait1, 'cycle');
 
         trait1.enabled = false;
         trait1.maybeCycle(123);
-
         expect(trait1.cycle).not.toHaveBeenCalled();
 
         trait1.enabled = true;
         trait1.maybeCycle(456);
-        expect(trait1.cycle).toHaveBeenCalledWith(456);
+        expect(trait1.cycle).not.toHaveBeenCalled();
+
+        entity.bind({});
+        trait1.maybeCycle(789);
+        expect(trait1.cycle).toHaveBeenCalledWith(789);
     });
 
     it('has no key by default', () => {

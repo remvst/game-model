@@ -19,6 +19,7 @@ class Entity {
         this.y = 0;
         this.angle = 0;
         this.age = 0;
+        this.timeFactor = 1;
 
         this.traits = new ObjectSet(trait => trait.key);
 
@@ -39,10 +40,12 @@ class Entity {
     }
 
     cycle(elapsed) {
-        this.age += elapsed;
+        const adjusted = elapsed * this.timeFactor;
+
+        this.age += adjusted;
 
         this.traits.forEach(trait => {
-            trait.maybeCycle(elapsed);
+            trait.maybeCycle(adjusted);
         });
     }
 

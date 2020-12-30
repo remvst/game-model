@@ -1,23 +1,32 @@
 'use strict';
 
-const BaseObjectSet = require('./base-object-set');
+import { BaseObjectSet } from './base-object-set';
 
-module.exports = class ObjectSet extends BaseObjectSet {
+export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> {
 
-    constructor(getKey, getBuckets) {
-        super();
+    private getKey: (item: ObjectType) => string;
+    private getBuckets: ((item: ObjectType) => string[]) | null;
+
+    private list: ObjectType[];
+    private objectMap: Map<string, ObjectType>;
+    private bucketMap: Map<string, ObjectType[]>;
+
+    constructor(
+        getKey: (item: ObjectType) => string,
+        getBuckets: ((item: ObjectType) => string[]) | undefined = undefined
+    ) {
         this.getKey = getKey;
         this.getBuckets = getBuckets;
         this.list = [];
-        this.objectMap = {};
-        this.bucketMap = {};
+        this.objectMap = new Map();
+        this.bucketMap = new Map();
     }
 
-    get size() {
+    get size(): number {
         return this.list.length;
     }
 
-    add(object) {
+    add(object: ObjectType): boolean {
         if (!object) {
             return;
         }
@@ -45,14 +54,14 @@ module.exports = class ObjectSet extends BaseObjectSet {
         return true;
     }
 
-    remove(object) {
+    remove(object: ObjectType): ObjectType | null {
         if (!object) {
-            return;
+            return null;
         }
 
         const key = this.getKey(object);
         if (!(key in this.objectMap)) {
-            return;
+            return null;
         }
 
         const index = this.list.indexOf(object);
@@ -79,7 +88,7 @@ module.exports = class ObjectSet extends BaseObjectSet {
         return object;
     }
 
-    forEachItemInBucket(bucketKey, fn) {
+    forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | undefined)) {
         const bucket = this.bucketMap[bucketKey];
         if (!bucket) {
             return;
@@ -92,19 +101,19 @@ module.exports = class ObjectSet extends BaseObjectSet {
         }
     }
 
-    removeByKey(key) {
+    removeByKey(key: string): ObjectType | null {
         return this.remove(this.objectMap[key]);
     }
 
-    getByKey(key) {
+    getByKey(key: string): ObjectType | null {
         return this.objectMap[key] || null;
     }
 
-    hasKey(key) {
+    hasKey(key: string): boolean {
         return key in this.objectMap;
     }
 
-    forEach(fn) {
+    forEach(fn: (item: ObjectType) => (boolean | undefined)) {
         for (let i = 0 ; i < this.list.length ; i++) {
             if (fn(this.list[i])) {
                 return true;
@@ -114,8 +123,7 @@ module.exports = class ObjectSet extends BaseObjectSet {
         return false;
     }
 
-    map(fn) {
+    map<MappedType>(fn: (item: ObjectType) => MappedType): MappedType[] {
         return this.list.map(fn);
     }
-
 };

@@ -1,13 +1,16 @@
-'use strict';
+import Entity from './entity';
 
-class Trait {
+export default class Trait {
+
+    protected entity: Entity | null;
+    enabled: boolean;
 
     constructor() {
         this.entity = null;
         this.enabled = true;
     }
 
-    bind(entity) {
+    bind(entity: Entity) {
         this.entity = entity;
     }
 
@@ -15,7 +18,7 @@ class Trait {
         // to be implemented in subtraits
     }
 
-    dependency(traitId) {
+    dependency(traitId: string) {
         const trait = this.entity.traits.getByKey(traitId);
         if (!trait) {
             throw new Error('Trait ' + this.key + ' depends on trait ' + traitId + ' but trait was not found');
@@ -24,11 +27,11 @@ class Trait {
         return trait;
     }
 
-    get key() {
+    get key(): string {
         throw new Error('Must implement key()');
     }
 
-    maybeCycle(elapsed) {
+    maybeCycle(elapsed: number) {
         if (!this.enabled) {
             return;
         }
@@ -40,10 +43,8 @@ class Trait {
         this.cycle(elapsed);
     }
 
-    cycle(elapsed) { // jshint ignore:line
+    cycle(elapsed: number) { // jshint ignore:line
         // to be implemented in subtraits
     }
 
 }
-
-module.exports = Trait;

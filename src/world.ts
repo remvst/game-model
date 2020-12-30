@@ -1,16 +1,18 @@
 'use strict';
 
-const Rx = require('rxjs');
-const Rectangle = require('@remvst/geometry/rectangle');
+import { Subject } from 'rxjs';
 
-const WatchableObjectSet = require('./collections/watchable-object-set');
-const ObjectSet = require('./collections/object-set');
+import WatchableObjectSet from './collections/watchable-object-set';
+import ObjectSet from './collections/object-set';
+import Entity from './entity';
+import Event from './event';
 
-module.exports = class World {
+export default class World {
+
+    readonly events: Subject<Event>;
+    readonly entities: WatchableObjectSet<Entity>;
 
     constructor() {
-        this.bounds = new Rectangle(0, 0, 1000, 1000);
-
         this.entities = new WatchableObjectSet(new ObjectSet(
             entity => entity.id,
             entity => entity.traits.map(trait => trait.key)
@@ -18,21 +20,21 @@ module.exports = class World {
         this.entities.additions.subscribe(entity => entity.bind(this));
         this.entities.removals.subscribe(object => object.unbind());
 
-        this.events = new Rx.Subject();
+        this.events = new Subject();
     }
 
-    cycle(elapsed) {
+    cycle(elapsed: number) {
         this.entities.forEach(entity => {
             entity.cycle(elapsed);
         });
     }
 
-    addEvent(event) {
+    addEvent(event: Event) {
         event.apply(this);
         this.events.next(event);
     }
 
-    entity(entityId) {
+    entity(entityId: string) {
         return this.entities.getByKey(entityId);
     }
 

@@ -1,18 +1,23 @@
-'use strict';
+import { v4 } from 'uuid';
 
-const uuid = require('uuid');
+import ObjectSet from './collections/object-set';
+import Trait from './trait';
+import World from './world';
 
-const ObjectSet = require('./collections/object-set');
+export default class Entity {
 
-class Entity {
+    readonly id: string;
+    readonly traits: ObjectSet<Trait>;
+    world: World;
 
-    constructor(id, traits) {
-        if (!traits) {
-            traits = id;
-            id = uuid.v4();
-        }
+    x: number;
+    y: number;
+    angle: number;
+    age: number;
+    timeFactor: number;
 
-        this.id = id;
+    constructor(id: string | undefined = undefined, traits: Trait[]) {
+        this.id = id || v4();
         this.world = null;
 
         this.x = 0;
@@ -23,15 +28,17 @@ class Entity {
 
         this.traits = new ObjectSet(trait => trait.key);
 
-        traits.forEach(trait => {
+        traits.forEach((trait) => {
             this.traits.add(trait);
             trait.bind(this);
         });
 
-        this.traits.forEach(trait => trait.postBind());
+        this.traits.forEach((trait) => {
+            trait.postBind();
+        });
     }
 
-    bind(world) {
+    bind(world: World) {
         this.world = world;
     }
 
@@ -39,12 +46,12 @@ class Entity {
         this.world = null;
     }
 
-    cycle(elapsed) {
+    cycle(elapsed: number) {
         const adjusted = elapsed * this.timeFactor;
 
         this.age += adjusted;
 
-        this.traits.forEach(trait => {
+        this.traits.forEach((trait) => {
             trait.maybeCycle(adjusted);
         });
     }
@@ -55,7 +62,7 @@ class Entity {
         }
     }
 
-    trait(traitKey) {
+    trait(traitKey: string) {
         return this.traits.getByKey(traitKey);
     }
 

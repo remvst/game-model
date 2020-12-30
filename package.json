@@ -2,11 +2,11 @@
   "name": "@remvst/game-model",
   "version": "1.1.6",
   "description": "Game models",
-  "main": "index.ts",
+  "main": "lib/index.js",
   "scripts": {
     "test": "./node_modules/jasmine/bin/jasmine.js",
     "coverage": "istanbul cover ./node_modules/jasmine/bin/jasmine.js",
-    "build": "tsc src/index.ts"
+    "build": "tsc"
   },
   "author": "",
   "license": "UNLICENSED",

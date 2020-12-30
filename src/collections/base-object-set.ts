@@ -12,9 +12,9 @@ export interface BaseObjectSet<ObjectType> {
 
     hasKey(key: string): boolean
 
-    forEach(fn: (item: ObjectType) => (boolean | undefined)): void
+    forEach(fn: (item: ObjectType) => (boolean | void)): void
 
-    forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | undefined)): void
+    forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | void)): void
 
     map<MappedType>(fn: (item: ObjectType) => MappedType): MappedType[];
 }

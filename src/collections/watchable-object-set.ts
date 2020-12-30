@@ -54,7 +54,7 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
         return this.wrappedSet.hasKey(key);
     }
 
-    forEach(fn: (item: ObjectType) => boolean | undefined) {
+    forEach(fn: (item: ObjectType) => (boolean | void)) {
         return this.wrappedSet.forEach(fn);
     }
 

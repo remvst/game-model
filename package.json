@@ -11,11 +11,13 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
+    "jasmine-ts": "^0.3.0",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.6.3",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.6.2",
     "@types/node": "^14.14.16",
     "@types/uuid": "^8.3.0",
     "istanbul": "^0.4.5",

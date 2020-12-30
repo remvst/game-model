@@ -1,27 +1,30 @@
 'use strict';
 
-const Entity = require('../index').Entity;
-const Trait = require('../index').Trait;
+import { Entity, Trait, World } from '../src/index';
 
 describe('a trait', () => {
 
     class Trait1 extends Trait {
+        trait2: Trait2 | null = null;
+
         get key() {
             return 'trait1';
         }
 
         postBind() {
-            this.trait2 = this.dependency('trait2');
+            this.trait2 = this.dependency<Trait2>('trait2');
         }
     }
 
     class Trait2 extends Trait {
+        trait1: Trait1 | null = null;
+
         get key() {
             return 'trait2';
         }
 
         postBind() {
-            this.trait1 = this.dependency('trait1');
+            this.trait1 = this.dependency<Trait1>('trait1');
         }
     }
 
@@ -29,21 +32,21 @@ describe('a trait', () => {
         const trait1 = new Trait1();
         const trait2 = new Trait2();
 
-        new Entity([trait1, trait2]);
+        new Entity(undefined, [trait1, trait2]);
 
         expect(trait1.trait2).toBe(trait2);
         expect(trait2.trait1).toBe(trait1);
     });
 
     it('throws an error if a dependency isn\'t satisfied', () => {
-        expect(() => new Entity([new Trait1()])).toThrow();
+        expect(() => new Entity(undefined, [new Trait1()])).toThrow();
     });
 
     it('cycles if enabled and entity has a world', () => {
         const trait1 = new Trait1();
         const trait2 = new Trait2();
 
-        const entity = new Entity([trait1, trait2]);
+        const entity = new Entity(undefined, [trait1, trait2]);
 
         spyOn(trait1, 'cycle');
 
@@ -55,12 +58,8 @@ describe('a trait', () => {
         trait1.maybeCycle(456);
         expect(trait1.cycle).not.toHaveBeenCalled();
 
-        entity.bind({});
+        entity.bind({} as World);
         trait1.maybeCycle(789);
         expect(trait1.cycle).toHaveBeenCalledWith(789);
-    });
-
-    it('has no key by default', () => {
-        expect(() => new Trait().key).toThrow();
     });
 });

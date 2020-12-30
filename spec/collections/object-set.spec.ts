@@ -1,13 +1,19 @@
 'use strict';
 
-const ObjectSet = require('../../index').ObjectSet;
+import { ObjectSet } from '../../src/index';
+
+type ObjectType = {
+    key: string;
+    value: number;
+    buckets: string[];
+}
 
 describe('a keyed object set', () => {
-    const obj1 = {'key': 123, 'value': 2, 'buckets': ['bucket1']};
-    const obj2 = {'key': 456, 'value': 3, 'buckets': ['bucket1', 'bucket2']};
-    const obj3 = {'key': 789, 'value': 4, 'buckets': ['bucket2']};
+    const obj1: ObjectType = {'key': '123', 'value': 2, 'buckets': ['bucket1']};
+    const obj2: ObjectType = {'key': '456', 'value': 3, 'buckets': ['bucket1', 'bucket2']};
+    const obj3: ObjectType = {'key': '789', 'value': 4, 'buckets': ['bucket2']};
 
-    let objectSet;
+    let objectSet: ObjectSet<ObjectType>;
 
     beforeEach(() => {
         objectSet = new ObjectSet(obj => obj.key, obj => obj.buckets);
@@ -23,39 +29,39 @@ describe('a keyed object set', () => {
     });
 
     it('can fetch an object after adding it', () => {
-        expect(objectSet.hasKey(123)).toBe(false);
+        expect(objectSet.hasKey('123')).toBe(false);
         objectSet.add(obj1);
 
-        expect(objectSet.hasKey(123)).toBe(true);
-        expect(objectSet.getByKey(123)).toBe(obj1);
+        expect(objectSet.hasKey('123')).toBe(true);
+        expect(objectSet.getByKey('123')).toBe(obj1);
     });
 
     it('can remove an object', () => {
-        expect(objectSet.hasKey(123)).toBe(false);
+        expect(objectSet.hasKey('123')).toBe(false);
         objectSet.add(obj1);
         objectSet.add(obj1);
 
-        expect(objectSet.hasKey(123)).toBe(true);
-        expect(objectSet.getByKey(123)).toBe(obj1);
+        expect(objectSet.hasKey('123')).toBe(true);
+        expect(objectSet.getByKey('123')).toBe(obj1);
 
         objectSet.remove(obj1);
 
-        expect(objectSet.hasKey(123)).toBe(false);
-        expect(objectSet.getByKey(123)).toBe(null);
+        expect(objectSet.hasKey('123')).toBe(false);
+        expect(objectSet.getByKey('123')).toBe(null);
     });
 
     it('can remove an object by key', () => {
-        expect(objectSet.hasKey(123)).toBe(false);
+        expect(objectSet.hasKey('123')).toBe(false);
         objectSet.add(obj1);
         objectSet.add(obj1);
 
-        expect(objectSet.hasKey(123)).toBe(true);
-        expect(objectSet.getByKey(123)).toBe(obj1);
+        expect(objectSet.hasKey('123')).toBe(true);
+        expect(objectSet.getByKey('123')).toBe(obj1);
 
-        objectSet.removeByKey(123);
+        objectSet.removeByKey('123');
 
-        expect(objectSet.hasKey(123)).toBe(false);
-        expect(objectSet.getByKey(123)).toBe(null);
+        expect(objectSet.hasKey('123')).toBe(false);
+        expect(objectSet.getByKey('123')).toBe(null);
     });
 
     it('can remove a non-existing object', () => {
@@ -63,14 +69,7 @@ describe('a keyed object set', () => {
     });
 
     it('can remove a non-existing key', () => {
-        expect(() => objectSet.removeByKey(123)).not.toThrow();
-    });
-
-    it('cannot add null-ish values', () => {
-        expect(() => objectSet.add(0)).not.toThrow();
-        expect(() => objectSet.add(null)).not.toThrow();
-        expect(() => objectSet.add(undefined)).not.toThrow();
-        expect(objectSet.size).toBe(0);
+        expect(() => objectSet.removeByKey('123')).not.toThrow();
     });
 
     it('can map all of its objects', () => {
@@ -112,10 +111,10 @@ describe('a keyed object set', () => {
         objectSet.add(obj2);
         objectSet.add(obj3);
 
-        const bucket1 = [];
-        const bucket2 = [];
-        objectSet.forEachItemInBucket('bucket1', obj => bucket1.push(obj) && false);
-        objectSet.forEachItemInBucket('bucket2', obj => bucket2.push(obj) && false);
+        const bucket1: ObjectType[] = [];
+        const bucket2: ObjectType[] = [];
+        objectSet.forEachItemInBucket('bucket1', obj => { bucket1.push(obj); });
+        objectSet.forEachItemInBucket('bucket2', obj => { bucket2.push(obj); });
 
         expect(bucket1).toEqual([obj1, obj2]);
         expect(bucket2).toEqual([obj2, obj3]);
@@ -128,7 +127,6 @@ describe('a keyed object set', () => {
 
         const spy = jasmine.createSpy().and.returnValue(true);
 
-        const bucket1 = [];
         objectSet.forEachItemInBucket('bucket1', spy);
 
         expect(spy).toHaveBeenCalledWith(obj1);

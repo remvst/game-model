@@ -1,6 +1,6 @@
 import Entity from './entity';
 
-export default class Trait {
+export default abstract class Trait {
 
     protected entity: Entity | null;
     enabled: boolean;
@@ -18,18 +18,16 @@ export default class Trait {
         // to be implemented in subtraits
     }
 
-    dependency(traitId: string) {
+    dependency<TraitType extends Trait>(traitId: string): TraitType {
         const trait = this.entity!.traits.getByKey(traitId);
         if (!trait) {
             throw new Error('Trait ' + this.key + ' depends on trait ' + traitId + ' but trait was not found');
         }
 
-        return trait;
+        return trait as TraitType;
     }
 
-    get key(): string {
-        throw new Error('Must implement key()');
-    }
+    abstract get key(): string;
 
     maybeCycle(elapsed: number) {
         if (!this.enabled) {

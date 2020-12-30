@@ -28,7 +28,7 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
 
     add(object: ObjectType): boolean {
         const key = this.getKey(object);
-        if (key in this.objectMap) {
+        if (this.objectMap.has(key)) {
             return false;
         }
 
@@ -51,12 +51,8 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
     }
 
     remove(object: ObjectType): ObjectType | null {
-        if (!object) {
-            return null;
-        }
-
         const key = this.getKey(object);
-        if (!(key in this.objectMap)) {
+        if (!this.objectMap.has(key)) {
             return null;
         }
 
@@ -111,7 +107,7 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
     }
 
     hasKey(key: string): boolean {
-        return key in this.objectMap;
+        return this.objectMap.has(key);
     }
 
     forEach(fn: (item: ObjectType) => (boolean | void)) {

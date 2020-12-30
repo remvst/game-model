@@ -4,16 +4,18 @@
   "description": "Game models",
   "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/jasmine/bin/jasmine.js",
-    "coverage": "istanbul cover ./node_modules/jasmine/bin/jasmine.js",
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
+    "coverage": "nyc -r lcov -e .ts -x \"spec/**/*.spec.ts\" npm run test",
     "build": "tsc"
   },
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
     "jasmine-ts": "^0.3.0",
+    "nyc": "^15.1.0",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.6.3",
+    "ts-node": "^9.1.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

@@ -66,6 +66,4 @@ export default class Entity {
         return this.traits.getByKey(traitKey);
     }
 
-}
-
-module.exports = Entity;
+};

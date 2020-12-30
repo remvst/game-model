@@ -5,7 +5,9 @@ import { Entity, Trait, World } from '../src/index';
 describe('an entity', () => {
 
     class TestTrait extends Trait {
-        key: string = 'test';
+        get key() {
+            return 'test';
+        }
     }
 
     it('can be initialized with no traits', () => {

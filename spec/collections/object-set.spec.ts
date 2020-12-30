@@ -133,4 +133,15 @@ describe('a keyed object set', () => {
         expect(spy).not.toHaveBeenCalledWith(obj2);
         expect(spy).not.toHaveBeenCalledWith(obj3);
     });
+
+    it('can run a function on a bucket that does not exist', () => {
+        objectSet.add(obj1);
+        objectSet.add(obj2);
+        objectSet.add(obj3);
+
+        const fn = jasmine.createSpy();
+        objectSet.forEachItemInBucket('foo', fn);
+
+        expect(fn).not.toHaveBeenCalled();
+    });
 });

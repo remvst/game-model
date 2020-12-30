@@ -5,11 +5,11 @@ import { Subject } from 'rxjs';
 import WatchableObjectSet from './collections/watchable-object-set';
 import ObjectSet from './collections/object-set';
 import Entity from './entity';
-import Event from './event';
+import { WorldEvent } from './world-event';
 
 export default class World {
 
-    readonly events: Subject<Event>;
+    readonly events: Subject<WorldEvent>;
     readonly entities: WatchableObjectSet<Entity>;
 
     constructor() {
@@ -24,12 +24,12 @@ export default class World {
     }
 
     cycle(elapsed: number) {
-        this.entities.forEach(entity => {
+        this.entities.forEach((entity) => {
             entity.cycle(elapsed);
         });
     }
 
-    addEvent(event: Event) {
+    addEvent(event: WorldEvent) {
         event.apply(this);
         this.events.next(event);
     }

@@ -1,13 +1,16 @@
-'use strict';
+import Entity from './entity';
 
-class Trait {
+export default abstract class Trait {
+
+    protected entity: Entity | null;
+    enabled: boolean;
 
     constructor() {
         this.entity = null;
         this.enabled = true;
     }
 
-    bind(entity) {
+    bind(entity: Entity) {
         this.entity = entity;
     }
 
@@ -15,35 +18,31 @@ class Trait {
         // to be implemented in subtraits
     }
 
-    dependency(traitId) {
-        const trait = this.entity.traits.getByKey(traitId);
+    dependency<TraitType extends Trait>(traitId: string): TraitType {
+        const trait = this.entity!.traits.getByKey(traitId);
         if (!trait) {
             throw new Error('Trait ' + this.key + ' depends on trait ' + traitId + ' but trait was not found');
         }
 
-        return trait;
+        return trait as TraitType;
     }
 
-    get key() {
-        throw new Error('Must implement key()');
-    }
+    abstract get key(): string;
 
-    maybeCycle(elapsed) {
+    maybeCycle(elapsed: number) {
         if (!this.enabled) {
             return;
         }
 
-        if (!this.entity.world) {
+        if (!this.entity!.world) {
             return;
         }
 
         this.cycle(elapsed);
     }
 
-    cycle(elapsed) { // jshint ignore:line
+    cycle(elapsed: number) {
         // to be implemented in subtraits
     }
 
 }
-
-module.exports = Trait;

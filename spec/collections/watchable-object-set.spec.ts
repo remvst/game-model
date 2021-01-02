@@ -1,14 +1,19 @@
 'use strict';
 
-const ObjectSet = require('../../index').ObjectSet;
-const WatchableObjectSet = require('../../index').WatchableObjectSet;
+import { ObjectSet, WatchableObjectSet } from '../../src/index';
+
+type ObjectType = {
+    key: string;
+    value: number;
+    buckets: string[];
+}
 
 describe('a watchable keyed object set', () => {
-    let objectSet;
+    let objectSet: WatchableObjectSet<ObjectType>;
 
-    const obj1 = {'key': 123, 'value': 2, 'buckets': ['bucket1']};
-    const obj2 = {'key': 456, 'value': 3, 'buckets': ['bucket1', 'bucket2']};
-    const obj3 = {'key': 789, 'value': 4, 'buckets': ['bucket2']};
+    const obj1: ObjectType = {'key': '123', 'value': 2, 'buckets': ['bucket1']};
+    const obj2: ObjectType = {'key': '456', 'value': 3, 'buckets': ['bucket1', 'bucket2']};
+    const obj3: ObjectType = {'key': '789', 'value': 4, 'buckets': ['bucket2']};
 
     beforeEach(() => {
         objectSet = new WatchableObjectSet(new ObjectSet(obj => obj.key, obj => obj.buckets));
@@ -35,8 +40,8 @@ describe('a watchable keyed object set', () => {
 
         expect(spy).toHaveBeenCalledWith(obj1);
         expect(objectSet.size).toBe(1);
-        expect(objectSet.hasKey(123)).toBe(true);
-        expect(objectSet.getByKey(123)).toBe(obj1);
+        expect(objectSet.hasKey('123')).toBe(true);
+        expect(objectSet.getByKey('123')).toBe(obj1);
     });
 
     it('does not fire addition when adding an element twice', () => {
@@ -65,7 +70,7 @@ describe('a watchable keyed object set', () => {
         objectSet.removals.subscribe(spy);
 
         objectSet.add(obj1);
-        objectSet.removeByKey(123);
+        objectSet.removeByKey('123');
 
         expect(spy).toHaveBeenCalledWith(obj1);
     });
@@ -86,7 +91,7 @@ describe('a watchable keyed object set', () => {
         const spy = jasmine.createSpy();
         objectSet.removals.subscribe(spy);
 
-        objectSet.removeByKey(123);
+        objectSet.removeByKey('123');
 
         expect(spy).not.toHaveBeenCalled();
     });

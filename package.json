@@ -1,21 +1,29 @@
 {
   "name": "@remvst/game-model",
-  "version": "1.1.6",
+  "version": "2.0.0",
   "description": "Game models",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/jasmine/bin/jasmine.js",
-    "coverage": "istanbul cover ./node_modules/jasmine/bin/jasmine.js"
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
+    "coverage": "nyc -r lcov -e .ts -x \"spec/**/*.spec.ts\" npm run test",
+    "build": "tsc"
   },
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
-    "@remvst/geometry": "^1.0.0",
+    "jasmine-ts": "^0.3.0",
+    "nyc": "^15.1.0",
     "rxjs": "^6.5.2",
+    "rxjs-compat": "^6.6.3",
+    "ts-node": "^9.1.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.6.2",
+    "@types/node": "^14.14.16",
+    "@types/uuid": "^8.3.0",
     "istanbul": "^0.4.5",
-    "jasmine": "^3.4.0"
+    "jasmine": "^3.4.0",
+    "typescript": "^4.1.3"
   }
 }

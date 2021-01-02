@@ -1,19 +1,18 @@
 'use strict';
 
-const Entity = require('../index').Entity;
-const Trait = require('../index').Trait;
-const World = require('../index').World;
-const WorldEvent = require('../index').WorldEvent;
+import { Entity, Trait, World, WorldEvent } from '../src/index';
 
 describe('a world', () => {
     class TestTrait extends Trait {
-        get key() {
-            return 'testtrait';
-        }
+        key: string = 'test';
+    }
+
+    class TestEvent implements WorldEvent {
+        apply(_: World) {}
     }
 
     it('can fetch an entity after it\'s been added', () => {
-        const entity = new Entity([new TestTrait()]);
+        const entity = new Entity(undefined, [new TestTrait()]);
 
         const world = new World();
         world.entities.add(entity);
@@ -22,7 +21,7 @@ describe('a world', () => {
     });
 
     it('can remove an entity after it\'s been added', () => {
-        const entity = new Entity([new TestTrait()]);
+        const entity = new Entity(undefined, [new TestTrait()]);
 
         const world = new World();
         world.entities.add(entity);
@@ -34,7 +33,7 @@ describe('a world', () => {
     });
 
     it('will cycle all its entities', () => {
-        const entity = new Entity([new TestTrait()]);
+        const entity = new Entity(undefined, [new TestTrait()]);
 
         spyOn(entity, 'cycle');
 
@@ -48,7 +47,7 @@ describe('a world', () => {
     it('can add an event', () => {
         const world = new World();
 
-        const event = new WorldEvent();
+        const event = new TestEvent();
         spyOn(event, 'apply').and.callThrough();
 
         const eventSpy = jasmine.createSpy('eventSpy');

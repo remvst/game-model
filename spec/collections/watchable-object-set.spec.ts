@@ -127,4 +127,21 @@ describe('a watchable keyed object set', () => {
 
         expect(spy).toHaveBeenCalledWith(obj1);
     });
+
+    it('forwards bucketSize', () => {
+        expect(objectSet.bucketSize('bucket1')).toBe(0);
+        expect(objectSet.bucketSize('bucket2')).toBe(0);
+
+        objectSet.add(obj1);
+        expect(objectSet.bucketSize('bucket1')).toBe(1);
+        expect(objectSet.bucketSize('bucket2')).toBe(0);
+
+        objectSet.add(obj2);
+        expect(objectSet.bucketSize('bucket1')).toBe(2);
+        expect(objectSet.bucketSize('bucket2')).toBe(1);
+
+        objectSet.add(obj3);
+        expect(objectSet.bucketSize('bucket1')).toBe(2);
+        expect(objectSet.bucketSize('bucket2')).toBe(2);
+    });
 });

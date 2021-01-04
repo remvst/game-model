@@ -26,6 +26,15 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
         return this.list.length;
     }
 
+    bucketSize(bucketKey: string): number {
+        const bucket = this.bucketMap.get(bucketKey);
+        if (!bucket) {
+            return 0;
+        }
+
+        return bucket.length;
+    }
+
     add(object: ObjectType): boolean {
         const key = this.getKey(object);
         if (this.objectMap.has(key)) {

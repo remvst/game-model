@@ -6,6 +6,7 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
     removals: Subject<ObjectType>;
     constructor(wrappedSet: BaseObjectSet<ObjectType>);
     get size(): number;
+    bucketSize(bucketKey: string): number;
     add(object: ObjectType): boolean;
     remove(object: ObjectType): ObjectType | null;
     removeByKey(key: string): ObjectType | null;

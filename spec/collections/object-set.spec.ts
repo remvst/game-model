@@ -106,6 +106,23 @@ describe('a keyed object set', () => {
         expect(spy).not.toHaveBeenCalledWith(obj3);
     });
 
+    it('can check the size of a bucket', () => {
+        expect(objectSet.bucketSize('bucket1')).toBe(0);
+        expect(objectSet.bucketSize('bucket2')).toBe(0);
+
+        objectSet.add(obj1);
+        expect(objectSet.bucketSize('bucket1')).toBe(1);
+        expect(objectSet.bucketSize('bucket2')).toBe(0);
+
+        objectSet.add(obj2);
+        expect(objectSet.bucketSize('bucket1')).toBe(2);
+        expect(objectSet.bucketSize('bucket2')).toBe(1);
+
+        objectSet.add(obj3);
+        expect(objectSet.bucketSize('bucket1')).toBe(2);
+        expect(objectSet.bucketSize('bucket2')).toBe(2);
+    });
+
     it('can run a function on a bucket', () => {
         objectSet.add(obj1);
         objectSet.add(obj2);

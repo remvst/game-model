@@ -12,6 +12,7 @@ export default class Entity {
 
     x: number;
     y: number;
+    z: number;
     angle: number;
     age: number;
     timeFactor: number;
@@ -22,6 +23,7 @@ export default class Entity {
 
         this.x = 0;
         this.y = 0;
+        this.z = 0;
         this.angle = 0;
         this.age = 0;
         this.timeFactor = 1;

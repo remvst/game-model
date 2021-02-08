@@ -7,6 +7,7 @@ export default class Entity {
     world: World | null;
     x: number;
     y: number;
+    z: number;
     angle: number;
     age: number;
     timeFactor: number;

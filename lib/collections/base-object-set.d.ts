@@ -7,6 +7,7 @@ export interface BaseObjectSet<ObjectType> {
     hasKey(key: string): boolean;
     forEach(fn: (item: ObjectType) => (boolean | void)): void;
     forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | void)): void;
+    bucket(bucketKey: string): Iterable<ObjectType>;
     bucketSize(bucketKey: string): number;
     map<MappedType>(fn: (item: ObjectType) => MappedType): MappedType[];
 }

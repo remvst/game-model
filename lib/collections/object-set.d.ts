@@ -10,7 +10,8 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
     bucketSize(bucketKey: string): number;
     add(object: ObjectType): boolean;
     remove(object: ObjectType): ObjectType | null;
-    forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | void)): true | undefined;
+    forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | void)): void;
+    bucket(bucketKey: string): Iterable<ObjectType>;
     removeByKey(key: string): ObjectType | null;
     getByKey(key: string): ObjectType | null;
     hasKey(key: string): boolean;

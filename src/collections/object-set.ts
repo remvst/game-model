@@ -90,15 +90,21 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
     }
 
     forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | void)) {
+        for (const item of this.bucket(bucketKey)) {
+            if (fn(item)) {
+                break;
+            }
+        }
+    }
+
+    * bucket(bucketKey: string): Iterable<ObjectType> {
         const bucket = this.bucketMap.get(bucketKey);
         if (!bucket) {
             return;
         }
 
         for (let i = 0 ; i < bucket.length ; i++) {
-            if (fn(bucket[i])) {
-                return true;
-            }
+            yield bucket[i];
         }
     }
 

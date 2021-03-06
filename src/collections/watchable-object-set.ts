@@ -70,4 +70,7 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
         return this.wrappedSet.forEachItemInBucket(bucketKey, fn);
     }
 
+    bucket(bucketKey: string): Iterable<ObjectType> {
+        return this.wrappedSet.bucket(bucketKey);
+    }
 };

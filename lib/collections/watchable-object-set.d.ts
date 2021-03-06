@@ -15,4 +15,5 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
     forEach(fn: (item: ObjectType) => (boolean | void)): void;
     map<MappedType>(fn: (item: ObjectType) => MappedType): MappedType[];
     forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => boolean | undefined): void;
+    bucket(bucketKey: string): Iterable<ObjectType>;
 }

@@ -14,6 +14,15 @@ describe('an entity', () => {
         readonly key = OtherTestTrait.key;
     }
 
+    class TraitWithParams extends Trait {
+        static readonly key = 'other'
+        readonly key = OtherTestTrait.key;
+
+        constructor(_: string, _1: number) {
+            super();
+        }
+    }
+
     it('can be initialized with no traits', () => {
         const entity = new Entity(undefined, []);
 
@@ -122,6 +131,12 @@ describe('an entity', () => {
         const entity = new Entity(undefined, [testTrait, otherTestTrait]);
         expect(entity.traitOfType(TestTrait)).toBe(testTrait);
         expect(entity.traitOfType(OtherTestTrait)).toBe(otherTestTrait);
+    });
+
+    it('can fetch a trait of a type with params', () => {
+        const traitWithParams = new TraitWithParams('', 2);
+        const entity = new Entity(undefined, [traitWithParams]);
+        expect(entity.traitOfType(TraitWithParams)).toBe(traitWithParams);
     });
 
     it('can fail to fetch a trait of a type', () => {

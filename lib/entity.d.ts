@@ -17,5 +17,5 @@ export default class Entity {
     cycle(elapsed: number): void;
     remove(): void;
     trait(traitKey: string): Trait | null;
-    traitOfType<T extends Trait>(keyProvider: (new () => T) & KeyProvider): T | null;
+    traitOfType<T extends Trait>(keyProvider: (new (...params: any) => T) & KeyProvider): T | null;
 }

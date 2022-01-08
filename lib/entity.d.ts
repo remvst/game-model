@@ -1,5 +1,5 @@
 import ObjectSet from './collections/object-set';
-import Trait from './trait';
+import Trait, { KeyProvider } from './trait';
 import World from './world';
 export default class Entity {
     readonly id: string;
@@ -17,4 +17,5 @@ export default class Entity {
     cycle(elapsed: number): void;
     remove(): void;
     trait(traitKey: string): Trait | null;
+    traitOfType<T extends Trait>(keyProvider: (new () => T) & KeyProvider): T | null;
 }

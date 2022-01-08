@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 
 import ObjectSet from './collections/object-set';
-import Trait from './trait';
+import Trait, { KeyProvider } from './trait';
 import World from './world';
 
 export default class Entity {
@@ -66,6 +66,14 @@ export default class Entity {
 
     trait(traitKey: string) {
         return this.traits.getByKey(traitKey);
+    }
+
+    traitOfType<T extends Trait>(keyProvider: (new () => T) & KeyProvider): T | null {
+        const key = keyProvider.key;
+        if (!key) {
+            throw new Error('Provided trait type does not have a statically defined key');
+        }
+        return this.traits.getByKey(key) as (T | null);
     }
 
 };

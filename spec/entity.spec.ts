@@ -5,9 +5,13 @@ import { Entity, Trait, World } from '../src/index';
 describe('an entity', () => {
 
     class TestTrait extends Trait {
-        get key() {
-            return 'test';
-        }
+        static readonly key = 'test'
+        readonly key = TestTrait.key;
+    }
+
+    class OtherTestTrait extends Trait {
+        static readonly key = 'other'
+        readonly key = OtherTestTrait.key;
     }
 
     it('can be initialized with no traits', () => {
@@ -45,7 +49,6 @@ describe('an entity', () => {
         const testTrait = new TestTrait();
         spyOn(testTrait, 'bind');
         spyOn(testTrait, 'postBind');
-        spyOnProperty(testTrait, 'key').and.returnValue('zeetest');
 
         new Entity(undefined, [testTrait]);
 
@@ -55,7 +58,6 @@ describe('an entity', () => {
 
     it('calls maybeCycle() on all traits', () => {
         const testTrait = new TestTrait();
-        spyOnProperty(testTrait, 'key').and.returnValue('zeetest');
         spyOn(testTrait, 'maybeCycle').and.callThrough();
 
         const entity = new Entity(undefined, [testTrait]);
@@ -66,7 +68,6 @@ describe('an entity', () => {
 
     it('calls maybeCycle() on all traits with the right time factor', () => {
         const testTrait = new TestTrait();
-        spyOnProperty(testTrait, 'key').and.returnValue('zeetest');
         spyOn(testTrait, 'maybeCycle').and.callThrough();
 
         const entity = new Entity(undefined, [testTrait]);
@@ -111,10 +112,21 @@ describe('an entity', () => {
 
     it('can fetch a trait', () => {
         const testTrait = new TestTrait();
-        spyOnProperty(testTrait, 'key').and.returnValue('foo');
-
         const entity = new Entity(undefined, [testTrait]);
+        expect(entity.trait('test')).toBe(testTrait);
+    });
 
-        expect(entity.trait('foo')).toBe(testTrait);
+    it('can fetch a trait of a type', () => {
+        const testTrait = new TestTrait();
+        const otherTestTrait = new OtherTestTrait();
+        const entity = new Entity(undefined, [testTrait, otherTestTrait]);
+        expect(entity.traitOfType(TestTrait)).toBe(testTrait);
+        expect(entity.traitOfType(OtherTestTrait)).toBe(otherTestTrait);
+    });
+
+    it('can fail to fetch a trait of a type', () => {
+        const testTrait = new TestTrait();
+        const entity = new Entity(undefined, [testTrait]);
+        expect(entity.traitOfType(OtherTestTrait)).toBe(null);
     });
 });

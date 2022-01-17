@@ -2,10 +2,13 @@ import { v4 } from 'uuid';
 
 import ObjectSet from './collections/object-set';
 import { EntityEvent } from './events/entity-event';
+import EntityEventProcessed from './events/entity-event-processed';
 import Trait, { KeyProvider } from './trait';
 import World from './world';
 
 export default class Entity {
+
+    private readonly reusableEventProcessedEvent = new EntityEventProcessed(this);
 
     readonly id: string;
     readonly traits: ObjectSet<Trait>;
@@ -80,6 +83,11 @@ export default class Entity {
     addEvent(event: EntityEvent) {
         for (const trait of this.traits.items()) {
             trait.processEvent(event);
+        }
+
+        if (this.world) {
+            this.reusableEventProcessedEvent.event = event;
+            this.world.addEvent(this.reusableEventProcessedEvent);
         }
     }
 

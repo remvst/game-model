@@ -1,6 +1,6 @@
 'use strict';
 
-import { Entity, Trait, World, EntityEvent } from '../src/index';
+import { Entity, Trait, World, EntityEvent, EntityEventProcessed } from '../src/index';
 
 describe('an entity', () => {
 
@@ -157,5 +157,23 @@ describe('an entity', () => {
         entity.addEvent(event);
 
         expect(testTrait.processEvent).toHaveBeenCalledWith(event);
-    })
+    });
+
+    it('can process a local event and notify the world about it', () => {
+        const testTrait = new TestTrait();
+        spyOn(testTrait, 'processEvent');
+
+        const entity = new Entity(undefined, [testTrait]);
+        const entityEvent = new TestEvent();
+
+        const world = new World();
+        world.entities.add(entity);
+        spyOn(world, 'addEvent').withArgs(jasmine.any(EntityEventProcessed)).and.callFake(event => {
+            expect((event as EntityEventProcessed).event).toBe(entityEvent);
+        });
+
+        entity.addEvent(entityEvent);
+
+        expect(world.addEvent).toHaveBeenCalled();
+    });
 });

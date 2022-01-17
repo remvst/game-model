@@ -3,6 +3,7 @@ import { EntityEvent } from './events/entity-event';
 import Trait, { KeyProvider } from './trait';
 import World from './world';
 export default class Entity {
+    private readonly reusableEventProcessedEvent;
     readonly id: string;
     readonly traits: ObjectSet<Trait>;
     world: World | null;

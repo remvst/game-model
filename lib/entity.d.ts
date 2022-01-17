@@ -1,4 +1,5 @@
 import ObjectSet from './collections/object-set';
+import { EntityEvent } from './events/entity-event';
 import Trait, { KeyProvider } from './trait';
 import World from './world';
 export default class Entity {
@@ -18,4 +19,5 @@ export default class Entity {
     remove(): void;
     trait(traitKey: string): Trait | null;
     traitOfType<T extends Trait>(keyProvider: (new (...params: any) => T) & KeyProvider): T | null;
+    addEvent(event: EntityEvent): void;
 }

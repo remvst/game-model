@@ -16,6 +16,8 @@ export interface BaseObjectSet<ObjectType> {
 
     forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | void)): void
 
+    items(): Iterable<ObjectType>;
+
     bucket(bucketKey: string): Iterable<ObjectType>;
 
     bucketSize(bucketKey: string): number

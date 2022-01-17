@@ -5,12 +5,15 @@ import { Subject } from 'rxjs';
 import WatchableObjectSet from './collections/watchable-object-set';
 import ObjectSet from './collections/object-set';
 import Entity from './entity';
-import { WorldEvent } from './world-event';
+import { WorldEvent } from './events/world-event';
+import EntityRemoved from './events/entity-removed';
 
 export default class World {
 
     readonly events: Subject<WorldEvent>;
     readonly entities: WatchableObjectSet<Entity>;
+
+    private readonly reusableRemoveEvent = new EntityRemoved();
 
     constructor() {
         this.entities = new WatchableObjectSet(new ObjectSet(
@@ -18,7 +21,10 @@ export default class World {
             entity => entity.traits.map(trait => trait.key)
         ));
         this.entities.additions.subscribe(entity => entity.bind(this));
-        this.entities.removals.subscribe(object => object.unbind());
+        this.entities.removals.subscribe(entity => {
+            entity.addEvent(this.reusableRemoveEvent);
+            entity.unbind();
+        });
 
         this.events = new Subject();
     }

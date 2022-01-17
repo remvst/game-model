@@ -1,4 +1,5 @@
 import Entity from './entity';
+import { EntityEvent } from './events/entity-event';
 export interface KeyProvider {
     readonly key: string;
 }
@@ -12,4 +13,5 @@ export default abstract class Trait implements KeyProvider {
     abstract get key(): string;
     maybeCycle(elapsed: number): void;
     cycle(elapsed: number): void;
+    processEvent(event: EntityEvent): void;
 }

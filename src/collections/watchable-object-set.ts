@@ -22,6 +22,10 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
         return this.wrappedSet.size;
     }
 
+    items(): Iterable<ObjectType> {
+        return this.wrappedSet.items();
+    }
+
     bucketSize(bucketKey: string): number {
         return this.wrappedSet.bucketSize(bucketKey);
     }

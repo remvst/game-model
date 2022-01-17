@@ -7,6 +7,7 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
     private bucketMap;
     constructor(getKey: (item: ObjectType) => string, getBuckets?: ((item: ObjectType) => string[]) | undefined);
     get size(): number;
+    items(): Iterable<ObjectType>;
     bucketSize(bucketKey: string): number;
     add(object: ObjectType): boolean;
     remove(object: ObjectType): ObjectType | null;

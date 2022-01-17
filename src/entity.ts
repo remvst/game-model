@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 
 import ObjectSet from './collections/object-set';
+import { EntityEvent } from './events/entity-event';
 import Trait, { KeyProvider } from './trait';
 import World from './world';
 
@@ -30,14 +31,14 @@ export default class Entity {
 
         this.traits = new ObjectSet(trait => trait.key);
 
-        traits.forEach((trait) => {
+        for (const trait of traits) {
             this.traits.add(trait);
             trait.bind(this);
-        });
+        }
 
-        this.traits.forEach((trait) => {
+        for (const trait of this.traits.items()) {
             trait.postBind();
-        });
+        }
     }
 
     bind(world: World) {
@@ -53,9 +54,9 @@ export default class Entity {
 
         this.age += adjusted;
 
-        this.traits.forEach((trait) => {
+        for (const trait of this.traits.items()) {
             trait.maybeCycle(adjusted);
-        });
+        }
     }
 
     remove() {
@@ -74,6 +75,12 @@ export default class Entity {
             throw new Error('Provided trait type does not have a statically defined key');
         }
         return this.traits.getByKey(key) as (T | null);
+    }
+
+    addEvent(event: EntityEvent) {
+        for (const trait of this.traits.items()) {
+            trait.processEvent(event);
+        }
     }
 
 };

@@ -1,4 +1,5 @@
 import Entity from './entity';
+import { EntityEvent } from './events/entity-event';
 
 export interface KeyProvider {
     readonly key: string;
@@ -46,6 +47,10 @@ export default abstract class Trait implements KeyProvider {
     }
 
     cycle(elapsed: number) {
+        // to be implemented in subtraits
+    }
+
+    processEvent(event: EntityEvent) {
         // to be implemented in subtraits
     }
 

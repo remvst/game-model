@@ -1,5 +1,6 @@
 'use strict';
 
+import EntityRemoved from '../src/events/entity-removed';
 import { Entity, Trait, World, WorldEvent } from '../src/index';
 
 describe('a world', () => {
@@ -22,6 +23,7 @@ describe('a world', () => {
 
     it('can remove an entity after it\'s been added', () => {
         const entity = new Entity(undefined, [new TestTrait()]);
+        spyOn(entity, 'addEvent').withArgs(jasmine.any(EntityRemoved)).and.callThrough();
 
         const world = new World();
         world.entities.add(entity);
@@ -29,6 +31,7 @@ describe('a world', () => {
         spyOn(entity, 'unbind');
         world.entities.remove(entity);
 
+        expect(entity.addEvent).toHaveBeenCalled();
         expect(entity.unbind).toHaveBeenCalled();
     });
 

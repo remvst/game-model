@@ -1,6 +1,6 @@
 'use strict';
 
-import { Entity, Trait, World } from '../src/index';
+import { Entity, Trait, World, EntityEvent } from '../src/index';
 
 describe('an entity', () => {
 
@@ -21,6 +21,9 @@ describe('an entity', () => {
         constructor(_: string, _1: number) {
             super();
         }
+    }
+
+    class TestEvent implements EntityEvent {
     }
 
     it('can be initialized with no traits', () => {
@@ -144,4 +147,15 @@ describe('an entity', () => {
         const entity = new Entity(undefined, [testTrait]);
         expect(entity.traitOfType(OtherTestTrait)).toBe(null);
     });
+
+    it('can process a local event', () => {
+        const testTrait = new TestTrait();
+        spyOn(testTrait, 'processEvent');
+
+        const entity = new Entity(undefined, [testTrait]);
+        const event = new TestEvent();
+        entity.addEvent(event);
+
+        expect(testTrait.processEvent).toHaveBeenCalledWith(event);
+    })
 });

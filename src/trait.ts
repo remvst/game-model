@@ -1,3 +1,4 @@
+import { vector3 } from '.';
 import Entity from './entity';
 import { EntityEvent } from './events/entity-event';
 
@@ -10,6 +11,8 @@ export default abstract class Trait implements KeyProvider {
     protected entity: Entity | null;
     enabled: boolean;
 
+    protected readonly lastEntityPosition = vector3();
+
     constructor() {
         this.entity = null;
         this.enabled = true;
@@ -17,6 +20,9 @@ export default abstract class Trait implements KeyProvider {
 
     bind(entity: Entity) {
         this.entity = entity;
+        this.lastEntityPosition.x = this.entity.x;
+        this.lastEntityPosition.y = this.entity.y;
+        this.lastEntityPosition.z = this.entity.z;
     }
 
     postBind() {
@@ -44,6 +50,10 @@ export default abstract class Trait implements KeyProvider {
         }
 
         this.cycle(elapsed);
+
+        this.lastEntityPosition.x = this.entity!.x;
+        this.lastEntityPosition.y = this.entity!.y;
+        this.lastEntityPosition.z = this.entity!.z;
     }
 
     cycle(elapsed: number) {

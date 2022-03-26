@@ -38,6 +38,7 @@ describe('a world', () => {
     it('will cycle all its entities', () => {
         const entity = new Entity(undefined, [new TestTrait()]);
 
+        spyOn(entity, 'preCycle');
         spyOn(entity, 'cycle');
         spyOn(entity, 'postCycle');
 
@@ -45,8 +46,9 @@ describe('a world', () => {
         world.entities.add(entity);
         world.cycle(123);
 
+        expect(entity.preCycle).toHaveBeenCalledWith();
         expect(entity.cycle).toHaveBeenCalledWith(123);
-        expect(entity.postCycle).toHaveBeenCalled();
+        expect(entity.postCycle).toHaveBeenCalledWith();
     });
 
     it('can add an event', () => {

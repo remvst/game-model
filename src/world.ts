@@ -30,13 +30,9 @@ export default class World {
     }
 
     cycle(elapsed: number) {
-        this.entities.forEach((entity) => {
-            entity.cycle(elapsed);
-        });
-
-        this.entities.forEach((entity) => {
-            entity.postCycle();
-        });
+        for (const entity of this.entities.items()) entity.preCycle();
+        for (const entity of this.entities.items()) entity.cycle(elapsed);
+        for (const entity of this.entities.items()) entity.postCycle();
     }
 
     addEvent(event: WorldEvent) {

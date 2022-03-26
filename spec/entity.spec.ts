@@ -49,15 +49,25 @@ describe('an entity', () => {
         expect(entity.age).toBe(123);
     });
 
-    it('updates its position in postCycle', () => {
+    it('updates its cycle start and end positions', () => {
         const entity = new Entity(undefined, []);
         entity.position.x = 1;
         entity.position.y = 2;
         entity.position.z = 3;
+        entity.preCycle();
+
+        entity.position.x = 4;
+        entity.position.y = 5;
+        entity.position.z = 6;
         entity.postCycle();
 
-        expect(entity.previousPosition).toEqual(vector3(1, 2, 3));
-        expect(entity.previousPosition).not.toBe(entity.position);
+        expect(entity.cycleStartPosition).toEqual(vector3(1, 2, 3));
+        expect(entity.cycleStartPosition).not.toBe(entity.position);
+
+        expect(entity.cycleEndPosition).toEqual(vector3(4, 5, 6));
+        expect(entity.cycleEndPosition).not.toBe(entity.position);
+
+        expect(entity.cycleVelocity).toEqual(vector3(3, 3, 3));
     });
 
     it('updates its age on cycle with the correct time factor', () => {

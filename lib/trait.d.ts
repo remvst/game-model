@@ -6,6 +6,7 @@ export interface KeyProvider {
 export default abstract class Trait implements KeyProvider {
     protected entity: Entity | null;
     enabled: boolean;
+    protected readonly lastEntityPosition: import("./vector3").Vector3;
     constructor();
     bind(entity: Entity): void;
     postBind(): void;

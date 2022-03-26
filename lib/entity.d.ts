@@ -8,7 +8,9 @@ export default class Entity {
     readonly traits: ObjectSet<Trait>;
     world: World | null;
     position: import("./vector3").Vector3;
-    previousPosition: import("./vector3").Vector3;
+    cycleStartPosition: import("./vector3").Vector3;
+    cycleEndPosition: import("./vector3").Vector3;
+    cycleVelocity: import("./vector3").Vector3;
     angle: number;
     age: number;
     timeFactor: number;
@@ -21,8 +23,9 @@ export default class Entity {
     set z(z: number);
     bind(world: World): void;
     unbind(): void;
-    postCycle(): void;
+    preCycle(): void;
     cycle(elapsed: number): void;
+    postCycle(): void;
     remove(): void;
     trait(traitKey: string): Trait | null;
     traitOfType<T extends Trait>(keyProvider: (new (...params: any) => T) & KeyProvider): T | null;

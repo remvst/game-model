@@ -4,6 +4,7 @@ import ObjectSet from './collections/object-set';
 import { EntityEvent } from './events/entity-event';
 import EntityEventProcessed from './events/entity-event-processed';
 import Trait, { KeyProvider } from './trait';
+import { vector3 } from './vector3';
 import World from './world';
 
 export default class Entity {
@@ -12,22 +13,20 @@ export default class Entity {
 
     readonly id: string;
     readonly traits: ObjectSet<Trait>;
-    world: World | null;
+    world: World | null = null;
 
-    x: number;
-    y: number;
-    z: number;
+    position = vector3();
+    previousPosition = vector3();
+
     angle: number;
     age: number;
     timeFactor: number;
 
-    constructor(id: string | undefined = undefined, traits: Trait[]) {
+    constructor(
+        id: string | undefined,
+        traits: Trait[],
+    ) {
         this.id = id || v4();
-        this.world = null;
-
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
         this.angle = 0;
         this.age = 0;
         this.timeFactor = 1;
@@ -44,12 +43,26 @@ export default class Entity {
         }
     }
 
+    get x() { return this.position.x; }
+    get y() { return this.position.y; }
+    get z() { return this.position.z; }
+
+    set x(x: number) { this.position.x = x; }
+    set y(y: number) { this.position.y = y; }
+    set z(z: number) { this.position.z = z; }
+
     bind(world: World) {
         this.world = world;
     }
 
     unbind() {
         this.world = null;
+    }
+
+    postCycle() {
+        this.previousPosition.x = this.x;
+        this.previousPosition.y = this.y;
+        this.previousPosition.z = this.z;
     }
 
     cycle(elapsed: number) {

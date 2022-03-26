@@ -1,6 +1,6 @@
 'use strict';
 
-import { Entity, Trait, World, EntityEvent, EntityEventProcessed } from '../src/index';
+import { Entity, Trait, World, EntityEvent, EntityEventProcessed, vector3 } from '../src/index';
 
 describe('an entity', () => {
 
@@ -47,6 +47,17 @@ describe('an entity', () => {
 
         entity.cycle(123);
         expect(entity.age).toBe(123);
+    });
+
+    it('updates its position in postCycle', () => {
+        const entity = new Entity(undefined, []);
+        entity.position.x = 1;
+        entity.position.y = 2;
+        entity.position.z = 3;
+        entity.postCycle();
+
+        expect(entity.previousPosition).toEqual(vector3(1, 2, 3));
+        expect(entity.previousPosition).not.toBe(entity.position);
     });
 
     it('updates its age on cycle with the correct time factor', () => {

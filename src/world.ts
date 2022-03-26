@@ -33,6 +33,10 @@ export default class World {
         this.entities.forEach((entity) => {
             entity.cycle(elapsed);
         });
+
+        this.entities.forEach((entity) => {
+            entity.postCycle();
+        });
     }
 
     addEvent(event: WorldEvent) {

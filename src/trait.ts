@@ -8,21 +8,24 @@ export interface KeyProvider {
 
 export default abstract class Trait implements KeyProvider {
 
-    protected entity: Entity | null;
+    private _entity: Entity | null = null;
     enabled: boolean;
 
     protected readonly lastEntityPosition = vector3();
 
     constructor() {
-        this.entity = null;
         this.enabled = true;
     }
 
+    get entity(): Entity | null {
+        return this._entity;
+    }
+
     bind(entity: Entity) {
-        this.entity = entity;
-        this.lastEntityPosition.x = this.entity.x;
-        this.lastEntityPosition.y = this.entity.y;
-        this.lastEntityPosition.z = this.entity.z;
+        this._entity = entity;
+        this.lastEntityPosition.x = this._entity.position.x;
+        this.lastEntityPosition.y = this._entity.position.y;
+        this.lastEntityPosition.z = this._entity.position.z;
     }
 
     postBind() {
@@ -45,7 +48,7 @@ export default abstract class Trait implements KeyProvider {
             return;
         }
 
-        if (!this.entity!.world) {
+        if (!this.entity || !this.entity!.world) {
             return;
         }
 

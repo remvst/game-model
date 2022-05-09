@@ -4,10 +4,11 @@ export interface KeyProvider {
     readonly key: string;
 }
 export default abstract class Trait implements KeyProvider {
-    protected entity: Entity | null;
+    private _entity;
     enabled: boolean;
     protected readonly lastEntityPosition: import("./vector3").Vector3;
     constructor();
+    get entity(): Entity | null;
     bind(entity: Entity): void;
     postBind(): void;
     dependency<TraitType extends Trait>(traitId: string): TraitType;

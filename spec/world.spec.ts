@@ -5,7 +5,8 @@ import { Entity, Trait, World, WorldEvent } from '../src/index';
 
 describe('a world', () => {
     class TestTrait extends Trait {
-        key: string = 'test';
+        static readonly key = 'test';
+        readonly key = TestTrait.key;
     }
 
     class TestEvent implements WorldEvent {
@@ -19,6 +20,22 @@ describe('a world', () => {
         world.entities.add(entity);
 
         expect(world.entity(entity.id)).toBe(entity);
+    });
+
+    it('can cycle traits', () => {
+        const entity1 = new Entity(undefined, [new TestTrait()]);
+        const entity2 = new Entity(undefined, [new TestTrait()]);
+        const entity3 = new Entity(undefined, []);
+
+        const world = new World();
+        world.entities.add(entity1);
+        world.entities.add(entity2);
+        world.entities.add(entity3);
+
+        expect(Array.from(world.traitsOfType(TestTrait))).toEqual([
+            entity1.traitOfType(TestTrait)!,
+            entity2.traitOfType(TestTrait)!,
+        ]);
     });
 
     it('can remove an entity after it\'s been added', () => {

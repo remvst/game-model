@@ -5,11 +5,8 @@ import { Entity, Trait, World } from '../src/index';
 describe('a trait', () => {
 
     class Trait1 extends Trait {
+        readonly key = 'trait1';
         trait2: Trait2 | null = null;
-
-        get key() {
-            return 'trait1';
-        }
 
         postBind() {
             this.trait2 = this.dependency<Trait2>('trait2');
@@ -17,11 +14,8 @@ describe('a trait', () => {
     }
 
     class Trait2 extends Trait {
+        readonly key = 'trait2';
         trait1: Trait1 | null = null;
-
-        get key() {
-            return 'trait2';
-        }
 
         postBind() {
             this.trait1 = this.dependency<Trait1>('trait1');
@@ -32,14 +26,16 @@ describe('a trait', () => {
         const trait1 = new Trait1();
         const trait2 = new Trait2();
 
-        new Entity(undefined, [trait1, trait2]);
+        const entity = new Entity(undefined, [trait1, trait2]);
+        entity.bind({} as World);
 
         expect(trait1.trait2).toBe(trait2);
         expect(trait2.trait1).toBe(trait1);
     });
 
     it('throws an error if a dependency isn\'t satisfied', () => {
-        expect(() => new Entity(undefined, [new Trait1()])).toThrow();
+        const entity = new Entity(undefined, [new Trait1()]);
+        expect(() => entity.bind({} as World)).toThrow();
     });
 
     it('cycles if enabled and entity has a world', () => {

@@ -83,7 +83,8 @@ describe('an entity', () => {
         spyOn(testTrait, 'bind');
         spyOn(testTrait, 'postBind');
 
-        new Entity(undefined, [testTrait]);
+        const entity = new Entity(undefined, [testTrait]);
+        entity.bind({} as World);
 
         expect(testTrait.bind).toHaveBeenCalled();
         expect(testTrait.postBind).toHaveBeenCalled();

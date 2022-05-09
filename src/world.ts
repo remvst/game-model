@@ -7,6 +7,7 @@ import ObjectSet from './collections/object-set';
 import Entity from './entity';
 import { WorldEvent } from './events/world-event';
 import EntityRemoved from './events/entity-removed';
+import Trait, { KeyProvider } from './trait';
 
 export default class World {
 
@@ -44,4 +45,13 @@ export default class World {
         return this.entities.getByKey(entityId);
     }
 
+    * traitsOfType<T extends Trait>(keyProvider: (new (...params: any) => T) & KeyProvider): Iterable<T> {
+        const key = keyProvider.key;
+        if (!key) {
+            throw new Error('Provided trait type does not have a statically defined key');
+        }
+        for (const value of this.entities.bucket(key)) {
+            yield value.traitOfType(keyProvider)!;
+        }
+    }
 };

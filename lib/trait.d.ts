@@ -12,9 +12,11 @@ export default abstract class Trait implements KeyProvider {
     postBind(): void;
     dependency<TraitType extends Trait>(traitId: string): TraitType;
     abstract get key(): string;
+    preCycle(): void;
     maybeCycle(elapsed: number): void;
     cycle(elapsed: number): void;
     postCycle(): void;
+    private makeQueriable;
     processEvent(event: EntityEvent): void;
     readonly surfaceProvider: TraitSurfaceProvider | null;
 }

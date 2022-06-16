@@ -44,6 +44,10 @@ export default abstract class Trait implements KeyProvider {
 
     abstract get key(): string;
 
+    preCycle() {
+        this.makeQueriable();
+    }
+
     maybeCycle(elapsed: number) {
         if (!this.enabled) {
             return;
@@ -65,6 +69,10 @@ export default abstract class Trait implements KeyProvider {
     }
 
     postCycle() {
+        this.makeQueriable();
+    }
+
+    private makeQueriable() {
         const { surfaceProvider } = this;
         if (surfaceProvider) {
             surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);

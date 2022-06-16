@@ -69,6 +69,10 @@ export default class Entity {
         this.cycleStartPosition.x = this.x;
         this.cycleStartPosition.y = this.y;
         this.cycleStartPosition.z = this.z;
+
+        for (const trait of this.traits.items()) {
+            trait.preCycle();
+        }
     }
 
     cycle(elapsed: number) {
@@ -89,6 +93,7 @@ export default class Entity {
         this.cycleVelocity.x = this.x - this.cycleStartPosition.x;
         this.cycleVelocity.y = this.y - this.cycleStartPosition.y;
         this.cycleVelocity.z = this.z - this.cycleStartPosition.z;
+
     }
 
     remove() {

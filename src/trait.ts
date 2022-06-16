@@ -1,10 +1,11 @@
+import { KeyProvider } from './key-provider';
+import { TraitSurfaceProvider } from './trait-surface-provider';
 import { vector3 } from '.';
 import Entity from './entity';
 import { EntityEvent } from './events/entity-event';
+import { Rectangle } from '@remvst/geometry';
 
-export interface KeyProvider {
-    readonly key: string;
-}
+const REUSABLE_GEOMETRY_AREA = new Rectangle(0, 0, 0, 0);
 
 export default abstract class Trait implements KeyProvider {
 
@@ -63,8 +64,17 @@ export default abstract class Trait implements KeyProvider {
         // to be implemented in subtraits
     }
 
+    postCycle() {
+        const { surfaceProvider } = this;
+        if (surfaceProvider) {
+            surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
+            this.entity?.world?.sectorSet(this.key, surfaceProvider.sectorSize).insert(this.entity, REUSABLE_GEOMETRY_AREA);
+        }
+    }
+
     processEvent(event: EntityEvent) {
         // to be implemented in subtraits
     }
 
+    readonly surfaceProvider: TraitSurfaceProvider | null = null;
 }

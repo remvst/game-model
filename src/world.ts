@@ -1,5 +1,3 @@
-'use strict';
-
 import { Subject } from 'rxjs';
 
 import WatchableObjectSet from './collections/watchable-object-set';
@@ -7,7 +5,9 @@ import ObjectSet from './collections/object-set';
 import Entity from './entity';
 import { WorldEvent } from './events/world-event';
 import EntityRemoved from './events/entity-removed';
-import Trait, { KeyProvider } from './trait';
+import Trait from './trait';
+import SectorObjectSet from './collections/sector-object-set';
+import { KeyProvider  } from './key-provider';
 
 export default class World {
 
@@ -15,6 +15,7 @@ export default class World {
     readonly entities: WatchableObjectSet<Entity>;
 
     private readonly reusableRemoveEvent = new EntityRemoved();
+    private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
 
     constructor() {
         this.entities = new WatchableObjectSet(new ObjectSet(
@@ -30,7 +31,24 @@ export default class World {
         this.events = new Subject();
     }
 
+    sectorSet(key: string, sectorSize: number): SectorObjectSet<Entity> {
+        let sectorSet = this.sectorSets.get(key);
+        if (sectorSet) {
+            return sectorSet;
+        }
+        sectorSet = new SectorObjectSet(sectorSize);
+        this.sectorSets.set(key, sectorSet);
+        return sectorSet;
+    }
+
+    private resetSectors() {
+        for (const set of this.sectorSets.values()) {
+            set.clear();
+        }
+    }
+
     cycle(elapsed: number) {
+        this.resetSectors();
         for (const entity of this.entities.items()) entity.preCycle();
         for (const entity of this.entities.items()) entity.cycle(elapsed);
         for (const entity of this.entities.items()) entity.postCycle();

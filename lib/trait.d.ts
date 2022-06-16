@@ -1,8 +1,7 @@
+import { KeyProvider } from './key-provider';
+import { TraitSurfaceProvider } from './trait-surface-provider';
 import Entity from './entity';
 import { EntityEvent } from './events/entity-event';
-export interface KeyProvider {
-    readonly key: string;
-}
 export default abstract class Trait implements KeyProvider {
     private _entity;
     enabled: boolean;
@@ -15,5 +14,7 @@ export default abstract class Trait implements KeyProvider {
     abstract get key(): string;
     maybeCycle(elapsed: number): void;
     cycle(elapsed: number): void;
+    postCycle(): void;
     processEvent(event: EntityEvent): void;
+    readonly surfaceProvider: TraitSurfaceProvider | null;
 }

@@ -1,5 +1,5 @@
-'use strict';
-
+import { KeyProvider } from './key-provider';
+import { TraitSurfaceProvider } from './trait-surface-provider';
 import Entity from './entity';
 import Trait from './trait';
 import World from './world';
@@ -21,5 +21,7 @@ export {
     Entity,
     EntityEvent,
     EntityRemoved,
+    KeyProvider,
+    TraitSurfaceProvider,
     vector3,
 };

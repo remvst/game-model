@@ -1,9 +1,10 @@
+import { KeyProvider } from './key-provider';
 import { v4 } from 'uuid';
 
 import ObjectSet from './collections/object-set';
 import { EntityEvent } from './events/entity-event';
 import EntityEventProcessed from './events/entity-event-processed';
-import Trait, { KeyProvider } from './trait';
+import Trait from './trait';
 import { vector3 } from './vector3';
 import World from './world';
 

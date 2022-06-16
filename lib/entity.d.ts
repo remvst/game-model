@@ -1,6 +1,7 @@
+import { KeyProvider } from './key-provider';
 import ObjectSet from './collections/object-set';
 import { EntityEvent } from './events/entity-event';
-import Trait, { KeyProvider } from './trait';
+import Trait from './trait';
 import World from './world';
 export default class Entity {
     private readonly reusableEventProcessedEvent;

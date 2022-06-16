@@ -1,6 +1,6 @@
 {
   "name": "@remvst/game-model",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Game models",
   "main": "lib/index.js",
   "scripts": {
@@ -11,6 +11,7 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
+    "@remvst/geometry": "^2.0.2",
     "jasmine-ts": "^0.3.0",
     "nyc": "^15.1.0",
     "rxjs": "^6.5.2",

@@ -6,3 +6,4 @@ export interface TraitSurfaceProvider {
     surface(trait: Trait, rectangle: Rectangle): void;
     containsPoint(trait: Trait, point: Vector3): boolean;
 }
+export declare function rectangleSurface(sectorSize: number, surface: (trait: Trait, rectangle: Rectangle) => void): TraitSurfaceProvider;

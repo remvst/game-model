@@ -1,5 +1,5 @@
 import { KeyProvider } from './key-provider';
-import { TraitSurfaceProvider } from './trait-surface-provider';
+import { TraitSurfaceProvider, rectangleSurface } from './trait-surface-provider';
 import Entity from './entity';
 import Trait from './trait';
 import World from './world';
@@ -23,5 +23,6 @@ export {
     EntityRemoved,
     KeyProvider,
     TraitSurfaceProvider,
+    rectangleSurface,
     vector3,
 };

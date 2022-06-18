@@ -11,7 +11,8 @@ export default class World {
     private readonly reusableRemoveEvent;
     private readonly sectorSets;
     constructor();
-    sectorSet(key: string, sectorSize: number): SectorObjectSet<Entity>;
+    defineSectorSet(key: string, sectorSize: number): void;
+    sectorSet(key: string): SectorObjectSet<Entity>;
     private resetSectors;
     cycle(elapsed: number): void;
     addEvent(event: WorldEvent): void;

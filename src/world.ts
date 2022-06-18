@@ -31,13 +31,19 @@ export default class World {
         this.events = new Subject();
     }
 
-    sectorSet(key: string, sectorSize: number): SectorObjectSet<Entity> {
-        let sectorSet = this.sectorSets.get(key);
-        if (sectorSet) {
-            return sectorSet;
+    defineSectorSet(key: string, sectorSize: number) {
+        if (this.sectorSets.has(key)) {
+            return;
         }
-        sectorSet = new SectorObjectSet(sectorSize);
+        const sectorSet = new SectorObjectSet<Entity>(sectorSize);
         this.sectorSets.set(key, sectorSet);
+    }
+
+    sectorSet(key: string): SectorObjectSet<Entity> {
+        let sectorSet = this.sectorSets.get(key);
+        if (!sectorSet) {
+            throw new Error('Undefined sector set');
+        }
         return sectorSet;
     }
 

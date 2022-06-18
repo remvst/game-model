@@ -81,7 +81,7 @@ export default abstract class Trait implements KeyProvider {
         const { surfaceProvider } = this;
         if (surfaceProvider) {
             surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
-            this.entity?.world?.sectorSet(this.key).insert(this.entity, REUSABLE_GEOMETRY_AREA);
+            this.entity?.world?.sectorSet(this.key)?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
         }
     }
 

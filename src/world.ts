@@ -39,12 +39,8 @@ export default class World {
         this.sectorSets.set(key, sectorSet);
     }
 
-    sectorSet(key: string): SectorObjectSet<Entity> {
-        let sectorSet = this.sectorSets.get(key);
-        if (!sectorSet) {
-            throw new Error('Undefined sector set');
-        }
-        return sectorSet;
+    sectorSet(key: string): SectorObjectSet<Entity> | null {
+        return this.sectorSets.get(key) || null;
     }
 
     private resetSectors() {

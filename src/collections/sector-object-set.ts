@@ -53,10 +53,10 @@ export default class SectorObjectSet<ObjectType> {
     * query(area: Rectangle): Iterable<ObjectType> {
         if (this.sectors.size === 0) return;
 
-        const startSectorX = Math.max(this.minX, Math.floor(area.x / this.sectorSize));
-        const startSectorY = Math.max(this.minY, Math.floor(area.y / this.sectorSize));
-        const endSectorX = Math.min(this.maxX, Math.floor(area.maxX / this.sectorSize));
-        const endSectorY = Math.min(this.maxY, Math.floor(area.maxY / this.sectorSize));
+        const startSectorX = Math.floor(Math.max(this.minX, area.x) / this.sectorSize);
+        const startSectorY = Math.floor(Math.max(this.minY, area.y) / this.sectorSize);
+        const endSectorX = Math.floor(Math.min(this.maxX, area.maxX) / this.sectorSize);
+        const endSectorY = Math.floor(Math.min(this.maxY, area.maxY) / this.sectorSize);
 
         for (let sectorX = startSectorX ; sectorX <= endSectorX ; sectorX++) {
             for (let sectorY = startSectorY ; sectorY <= endSectorY ; sectorY++) {

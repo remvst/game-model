@@ -8,6 +8,7 @@ export default class SectorObjectSet<ObjectType> {
     private maxY;
     constructor(sectorSize: number);
     insert(object: ObjectType, area: Rectangle): void;
+    nonRepeatingQuery(area: Rectangle): Iterable<ObjectType>;
     query(area: Rectangle): Iterable<ObjectType>;
     clear(): void;
 }

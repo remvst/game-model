@@ -34,6 +34,16 @@ describe('a sector object set', () => {
         expect(results).toEqual(['myobj', 'myobj']);
     });
 
+    it('can make a non repeating query', () => {
+        set.insert('myobj', new Rectangle(0, 0, 100, 100));
+
+        const results = Array.from(set.query(new Rectangle(0, 0, 50, 10)));
+        expect(results).toEqual(['myobj', 'myobj']);
+
+        const nonRepeatingResults = Array.from(set.nonRepeatingQuery(new Rectangle(0, 0, 50, 10)));
+        expect(nonRepeatingResults).toEqual(['myobj']);
+    });
+
     it('can query areas with multiple objects', () => {
         set.insert('myobj', new Rectangle(5, 5, 10, 10));
         set.insert('myobj2', new Rectangle(20, 20, 10, 10));

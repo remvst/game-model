@@ -50,6 +50,18 @@ export default class SectorObjectSet<ObjectType> {
         this.maxY = Math.max(this.maxY, area.maxY);
     }
 
+    * nonRepeatingQuery(area: Rectangle): Iterable<ObjectType> {
+        const visited = new Set<ObjectType>();
+        for (const result of this.query(area)) {
+            if (visited.has(result)) {
+                continue;
+            }
+
+            visited.add(result);
+            yield result;
+        }
+    }
+
     * query(area: Rectangle): Iterable<ObjectType> {
         if (this.sectors.size === 0) return;
 

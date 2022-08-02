@@ -1,5 +1,6 @@
 import { KeyProvider } from './key-provider';
 import { TraitSurfaceProvider } from './trait-surface-provider';
+import { World } from '.';
 import Entity from './entity';
 import { EntityEvent } from './events/entity-event';
 export default abstract class Trait implements KeyProvider {
@@ -17,6 +18,6 @@ export default abstract class Trait implements KeyProvider {
     cycle(elapsed: number): void;
     postCycle(): void;
     private makeQueriable;
-    processEvent(event: EntityEvent): void;
+    processEvent(event: EntityEvent, world: World): void;
     readonly surfaceProvider: TraitSurfaceProvider | null;
 }

@@ -1,6 +1,6 @@
 import { KeyProvider } from './key-provider';
 import { TraitSurfaceProvider } from './trait-surface-provider';
-import { vector3 } from '.';
+import { vector3, World } from '.';
 import Entity from './entity';
 import { EntityEvent } from './events/entity-event';
 import { Rectangle } from '@remvst/geometry';
@@ -85,7 +85,7 @@ export default abstract class Trait implements KeyProvider {
         }
     }
 
-    processEvent(event: EntityEvent) {
+    processEvent(event: EntityEvent, world: World) {
         // to be implemented in subtraits
     }
 

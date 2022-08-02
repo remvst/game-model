@@ -116,8 +116,12 @@ export default class Entity {
 
     addEvent(event: EntityEvent) {
         const { world } = this;
+        if (!world) {
+            return;
+        }
+
         for (const trait of this.traits.items()) {
-            trait.processEvent(event);
+            trait.processEvent(event, world);
         }
 
         if (world) {

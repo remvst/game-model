@@ -176,9 +176,13 @@ describe('an entity', () => {
 
         const entity = new Entity(undefined, [testTrait]);
         const event = new TestEvent();
+
+        const world = new World();
+        world.entities.add(entity);
+        
         entity.addEvent(event);
 
-        expect(testTrait.processEvent).toHaveBeenCalledWith(event);
+        expect(testTrait.processEvent).toHaveBeenCalledWith(event, world);
     });
 
     it('can process a local event and notify the world about it', () => {

@@ -14,5 +14,5 @@ export interface EntitySerializer<SerializedEntity extends AnySerialized> extend
 }
 export interface WorldSerializer<SerializedWorld extends AnySerialized> extends Serializer<World, SerializedWorld> {
 }
-export interface WorldEventSerializer<SerializedWorldEvent extends AnySerialized> extends Serializer<WorldEvent, SerializedWorldEvent> {
+export interface WorldEventSerializer<WorldEventType extends WorldEvent, SerializedWorldEvent extends AnySerialized> extends Serializer<WorldEventType, SerializedWorldEvent> {
 }

@@ -14,6 +14,7 @@ import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
 import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSerializers } from './serialization/json-serializers';
 import TraitRegistry from './trait-registry';
+import WorldEventRegistry from './events/world-event-registry';
 
 export {
     Trait,
@@ -37,6 +38,7 @@ export {
     JsonSerializedWorld,
     JsonSerializers,
     TraitRegistry,
+    WorldEventRegistry,
     jsonSerializers,
     rectangleSurface,
     vector3,

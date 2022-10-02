@@ -14,4 +14,5 @@ import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
 import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSerializers } from './serialization/json-serializers';
 import TraitRegistry from './trait-registry';
-export { Trait, World, WorldEvent, EntityEventProcessed, ObjectSet, WatchableObjectSet, Entity, EntityEvent, EntityRemoved, KeyProvider, TraitSurfaceProvider, Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer, AnySerialized, JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, TraitRegistry, jsonSerializers, rectangleSurface, vector3, };
+import WorldEventRegistry from './events/world-event-registry';
+export { Trait, World, WorldEvent, EntityEventProcessed, ObjectSet, WatchableObjectSet, Entity, EntityEvent, EntityRemoved, KeyProvider, TraitSurfaceProvider, Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer, AnySerialized, JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, TraitRegistry, WorldEventRegistry, jsonSerializers, rectangleSurface, vector3, };

@@ -1,12 +1,10 @@
-import { World } from "..";
+import { KeyProvider } from './../key-provider';
 import Entity from "../entity";
 import Trait from "../trait";
+import World from "../world";
+import CompositeSerializer from "./composite-serializer";
 import { AnySerialized, EntitySerializer, TraitSerializer, WorldSerializer } from "./serializer";
-
-interface MetaSerializedTrait extends AnySerialized {
-    key: string;
-    data: AnySerialized;
-}
+import { WorldEvent } from '../events/world-event';
 
 interface SerializedEntity {
     id: string;
@@ -14,45 +12,16 @@ interface SerializedEntity {
     y: number;
     z: number;
     angle: number;
-    traits: MetaSerializedTrait[];
+    traits: AnySerialized[];
 }
 
 interface SerializedWorld {
-    entities: SerializedEntity[];
-}
-
-class JsonTraitsSerializer implements TraitSerializer<Trait, MetaSerializedTrait> {
-    readonly serializers: Map<string, TraitSerializer<Trait, any>> = new Map();
-
-    add(key: string, serializer: TraitSerializer<Trait, any>): this {
-        this.serializers.set(key, serializer);
-        return this;
-    }
-
-    serialize(value: Trait): MetaSerializedTrait {
-        const serializer = this.serializers.get(value.key);
-        if (!serializer) {
-            throw new Error(`Cannot serialize trait ${value.key}`);
-        }
-
-        return {
-            'key': value.key,
-            'data': serializer.serialize(value),
-        };
-    }
-
-    deserialize(value: MetaSerializedTrait): Trait {
-        const serializer = this.serializers.get(value.key);
-        if (!serializer) {
-            throw new Error(`Cannot deserialize trait ${value.key}`);
-        }
-        return serializer.deserialize(value.data);
-    }
+    entities: AnySerialized[];
 }
 
 class JsonEntitySerializer implements EntitySerializer<SerializedEntity> {
     constructor(
-        private readonly traitsSerializer: JsonTraitsSerializer
+        private readonly traitsSerializer: TraitSerializer<Trait, AnySerialized>
     ) {
         
     }
@@ -85,13 +54,13 @@ class JsonEntitySerializer implements EntitySerializer<SerializedEntity> {
 
 class JsonWorldSerializer implements WorldSerializer<SerializedWorld> {
     constructor(
-        private readonly entitySerializer: JsonEntitySerializer
+        private readonly entitySerializer: EntitySerializer<AnySerialized>
     ) {
 
     }
 
     serialize(value: World): SerializedWorld {
-        const entities: SerializedEntity[] = [];
+        const entities: AnySerialized[] = [];
         value.entities.forEach((entity) => {
             try {
                 const serialized = this.entitySerializer.serialize(entity);
@@ -120,15 +89,17 @@ class JsonWorldSerializer implements WorldSerializer<SerializedWorld> {
 }
 
 export type JsonSerializers = {
-    'trait': JsonTraitsSerializer,
+    'trait': CompositeSerializer<Trait>,
     'entity': JsonEntitySerializer,
     'world': JsonWorldSerializer,
+    'worldEvent': CompositeSerializer<WorldEvent & KeyProvider>,
 };
 
 export function jsonSerializers(): JsonSerializers {
-    const trait = new JsonTraitsSerializer()
+    const trait = new CompositeSerializer<Trait>()
     const entity = new JsonEntitySerializer(trait);
     const world = new JsonWorldSerializer(entity);
+    const worldEvent = new CompositeSerializer<WorldEvent & KeyProvider>();
 
-    return { trait, entity, world };
+    return { trait, entity, world, worldEvent };
 }

@@ -1,3 +1,4 @@
+import { AnySerialized } from './serialization/serializer';
 import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer } from './serialization/serializer';
 import { KeyProvider } from './key-provider';
 import { TraitSurfaceProvider, rectangleSurface } from './trait-surface-provider';
@@ -29,6 +30,7 @@ export {
     TraitSerializer,
     EntitySerializer,
     WorldSerializer,
+    AnySerialized,
     jsonSerializers,
     rectangleSurface,
     vector3,

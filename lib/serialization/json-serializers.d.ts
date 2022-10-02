@@ -1,44 +1,38 @@
-import { World } from "..";
+import { KeyProvider } from './../key-provider';
 import Entity from "../entity";
 import Trait from "../trait";
+import World from "../world";
+import CompositeSerializer from "./composite-serializer";
 import { AnySerialized, EntitySerializer, TraitSerializer, WorldSerializer } from "./serializer";
-interface MetaSerializedTrait extends AnySerialized {
-    key: string;
-    data: AnySerialized;
-}
+import { WorldEvent } from '../events/world-event';
 interface SerializedEntity {
     id: string;
     x: number;
     y: number;
     z: number;
     angle: number;
-    traits: MetaSerializedTrait[];
+    traits: AnySerialized[];
 }
 interface SerializedWorld {
-    entities: SerializedEntity[];
-}
-declare class JsonTraitsSerializer implements TraitSerializer<Trait, MetaSerializedTrait> {
-    readonly serializers: Map<string, TraitSerializer<Trait, any>>;
-    add(key: string, serializer: TraitSerializer<Trait, any>): this;
-    serialize(value: Trait): MetaSerializedTrait;
-    deserialize(value: MetaSerializedTrait): Trait;
+    entities: AnySerialized[];
 }
 declare class JsonEntitySerializer implements EntitySerializer<SerializedEntity> {
     private readonly traitsSerializer;
-    constructor(traitsSerializer: JsonTraitsSerializer);
+    constructor(traitsSerializer: TraitSerializer<Trait, AnySerialized>);
     serialize(value: Entity): SerializedEntity;
     deserialize(serialized: SerializedEntity): Entity;
 }
 declare class JsonWorldSerializer implements WorldSerializer<SerializedWorld> {
     private readonly entitySerializer;
-    constructor(entitySerializer: JsonEntitySerializer);
+    constructor(entitySerializer: EntitySerializer<AnySerialized>);
     serialize(value: World): SerializedWorld;
     deserialize(serialized: SerializedWorld): World;
 }
 export declare type JsonSerializers = {
-    'trait': JsonTraitsSerializer;
+    'trait': CompositeSerializer<Trait>;
     'entity': JsonEntitySerializer;
     'world': JsonWorldSerializer;
+    'worldEvent': CompositeSerializer<WorldEvent & KeyProvider>;
 };
 export declare function jsonSerializers(): JsonSerializers;
 export {};

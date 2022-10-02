@@ -1,5 +1,5 @@
 import { AnySerialized } from './serialization/serializer';
-import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer } from './serialization/serializer';
+import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer } from './serialization/serializer';
 import { KeyProvider } from './key-provider';
 import { TraitSurfaceProvider, rectangleSurface } from './trait-surface-provider';
 import Entity from './entity';
@@ -30,6 +30,7 @@ export {
     TraitSerializer,
     EntitySerializer,
     WorldSerializer,
+    WorldEventSerializer,
     AnySerialized,
     JsonSerializedEntity,
     JsonSerializedWorld,

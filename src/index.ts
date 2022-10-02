@@ -1,3 +1,4 @@
+import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer } from './serialization/serializer';
 import { KeyProvider } from './key-provider';
 import { TraitSurfaceProvider, rectangleSurface } from './trait-surface-provider';
 import Entity from './entity';
@@ -10,6 +11,7 @@ import WatchableObjectSet from './collections/watchable-object-set';
 import EntityRemoved from './events/entity-removed';
 import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
+import { jsonSerializers } from './serialization/json-serializers';
 
 export {
     Trait,
@@ -23,6 +25,11 @@ export {
     EntityRemoved,
     KeyProvider,
     TraitSurfaceProvider,
+    Serializer,
+    TraitSerializer,
+    EntitySerializer,
+    WorldSerializer,
+    jsonSerializers,
     rectangleSurface,
     vector3,
 };

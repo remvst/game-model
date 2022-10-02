@@ -1,8 +1,4 @@
-import { TraitSerializer } from './../../src/serialization/serializer';
-import { JsonSerializers, jsonSerializers } from './../../src/serialization/json-serializers';
-import Trait from "../../src/trait";
-import World from '../../src/world';
-import Entity from '../../src/entity';
+import { Trait, JsonSerializers, jsonSerializers, TraitSerializer, Entity, World } from '../../src';
 
 describe('JSON serializers', () => {
     

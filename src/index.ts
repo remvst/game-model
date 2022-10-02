@@ -12,7 +12,7 @@ import WatchableObjectSet from './collections/watchable-object-set';
 import EntityRemoved from './events/entity-removed';
 import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
-import { jsonSerializers } from './serialization/json-serializers';
+import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSerializers } from './serialization/json-serializers';
 
 export {
     Trait,
@@ -31,6 +31,9 @@ export {
     EntitySerializer,
     WorldSerializer,
     AnySerialized,
+    JsonSerializedEntity,
+    JsonSerializedWorld,
+    JsonSerializers,
     jsonSerializers,
     rectangleSurface,
     vector3,

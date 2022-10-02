@@ -6,7 +6,7 @@ import CompositeSerializer from "./composite-serializer";
 import { AnySerialized, EntitySerializer, TraitSerializer, WorldSerializer } from "./serializer";
 import { WorldEvent } from '../events/world-event';
 
-interface SerializedEntity {
+export interface JsonSerializedEntity {
     id: string;
     x: number;
     y: number;
@@ -15,18 +15,18 @@ interface SerializedEntity {
     traits: AnySerialized[];
 }
 
-interface SerializedWorld {
+export interface JsonSerializedWorld {
     entities: AnySerialized[];
 }
 
-class JsonEntitySerializer implements EntitySerializer<SerializedEntity> {
+class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
     constructor(
         private readonly traitsSerializer: TraitSerializer<Trait, AnySerialized>
     ) {
         
     }
 
-    serialize(value: Entity): SerializedEntity {
+    serialize(value: Entity): JsonSerializedEntity {
         const serializedTraits = value.traits
             .map(trait => this.traitsSerializer.serialize(trait));
 
@@ -40,7 +40,7 @@ class JsonEntitySerializer implements EntitySerializer<SerializedEntity> {
         };
     }
 
-    deserialize(serialized: SerializedEntity): Entity {
+    deserialize(serialized: JsonSerializedEntity): Entity {
         const entity = new Entity(serialized.id, serialized.traits.map((serializedTrait) => {
             return this.traitsSerializer.deserialize(serializedTrait);
         }));
@@ -52,14 +52,14 @@ class JsonEntitySerializer implements EntitySerializer<SerializedEntity> {
     }
 }
 
-class JsonWorldSerializer implements WorldSerializer<SerializedWorld> {
+class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
     constructor(
         private readonly entitySerializer: EntitySerializer<AnySerialized>
     ) {
 
     }
 
-    serialize(value: World): SerializedWorld {
+    serialize(value: World): JsonSerializedWorld {
         const entities: AnySerialized[] = [];
         value.entities.forEach((entity) => {
             try {
@@ -73,7 +73,7 @@ class JsonWorldSerializer implements WorldSerializer<SerializedWorld> {
         return { entities };
     }
 
-    deserialize(serialized: SerializedWorld): World {
+    deserialize(serialized: JsonSerializedWorld): World {
         const world = new World();
         serialized.entities.forEach(serializedEntity => {
             try {

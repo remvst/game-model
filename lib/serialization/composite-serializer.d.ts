@@ -6,7 +6,7 @@ export interface CompositeSerializerMeta {
 }
 export default class CompositeSerializer<ObjectType extends KeyProvider> implements Serializer<ObjectType, CompositeSerializerMeta> {
     readonly serializers: Map<string, Serializer<ObjectType, AnySerialized>>;
-    add(key: string, serializer: Serializer<ObjectType, AnySerialized>): this;
+    add<SubObjectType extends ObjectType, SerializedType extends AnySerialized>(key: string, serializer: Serializer<SubObjectType, SerializedType>): this;
     serialize(value: ObjectType): CompositeSerializerMeta;
     deserialize(value: CompositeSerializerMeta): ObjectType;
 }

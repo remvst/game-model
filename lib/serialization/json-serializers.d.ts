@@ -5,7 +5,7 @@ import World from "../world";
 import CompositeSerializer from "./composite-serializer";
 import { AnySerialized, EntitySerializer, TraitSerializer, WorldSerializer } from "./serializer";
 import { WorldEvent } from '../events/world-event';
-interface SerializedEntity {
+export interface JsonSerializedEntity {
     id: string;
     x: number;
     y: number;
@@ -13,20 +13,20 @@ interface SerializedEntity {
     angle: number;
     traits: AnySerialized[];
 }
-interface SerializedWorld {
+export interface JsonSerializedWorld {
     entities: AnySerialized[];
 }
-declare class JsonEntitySerializer implements EntitySerializer<SerializedEntity> {
+declare class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
     private readonly traitsSerializer;
     constructor(traitsSerializer: TraitSerializer<Trait, AnySerialized>);
-    serialize(value: Entity): SerializedEntity;
-    deserialize(serialized: SerializedEntity): Entity;
+    serialize(value: Entity): JsonSerializedEntity;
+    deserialize(serialized: JsonSerializedEntity): Entity;
 }
-declare class JsonWorldSerializer implements WorldSerializer<SerializedWorld> {
+declare class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
     private readonly entitySerializer;
     constructor(entitySerializer: EntitySerializer<AnySerialized>);
-    serialize(value: World): SerializedWorld;
-    deserialize(serialized: SerializedWorld): World;
+    serialize(value: World): JsonSerializedWorld;
+    deserialize(serialized: JsonSerializedWorld): World;
 }
 export declare type JsonSerializers = {
     'trait': CompositeSerializer<Trait>;

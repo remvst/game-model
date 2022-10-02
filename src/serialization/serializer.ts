@@ -11,7 +11,7 @@ export interface Serializer<ObjectType, SerializedType> {
     deserialize(serialized: SerializedType): ObjectType;
 }
 
-export interface TraitSerializer<TraitType extends Trait, SerializedTrait> extends Serializer<TraitType, SerializedTrait> {}
-export interface EntitySerializer<SerializedEntity> extends Serializer<Entity, SerializedEntity> {}
-export interface WorldSerializer<SerializedWorld> extends Serializer<World, SerializedWorld> {};
-export interface WorldEventSerializer<SerializedWorldEvent> extends Serializer<WorldEvent, SerializedWorldEvent> {}
+export interface TraitSerializer<TraitType extends Trait, SerializedTrait extends AnySerialized> extends Serializer<TraitType, SerializedTrait> {}
+export interface EntitySerializer<SerializedEntity extends AnySerialized> extends Serializer<Entity, SerializedEntity> {}
+export interface WorldSerializer<SerializedWorld extends AnySerialized> extends Serializer<World, SerializedWorld> {};
+export interface WorldEventSerializer<SerializedWorldEvent extends AnySerialized> extends Serializer<WorldEvent, SerializedWorldEvent> {}

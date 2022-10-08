@@ -3,6 +3,7 @@ import { TraitSerializer, AnySerialized } from './serialization/serializer';
 import Trait from "./trait";
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
+    readonly category?: string;
     newTrait(): TraitType;
     serializer?(): TraitSerializer<TraitType, AnySerialized>;
     configurable?: (trait: TraitType) => Configurable;

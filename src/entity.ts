@@ -8,6 +8,8 @@ import Trait from './trait';
 import { vector3 } from './vector3';
 import World from './world';
 
+const now = typeof window === 'undefined' ? () => Date.now() * 1000 : performance.now.bind(performance);
+
 export default class Entity {
 
     private readonly reusableEventProcessedEvent = new EntityEventProcessed(this);
@@ -81,7 +83,12 @@ export default class Entity {
         this.age += adjusted;
 
         for (const trait of this.traits.items()) {
+            const before = now();
+
             trait.maybeCycle(adjusted);
+
+            const after = now();
+            this.world?.cyclePerformanceTracker?.addTime(this.id, trait.key, after - before);
         }
     }
 

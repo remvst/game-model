@@ -15,6 +15,7 @@ import { vector3 } from './vector3';
 import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSerializers } from './serialization/json-serializers';
 import TraitRegistry from './trait-registry';
 import WorldEventRegistry from './events/world-event-registry';
+import { CyclePerformanceTracker } from './performance-tracker';
 
 export {
     Trait,
@@ -39,6 +40,7 @@ export {
     JsonSerializers,
     TraitRegistry,
     WorldEventRegistry,
+    CyclePerformanceTracker,
     jsonSerializers,
     rectangleSurface,
     vector3,

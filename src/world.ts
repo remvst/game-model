@@ -8,6 +8,7 @@ import EntityRemoved from './events/entity-removed';
 import Trait from './trait';
 import SectorObjectSet from './collections/sector-object-set';
 import { KeyProvider  } from './key-provider';
+import { CyclePerformanceTracker } from './performance-tracker';
 
 export default class World {
 
@@ -16,6 +17,8 @@ export default class World {
 
     private readonly reusableRemoveEvent = new EntityRemoved();
     private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
+
+    cyclePerformanceTracker: CyclePerformanceTracker | null = null;
 
     constructor() {
         this.entities = new WatchableObjectSet(new ObjectSet(

@@ -1,12 +1,13 @@
 {
   "name": "@remvst/game-model",
-  "version": "2.14.1",
+  "version": "2.15.0",
   "description": "Game models",
   "main": "lib/index.js",
   "scripts": {
     "test": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
     "coverage": "nyc -r lcov -e .ts -x \"spec/**/*.spec.ts\" npm run test",
-    "build": "tsc"
+    "build": "rm -rf lib && tsc",
+    "prepublishOnly": "npm i && npm run build"
   },
   "author": "",
   "license": "UNLICENSED",

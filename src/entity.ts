@@ -7,9 +7,13 @@ import EntityEventProcessed from './events/entity-event-processed';
 import Trait from './trait';
 import { vector3 } from './vector3';
 import World from './world';
-import { performance } from 'perf_hooks';
 
-const now = typeof window === 'undefined' ? () => performance.now() : performance.now.bind(performance);
+function processMicroTime() {
+    const [seconds, nanoseconds] = process.hrtime()
+    return seconds * 1000000000 + nanoseconds;
+}
+
+const now = typeof window === 'undefined' ? processMicroTime : performance.now.bind(performance);
 
 export default class Entity {
 

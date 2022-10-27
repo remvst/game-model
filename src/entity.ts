@@ -7,8 +7,9 @@ import EntityEventProcessed from './events/entity-event-processed';
 import Trait from './trait';
 import { vector3 } from './vector3';
 import World from './world';
+import { performance } from 'perf_hooks';
 
-const now = typeof window === 'undefined' ? () => Date.now() * 1000 : performance.now.bind(performance);
+const now = typeof window === 'undefined' ? () => performance.now() : performance.now.bind(performance);
 
 export default class Entity {
 

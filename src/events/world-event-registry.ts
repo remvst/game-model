@@ -16,7 +16,7 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
 export default class WorldEventRegistry {
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();
 
-    add(entry: WorldEventRegistryEntry<any>): this {
+    add<T extends WorldEvent>(entry: WorldEventRegistryEntry<T>): this {
         if (this.entries.has(entry.key)) {
             throw new Error(`Entry conflict for key ${entry.key}`);
         }

@@ -1,11 +1,11 @@
+import { Rectangle } from '@remvst/geometry';
 import { KeyProvider } from './key-provider';
-import { TraitSurfaceProvider } from './trait-surface-provider';
+import { TraitSurfaceProvider, entityPositionSurface } from './trait-surface-provider';
 import { vector3, World } from '.';
 import Entity from './entity';
 import { EntityEvent } from './events/entity-event';
-import { Rectangle } from '@remvst/geometry';
 
-const REUSABLE_GEOMETRY_AREA = new Rectangle(0, 0, 0, 0);
+const REUSABLE_GEOMETRY_AREA = new Rectangle();
 
 export default abstract class Trait implements KeyProvider {
 
@@ -13,6 +13,9 @@ export default abstract class Trait implements KeyProvider {
     enabled: boolean;
 
     protected readonly lastEntityPosition = vector3();
+
+    readonly queriableSectorSize = 1000;
+    readonly surfaceProvider: TraitSurfaceProvider = entityPositionSurface;
 
     constructor() {
         this.enabled = true;
@@ -24,14 +27,11 @@ export default abstract class Trait implements KeyProvider {
 
     bind(entity: Entity) {
         this._entity = entity;
-        this.lastEntityPosition.x = this._entity.position.x;
-        this.lastEntityPosition.y = this._entity.position.y;
-        this.lastEntityPosition.z = this._entity.position.z;
+        this.lastEntityPosition.x = entity.position.x;
+        this.lastEntityPosition.y = entity.position.y;
+        this.lastEntityPosition.z = entity.position.z;
 
-        const { surfaceProvider } = this;
-        if (surfaceProvider) {
-            this.entity?.world?.defineSectorSet(this.key, surfaceProvider.sectorSize);
-        }
+        entity.world?.defineSectorSet(this.key, this.queriableSectorSize);
     }
 
     postBind() {
@@ -73,21 +73,12 @@ export default abstract class Trait implements KeyProvider {
         // to be implemented in subtraits
     }
 
-    postCycle() {
-        this.makeQueriable();
-    }
-
     private makeQueriable() {
-        const { surfaceProvider } = this;
-        if (surfaceProvider) {
-            surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
-            this.entity?.world?.sectorSet(this.key)?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
-        }
+        this.surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
+        this.entity?.world?.sectorSet(this.key)?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
     }
 
     processEvent(event: EntityEvent, world: World) {
         // to be implemented in subtraits
     }
-
-    readonly surfaceProvider: TraitSurfaceProvider | null = null;
 }

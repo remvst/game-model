@@ -15,15 +15,19 @@ class Sector<ObjectType> {
 
 export default class SectorObjectSet<ObjectType> {
     private readonly sectors = new Map<string, Sector<ObjectType>>();
-    private minX: number = 0;
-    private minY: number = 0;
-    private maxX: number = 0;
-    private maxY: number = 0;
+    private minX = Number.MAX_SAFE_INTEGER;
+    private minY = Number.MAX_SAFE_INTEGER;
+    private maxX = Number.MIN_SAFE_INTEGER;
+    private maxY = Number.MIN_SAFE_INTEGER;
 
     constructor(
         readonly sectorSize: number,
     ) {
 
+    }
+
+    private sectorKey(x: number, y: number): string {
+        return `${x},${y}`;
     }
 
     insert(object: ObjectType, area: Rectangle) {
@@ -34,7 +38,7 @@ export default class SectorObjectSet<ObjectType> {
 
         for (let sectorX = startSectorX ; sectorX <= endSectorX ; sectorX++) {
             for (let sectorY = startSectorY ; sectorY <= endSectorY ; sectorY++) {
-                const index = `${sectorX},${sectorY}`;
+                const index = this.sectorKey(sectorX, sectorY);
                 const sector = this.sectors.get(index);
                 if (!sector) {
                     this.sectors.set(index, new Sector([object]));
@@ -72,7 +76,7 @@ export default class SectorObjectSet<ObjectType> {
 
         for (let sectorX = startSectorX ; sectorX <= endSectorX ; sectorX++) {
             for (let sectorY = startSectorY ; sectorY <= endSectorY ; sectorY++) {
-                const index = `${sectorX},${sectorY}`;
+                const index = this.sectorKey(sectorX, sectorY);
                 const sector = this.sectors.get(index);
                 if (sector) {
                     for (const object of sector.objects) {
@@ -88,6 +92,6 @@ export default class SectorObjectSet<ObjectType> {
         this.minX = Number.MAX_SAFE_INTEGER;
         this.minY = Number.MAX_SAFE_INTEGER;
         this.maxX = Number.MIN_SAFE_INTEGER;
-        this.maxX = Number.MIN_SAFE_INTEGER;
+        this.maxY = Number.MIN_SAFE_INTEGER;
     }
 }

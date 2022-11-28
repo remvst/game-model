@@ -22,12 +22,20 @@ describe('a trait', () => {
         }
     }
 
+    let world: World;
+
+    beforeEach(() => {
+        world = {
+            'defineSectorSet': jasmine.createSpy(),
+        } as any;
+    });
+
     it('can have a dependency on another trait', () => {
         const trait1 = new Trait1();
         const trait2 = new Trait2();
 
         const entity = new Entity(undefined, [trait1, trait2]);
-        entity.bind({} as World);
+        entity.bind(world);
 
         expect(trait1.trait2).toBe(trait2);
         expect(trait2.trait1).toBe(trait1);
@@ -35,7 +43,7 @@ describe('a trait', () => {
 
     it('throws an error if a dependency isn\'t satisfied', () => {
         const entity = new Entity(undefined, [new Trait1()]);
-        expect(() => entity.bind({} as World)).toThrow();
+        expect(() => entity.bind(world)).toThrow();
     });
 
     it('cycles if enabled and entity has a world', () => {
@@ -54,7 +62,7 @@ describe('a trait', () => {
         trait1.maybeCycle(456);
         expect(trait1.cycle).not.toHaveBeenCalled();
 
-        entity.bind({} as World);
+        entity.bind(world);
         trait1.maybeCycle(789);
         expect(trait1.cycle).toHaveBeenCalledWith(789);
     });

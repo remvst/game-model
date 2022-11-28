@@ -3,7 +3,6 @@ import { Rectangle } from "@remvst/geometry";
 import Trait from './trait';
 
 export interface TraitSurfaceProvider {
-    readonly sectorSize: number;
     surface(trait: Trait, rectangle: Rectangle): void;
     containsPoint(trait: Trait, point: Vector3): boolean;
 }
@@ -12,7 +11,6 @@ const REUSABLE_GEOMETRY_AREA = new Rectangle(0, 0, 0, 0);
 
 class SimpleTraitSurfaceProvider implements TraitSurfaceProvider {
     constructor(
-        readonly sectorSize: number,
         readonly surface: (trait: Trait, rectangle: Rectangle) => void,
     ) {
 
@@ -28,8 +26,11 @@ class SimpleTraitSurfaceProvider implements TraitSurfaceProvider {
 }
 
 export function rectangleSurface(
-    sectorSize: number,
     surface: (trait: Trait, rectangle: Rectangle) => void,
 ): TraitSurfaceProvider {
-    return new SimpleTraitSurfaceProvider(sectorSize, surface);
+    return new SimpleTraitSurfaceProvider(surface);
 };
+
+export const entityPositionSurface: TraitSurfaceProvider = rectangleSurface(
+    (trait, rectangle) => rectangle.update(trait.entity!.x, trait.entity!.y, 0, 0),
+);

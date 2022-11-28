@@ -7,6 +7,7 @@ import { AnySerialized } from '../serialization/serializer';
 
 export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly key: string;
+    readonly category?: string;
     newEvent(): EventType;
     serializer(): WorldEventSerializer<EventType, AnySerialized>;
     readjust?: (event: EventType, entity: Entity, triggererId: string) => void;

@@ -91,9 +91,9 @@ describe('a world', () => {
         expect(relevantEntity.cycle).toHaveBeenCalledWith(123);
         expect(relevantEntity.postCycle).toHaveBeenCalledWith();
 
-        expect(irrelevantEntity.preCycle).toHaveBeenCalled();
+        expect(irrelevantEntity.preCycle).not.toHaveBeenCalled();
         expect(irrelevantEntity.cycle).not.toHaveBeenCalled();
-        expect(irrelevantEntity.postCycle).toHaveBeenCalled();
+        expect(irrelevantEntity.postCycle).not.toHaveBeenCalled();
     });
 
     it('can add an event', () => {

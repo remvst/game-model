@@ -57,17 +57,11 @@ describe('an entity', () => {
         entity.preCycle();
 
         entity.position.x = 4;
-        entity.position.y = 5;
-        entity.position.z = 6;
+        entity.position.y = 7;
+        entity.position.z = 9;
         entity.postCycle();
 
-        expect(entity.cycleStartPosition).toEqual(vector3(1, 2, 3));
-        expect(entity.cycleStartPosition).not.toBe(entity.position);
-
-        expect(entity.cycleEndPosition).toEqual(vector3(4, 5, 6));
-        expect(entity.cycleEndPosition).not.toBe(entity.position);
-
-        expect(entity.cycleVelocity).toEqual(vector3(3, 3, 3));
+        expect(entity.cycleVelocity).toEqual(vector3(3, 5, 6));
     });
 
     it('updates its age on cycle with the correct time factor', () => {

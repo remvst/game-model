@@ -24,8 +24,7 @@ export default class Entity {
     world: World | null = null;
 
     position = vector3();
-    cycleStartPosition = vector3();
-    cycleEndPosition = vector3();
+    private cycleStartPosition = vector3();
     cycleVelocity = vector3();
 
     angle: number;
@@ -73,9 +72,9 @@ export default class Entity {
     }
 
     preCycle() {
-        this.cycleStartPosition.x = this.x;
-        this.cycleStartPosition.y = this.y;
-        this.cycleStartPosition.z = this.z;
+        this.cycleStartPosition.x = this.position.x;
+        this.cycleStartPosition.y = this.position.y;
+        this.cycleStartPosition.z = this.position.z;
 
         for (const trait of this.traits.items()) {
             trait.preCycle();
@@ -98,13 +97,9 @@ export default class Entity {
     }
 
     postCycle() {
-        this.cycleEndPosition.x = this.x;
-        this.cycleEndPosition.y = this.y;
-        this.cycleEndPosition.z = this.z;
-
-        this.cycleVelocity.x = this.x - this.cycleStartPosition.x;
-        this.cycleVelocity.y = this.y - this.cycleStartPosition.y;
-        this.cycleVelocity.z = this.z - this.cycleStartPosition.z;
+        this.cycleVelocity.x = this.position.x - this.cycleStartPosition.x;
+        this.cycleVelocity.y = this.position.y - this.cycleStartPosition.y;
+        this.cycleVelocity.z = this.position.z - this.cycleStartPosition.z;
     }
 
     remove() {

@@ -57,15 +57,21 @@ export default class World {
 
     cycle(elapsed: number) {
         this.resetSectors();
-        for (const entity of this.entities.items()) entity.preCycle();
         for (const entity of this.entities.items()) {
-            if (!this.entityRelevanceProvider(entity)) {
-                continue;
+            if (this.entityRelevanceProvider(entity)) {
+                entity.preCycle();
             }
-
-            entity.cycle(elapsed);
         }
-        for (const entity of this.entities.items()) entity.postCycle();
+        for (const entity of this.entities.items()) {
+            if (this.entityRelevanceProvider(entity)) {
+                entity.cycle(elapsed);
+            }
+        }
+        for (const entity of this.entities.items()) {
+            if (this.entityRelevanceProvider(entity)) {
+                entity.postCycle();
+            }
+        }
     }
 
     addEvent(event: WorldEvent) {

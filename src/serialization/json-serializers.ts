@@ -54,7 +54,8 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 
 class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
     constructor(
-        private readonly entitySerializer: EntitySerializer<AnySerialized>
+        private readonly entitySerializer: EntitySerializer<AnySerialized>,
+        private readonly worldSetup: WorldSetup,
     ) {
 
     }
@@ -75,6 +76,8 @@ class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
 
     deserialize(serialized: JsonSerializedWorld): World {
         const world = new World();
+        this.worldSetup(world);
+
         serialized.entities.forEach(serializedEntity => {
             try {
                 const entity = this.entitySerializer.deserialize(serializedEntity);
@@ -95,10 +98,14 @@ export type JsonSerializers = {
     'worldEvent': CompositeSerializer<WorldEvent & KeyProvider>,
 };
 
-export function jsonSerializers(): JsonSerializers {
+export type WorldSetup = (world: World) => void;
+
+export function jsonSerializers(opts?: {
+    worldSetup?: WorldSetup,
+}): JsonSerializers {
     const trait = new CompositeSerializer<Trait>()
     const entity = new JsonEntitySerializer(trait);
-    const world = new JsonWorldSerializer(entity);
+    const world = new JsonWorldSerializer(entity, opts?.worldSetup || (() => {}));
     const worldEvent = new CompositeSerializer<WorldEvent & KeyProvider>();
 
     return { trait, entity, world, worldEvent };

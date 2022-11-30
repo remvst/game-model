@@ -1,3 +1,4 @@
+import { WorldSetup } from './../../src/serialization/json-serializers';
 import { Trait, JsonSerializers, jsonSerializers, TraitSerializer, Entity, World } from '../../src';
 
 describe('JSON serializers', () => {
@@ -24,9 +25,11 @@ describe('JSON serializers', () => {
     }
 
     let serializers: JsonSerializers;
+    let worldSetup: WorldSetup;
 
     beforeEach(() => {
-        serializers = jsonSerializers();
+        worldSetup = jasmine.createSpy();
+        serializers = jsonSerializers({ worldSetup });
 
         serializers.trait
             .add(TestTrait1.key, new TestTrait1Serializer());
@@ -51,6 +54,7 @@ describe('JSON serializers', () => {
 
         expect(deserialized.entities.size).toBe(1);
         expect(Array.from(deserialized.entities.items())[0].id).toBe(entity.id);
+        expect(worldSetup).toHaveBeenCalledWith(deserialized);
     });
 
     it('can serialize a world with an entity with a trait', () => {

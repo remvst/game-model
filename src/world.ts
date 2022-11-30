@@ -10,6 +10,8 @@ import SectorObjectSet from './collections/sector-object-set';
 import { KeyProvider  } from './key-provider';
 import { CyclePerformanceTracker } from './performance-tracker';
 
+type EntityRelevanceProvider = (entity: Entity) => boolean;
+
 export default class World {
 
     readonly events: Subject<WorldEvent>;
@@ -19,6 +21,7 @@ export default class World {
     private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
 
     cyclePerformanceTracker: CyclePerformanceTracker | null = null;
+    entityRelevanceProvider: EntityRelevanceProvider = () => true;
 
     constructor() {
         this.entities = new WatchableObjectSet(new ObjectSet(
@@ -55,7 +58,13 @@ export default class World {
     cycle(elapsed: number) {
         this.resetSectors();
         for (const entity of this.entities.items()) entity.preCycle();
-        for (const entity of this.entities.items()) entity.cycle(elapsed);
+        for (const entity of this.entities.items()) {
+            if (!this.entityRelevanceProvider(entity)) {
+                continue;
+            }
+
+            entity.cycle(elapsed);
+        }
         for (const entity of this.entities.items()) entity.postCycle();
     }
 

@@ -58,9 +58,7 @@ export default class World {
     cycle(elapsed: number) {
         this.resetSectors();
         for (const entity of this.entities.items()) {
-            if (this.entityRelevanceProvider(entity)) {
-                entity.preCycle();
-            }
+            entity.preCycle();
         }
         for (const entity of this.entities.items()) {
             if (this.entityRelevanceProvider(entity)) {

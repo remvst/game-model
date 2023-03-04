@@ -1,8 +1,10 @@
 import { Property, traitEnabledProperty } from './properties';
-import { Configurable } from '@remvst/configurable';
+import { Configurable, CompositeConfigurable } from '@remvst/configurable';
 import { TraitSerializer, AnySerialized } from './serialization/serializer';
 import Trait from "./trait";
 import PropertyRegistry from './property-registry';
+import { propertyValueConfigurable } from './configurable-utils';
+import Entity from './entity';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
@@ -25,6 +27,21 @@ export default class TraitRegistry {
 
         const properties = entry.properties || [];
         properties.push(traitEnabledProperty(entry.key));
+
+        // In case no configurable was defined, add a default one
+        if (!entry.configurable) {
+            entry.configurable = (entity: Entity) => {
+                const autoConfigurable = new CompositeConfigurable();
+                for (const property of properties) {
+                    autoConfigurable.add(property.identifier, propertyValueConfigurable(
+                        property,
+                        () => property.get(entity),
+                        (value) => property.set(entity, value),
+                    ))
+                }
+                return autoConfigurable;
+            };
+        }
 
         for (const property of properties) {
             this.properties.add(property);

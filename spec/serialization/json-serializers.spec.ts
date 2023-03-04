@@ -61,6 +61,7 @@ describe('JSON serializers', () => {
         const entity = new Entity('ent', [
             new TestTrait1('myprop'),
         ]);
+        entity.traitOfType(TestTrait1)!.enabled = false;
         
         const world = new World();
         world.entities.add(entity);
@@ -77,6 +78,7 @@ describe('JSON serializers', () => {
         expect(deserializedEntity.traits.size).toBe(1);
         expect(traits.length).toBe(1);
         expect((traits[0] as TestTrait1).prop).toBe('myprop');
+        expect((traits[0] as TestTrait1).enabled).toBe(false);
     });
 
     it('will skip entities with non-serializable traits', () => {

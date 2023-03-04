@@ -6,13 +6,18 @@ import CompositeSerializer from "./composite-serializer";
 import { AnySerialized, EntitySerializer, TraitSerializer, WorldSerializer } from "./serializer";
 import { WorldEvent } from '../events/world-event';
 
+export interface SerializedTrait {
+    enabled: boolean;
+    data: AnySerialized;
+}
+
 export interface JsonSerializedEntity {
     id: string;
     x: number;
     y: number;
     z: number;
     angle: number;
-    traits: AnySerialized[];
+    traits: SerializedTrait[];
 }
 
 export interface JsonSerializedWorld {
@@ -28,7 +33,10 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 
     serialize(value: Entity): JsonSerializedEntity {
         const serializedTraits = value.traits
-            .map(trait => this.traitsSerializer.serialize(trait));
+            .map(trait => ({
+                'enabled': trait.enabled,
+                'data': this.traitsSerializer.serialize(trait),
+            }));
 
         return {
             'id': value.id,
@@ -42,7 +50,21 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 
     deserialize(serialized: JsonSerializedEntity): Entity {
         const entity = new Entity(serialized.id, serialized.traits.map((serializedTrait) => {
-            return this.traitsSerializer.deserialize(serializedTrait);
+            // If the trait is serialized using the old serialization format, convert it
+            const isOldFormat = !serializedTrait.hasOwnProperty('data') || !serializedTrait.hasOwnProperty('enabled');
+            if (isOldFormat) {
+                serializedTrait = {
+                    'enabled': true,
+                    'data': serializedTrait,
+                };
+            }
+
+            const deserialized = this.traitsSerializer.deserialize(serializedTrait.data);
+
+            // Apply general properties
+            deserialized.enabled = (serializedTrait as SerializedTrait).enabled;
+
+            return deserialized;
         }));
         entity.x = serialized.x;
         entity.y = serialized.y;

@@ -1,4 +1,4 @@
-import { getSet, Property, PropertyType } from './properties';
+import { getSet, Property, PropertyType, traitGetSet } from './properties';
 import { AnySerialized } from './serialization/serializer';
 import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer } from './serialization/serializer';
 import { KeyProvider } from './key-provider';
@@ -49,6 +49,7 @@ export {
     PropertyRegistry,
     SetProperty,
     getSet,
+    traitGetSet,
     jsonSerializers,
     rectangleSurface,
     vector3,

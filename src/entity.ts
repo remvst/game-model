@@ -7,6 +7,7 @@ import EntityEventProcessed from './events/entity-event-processed';
 import Trait from './trait';
 import { vector3 } from './vector3';
 import World from './world';
+import { Property, getSet, PropertyType } from './properties';
 
 function processMicroTime() {
     const [seconds, nanoseconds] = process.hrtime()
@@ -14,6 +15,11 @@ function processMicroTime() {
 }
 
 const now = typeof window === 'undefined' ? processMicroTime : performance.now.bind(performance);
+
+export class EntityProperties {
+    static readonly x: Property<number> = getSet('x', PropertyType.NUMBER, entity => entity.x, (entity, x) => entity.x = x);
+    static readonly y: Property<number> = getSet('y', PropertyType.NUMBER, entity => entity.y, (entity, y) => entity.y = y);
+}
 
 export default class Entity {
 

@@ -1,3 +1,4 @@
+import { getSet, Property, PropertyType } from './properties';
 import { AnySerialized } from './serialization/serializer';
 import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer } from './serialization/serializer';
 import { KeyProvider } from './key-provider';
@@ -6,6 +7,7 @@ import Entity from './entity';
 import Trait from './trait';
 import World from './world';
 import { WorldEvent } from './events/world-event';
+import SetProperty from './events/set-property';
 import { EntityEvent } from './events/entity-event';
 import ObjectSet from './collections/object-set';
 import WatchableObjectSet from './collections/watchable-object-set';
@@ -16,6 +18,7 @@ import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSeriali
 import TraitRegistry from './trait-registry';
 import WorldEventRegistry from './events/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
+import PropertyRegistry from './property-registry';
 
 export {
     Trait,
@@ -41,6 +44,11 @@ export {
     TraitRegistry,
     WorldEventRegistry,
     CyclePerformanceTracker,
+    Property,
+    PropertyType,
+    PropertyRegistry,
+    SetProperty,
+    getSet,
     jsonSerializers,
     rectangleSurface,
     vector3,

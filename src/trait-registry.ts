@@ -30,13 +30,13 @@ export default class TraitRegistry {
 
         // In case no configurable was defined, add a default one
         if (!entry.configurable) {
-            entry.configurable = (entity: Entity) => {
+            entry.configurable = (trait: Trait) => {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of properties) {
                     autoConfigurable.add(property.identifier, propertyValueConfigurable(
                         property,
-                        () => property.get(entity),
-                        (value) => property.set(entity, value),
+                        () => property.get(trait.entity!),
+                        (value) => property.set(trait.entity!, value),
                     ))
                 }
                 return autoConfigurable;

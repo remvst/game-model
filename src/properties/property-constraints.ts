@@ -16,6 +16,10 @@ export class PropertyType {
     static enum<T>(values: T[]) {
         return new EnumConstraints(values);
     }
+
+    static composite(properties: Map<string, PropertyConstraints<any>>) {
+        return new CompositeConstraints(properties);
+    }
     
     static bool() { return new BooleanConstraints(); }
     static str() { return new StringConstraints(); }
@@ -116,5 +120,23 @@ export class EnumConstraints<T> extends PropertyConstraints<T> {
 
     convert(value: any) {
         return this.values.indexOf(value) >= 0 ? value : this.defaultValue();
+    }
+}
+
+export class CompositeConstraints extends PropertyConstraints<any> {
+    constructor(readonly properties: Map<string, PropertyConstraints<any>>) {
+        super();
+    }
+
+    defaultValue() {
+        const res: any = {};
+        for (const [key, type] of this.properties.entries()) {
+            res[key] = type.defaultValue();
+        }
+        return res;
+    }
+
+    convert(_: any) {
+        return this.defaultValue();
     }
 }

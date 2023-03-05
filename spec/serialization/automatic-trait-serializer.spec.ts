@@ -1,5 +1,5 @@
 import { TraitSerializer } from './../../src/serialization/serializer';
-import { Trait, traitGetSet, TraitRegistry, PropertyType, AutomaticTraitSerializer } from "../../src";
+import { Trait, traitGetSet, TraitRegistry, PropertyType, AutomaticTraitSerializer, PropertyConstraints } from "../../src";
 
 describe('the automatic trait serializer', () => {
     
@@ -18,6 +18,9 @@ describe('the automatic trait serializer', () => {
 
         boolProp = false;
         boolArrayProp = [false, true];
+
+        compositeProp = {'id': 'someid', 'delay': 123};
+        compositeArrayProp = [{'id': 'someid', 'delay': 123}];
     }
 
     let registry: TraitRegistry;
@@ -25,6 +28,11 @@ describe('the automatic trait serializer', () => {
 
     beforeEach(() => {
         registry = new TraitRegistry();
+
+        const compositeType = PropertyType.composite(new Map<string, PropertyConstraints<any>>([
+            ['id', PropertyType.id()],
+            ['delay', PropertyType.num()],
+        ]));
 
         registry.addAuto({
             traitType: TestTrait,
@@ -40,6 +48,9 @@ describe('the automatic trait serializer', () => {
 
                 traitGetSet(TestTrait, 'numberProp', PropertyType.num(), (trait) => trait.numberProp, (trait, numberProp) => trait.numberProp = numberProp),
                 traitGetSet(TestTrait, 'numberArrayProp', PropertyType.list(PropertyType.num()), (trait) => trait.numberArrayProp, (trait, numberArrayProp) => trait.numberArrayProp = numberArrayProp),
+
+                traitGetSet(TestTrait, 'compositeProp', compositeType, (trait) => trait.compositeProp, (trait, compositeProp) => trait.compositeProp = compositeProp),
+                traitGetSet(TestTrait, 'compositeArrayProp', PropertyType.list(compositeType), (trait) => trait.compositeArrayProp, (trait, compositeArrayProp) => trait.compositeArrayProp = compositeArrayProp),
             ],
         });
 
@@ -66,6 +77,9 @@ describe('the automatic trait serializer', () => {
         trait.boolProp = false;
         trait.boolArrayProp = [true, false, true, false];
 
+        trait.compositeProp = {'id': 'ha', 'delay': 1000};
+        trait.compositeArrayProp = [{'id': 'ha', 'delay': 1000}, {'id': 'ha', 'delay': 1000}];
+
         const serialized = serializer.serialize(trait);
         const deserialized = serializer.deserialize(serialized);
 
@@ -77,5 +91,6 @@ describe('the automatic trait serializer', () => {
         expect(deserialized.boolArrayProp).toEqual(trait.boolArrayProp);
         expect(deserialized.entityIdProp).toEqual(trait.entityIdProp);
         expect(deserialized.entityIdArrayProp).toEqual(trait.entityIdArrayProp);
+        expect(deserialized.compositeProp).toEqual(trait.compositeProp);
     });
 });

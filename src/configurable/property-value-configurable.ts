@@ -1,6 +1,7 @@
+import { read } from 'fs';
 import { BooleanConfigurable, ButtonConfigurable, ColorConfigurable, CompositeConfigurable, Configurable, EnumConfigurable, GroupConfigurable, NumberConfigurable, StringConfigurable } from "@remvst/configurable";
 import EntityIdConfigurable from "./entity-id-configurable";
-import { PropertyConstraints, ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../properties/property-constraints";
+import { PropertyConstraints, ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, CompositeConstraints } from "../properties/property-constraints";
 import World from "../world";
 
 export function propertyValueConfigurable<T>(
@@ -45,6 +46,26 @@ export function propertyValueConfigurable<T>(
             }))
 
             configurable.add(`item[${i}]`, group);
+        }
+
+        return configurable;
+    }
+
+    if (type instanceof CompositeConstraints) {
+        const existing = Object.assign({}, read() as any);
+        const configurable = new CompositeConfigurable();
+
+        for (const [key, subType] of type.properties.entries()) {
+            configurable.add(key, propertyValueConfigurable(
+                world, 
+                subType,
+                () => existing[key],
+                (value, configurable) => {
+                    const newValue = Object.assign({}, existing);
+                    newValue[key] = value;
+                    write(newValue, configurable);
+                }
+            ))
         }
 
         return configurable;

@@ -17,7 +17,7 @@ export default class CompositeSerializer<ObjectType extends KeyProvider> impleme
     serialize(value: ObjectType): CompositeSerializerMeta {
         const serializer = this.serializers.get(value.key);
         if (!serializer) {
-            throw new Error(`Cannot serialize trait ${value.key}`);
+            throw new Error(`Cannot serialize item with key ${value.key}`);
         }
 
         return {
@@ -29,7 +29,7 @@ export default class CompositeSerializer<ObjectType extends KeyProvider> impleme
     deserialize(value: CompositeSerializerMeta): ObjectType {
         const serializer = this.serializers.get(value.key);
         if (!serializer) {
-            throw new Error(`Cannot deserialize trait ${value.key}`);
+            throw new Error(`Cannot deserialize item with key ${value.key}`);
         }
         return serializer.deserialize(value.data);
     }

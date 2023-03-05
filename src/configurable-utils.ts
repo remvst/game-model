@@ -1,6 +1,6 @@
 import { Configurable, BooleanConfigurable, StringConfigurable, NumberConfigurable, ColorConfigurable, EnumConfigurable } from '@remvst/configurable';
 import EntityIdConfigurable from './configurable/entity-id-configurable';
-import { Property, PropertyType } from "./properties";
+import { NumberPropertyConstraints, Property, PropertyType } from "./properties";
 import PropertyRegistry from './property-registry';
 import World from './world';
 
@@ -22,9 +22,21 @@ export function propertyValueConfigurable<T>(
             'write': (value) => write(value as T),
         });
     case PropertyType.NUMBER:
+        let min = undefined;
+        let max = undefined;
+        let step = undefined;
+
+        const { constraints } = property;
+        if (constraints instanceof NumberPropertyConstraints) {
+            min = constraints.min;
+            max = constraints.max;
+            step = constraints.step;
+        }
+
         return new NumberConfigurable({
             'read': () => parseFloat(read() as any) || 0,
             'write': (value) => write(value as T),
+            min, max, step,
         });
     case PropertyType.COLOR:
         return new ColorConfigurable({
@@ -44,11 +56,11 @@ export function propertyValueConfigurable<T>(
 
 export function anyProperty(opts: {
     propertyRegistry: PropertyRegistry,
+    filter: (property: Property<any>) => boolean,
     read: () => Property<any>,
     write: (value: Property<any>) => void,
 }): Configurable {
-
-    const property = new EnumConfigurable<Property<any>>({ 
+    const configurable = new EnumConfigurable<Property<any>>({ 
         'read': opts.read,
         'write': opts.write,
      });
@@ -57,9 +69,13 @@ export function anyProperty(opts: {
         const split = identifier.split('.');
         const category = split.length > 0 ? split[0] : '';
 
-        const prop = opts.propertyRegistry.property(identifier)! as Property<any>;
-        property.category(category).add(identifier, opts.propertyRegistry.property(identifier)!);
+        const property = opts.propertyRegistry.property(identifier)!;
+        if (!opts.filter(property)) {
+            continue;
+        }
+
+        configurable.category(category).add(identifier, property);
     }
 
-    return property;
+    return configurable;
 }

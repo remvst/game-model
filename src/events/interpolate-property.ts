@@ -5,7 +5,7 @@ import World from "../world";
 import { WorldEvent } from "./world-event";
 import { WorldEventRegistryEntry } from "./world-event-registry";
 import { Entity, EntityIdConfigurable, PropertyRegistry } from '..';
-import { Property } from '../properties';
+import { Property, PropertyType } from '../properties';
 import InterpolatorTrait from '../traits/interpolator-trait';
 import { anyProperty } from '../configurable-utils';
 
@@ -66,21 +66,6 @@ export default class InterpolateProperty implements WorldEvent {
             newEvent: () => new InterpolateProperty('', EntityProperties.x, 0, 1),
             serializer: () => new Serializer(propertyRegistry),
             configurable: (event, world) => {
-                const property = new EnumConfigurable<Property<any>>({
-                    'read': () => event.property,
-                    'write': (property, configurable) => {
-                        event.property = property;
-                        configurable.invalidate();
-                    },
-                });
-
-                for (const identifier of propertyRegistry.keys()) {
-                    const split = identifier.split('.');
-                    const category = split.length > 0 ? split[0] : '';
-
-                    property.category(category).add(identifier, propertyRegistry.property(identifier)!);
-                }
-
                 return new CompositeConfigurable()
                     .add('entityId', new EntityIdConfigurable({
                         world,
@@ -89,6 +74,7 @@ export default class InterpolateProperty implements WorldEvent {
                     }))
                     .add('property', anyProperty({
                         'propertyRegistry': propertyRegistry,
+                        'filter': (prop) => prop.type === PropertyType.NUMBER,
                         'read': () => event.property,
                         'write': (property) => event.property = property,
                     }))

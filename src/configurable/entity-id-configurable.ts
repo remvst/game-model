@@ -34,6 +34,14 @@ export default class EntityIdConfigurable extends GroupConfigurable {
         const { world } = opts;
         if (world) {
             const ids: string[] = [];
+
+            const entityChoices = new EnumConfigurable({
+                'read': opts.read,
+                'write': (value, configurable) => {
+                    opts.write(value, configurable);
+                    configurable.invalidate();
+                }
+            });
             const descriptionToEntity = new Map<string, Entity>();
             for (const entity of world.entities.items()) {
                 if(!this.filter(entity)) {
@@ -55,15 +63,13 @@ export default class EntityIdConfigurable extends GroupConfigurable {
 
                 const description = `(${shownKeys}) ${entity.id}`;
                 descriptionToEntity.set(description, entity);
+
+                for (const trait of entity.traits.items()) {
+                    entityChoices.category(trait.key).add(description, entity.id);
+                }
             }
 
-            const entityChoices = new EnumConfigurable({
-                'read': opts.read,
-                'write': (value, configurable) => {
-                    opts.write(value, configurable);
-                    configurable.invalidate();
-                }
-            });
+            entityChoices.add('', '');
 
             const sortedDescriptions = Array.from(descriptionToEntity.keys()).sort();
             sortedDescriptions.forEach(description => {

@@ -7,6 +7,7 @@ export interface Property<ValueType> {
     readonly type: PropertyType;
     get(entity: Entity): ValueType;
     set(entity: Entity, value: ValueType): void;
+    constraints?: PropertyConstraints;
 }
 
 export enum PropertyType {
@@ -17,13 +18,26 @@ export enum PropertyType {
     ENTITY_ID,
 }
 
+export class NumberPropertyConstraints {
+    constructor(
+        readonly min?: number,
+        readonly max?: number,
+        readonly step?: number,
+    ) {
+
+    }
+}
+
+export type PropertyConstraints = NumberPropertyConstraints;
+
 export function getSet<ValueType>(
     identifier: string,
     type: PropertyType,
     get: (entity: Entity) => ValueType,
     set: (entity: Entity, value: ValueType) => void,
+    constraints?: PropertyConstraints,
 ): Property<ValueType> {
-    return { identifier, type, get, set };
+    return { identifier, type, get, set, constraints };
 }
 
 export function traitGetSet<T extends Trait, ValueType>(
@@ -32,12 +46,14 @@ export function traitGetSet<T extends Trait, ValueType>(
     type: PropertyType,
     get: (trait: T) => ValueType,
     set: (trait: T, value: ValueType) => void,
+    constraints?: PropertyConstraints,
 ): Property<ValueType> {
     return {
         'identifier': traitType.key + '.' + identifier,
         'type': type,
         'get': (entity) => get(entity.traitOfType(traitType) as T),
         'set': (entity, value) => set(entity.traitOfType(traitType) as T, value),
+        constraints,
     };
 }
 

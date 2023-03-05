@@ -1,12 +1,12 @@
 import { Configurable, BooleanConfigurable, StringConfigurable, NumberConfigurable, ColorConfigurable, EnumConfigurable } from '@remvst/configurable';
 import EntityIdConfigurable from './configurable/entity-id-configurable';
-import { NumberPropertyConstraints, Property, PropertyType } from "./properties";
+import { GenericProperty, NumberPropertyConstraints, Property, PropertyType } from "./properties";
 import PropertyRegistry from './property-registry';
 import World from './world';
 
-export function propertyValueConfigurable<T>(
+export function propertyValueConfigurable<T, U>(
     world: World | null,
-    property: Property<T>, 
+    property: GenericProperty<U, T>, 
     read: () => T,
     write: (value: T) => void,
 ): Configurable {
@@ -55,7 +55,7 @@ export function propertyValueConfigurable<T>(
 }
 
 export function anyProperty(opts: {
-    propertyRegistry: PropertyRegistry,
+    propertyRegistry: PropertyRegistry<Property<any>>,
     filter: (property: Property<any>) => boolean,
     read: () => Property<any>,
     write: (value: Property<any>) => void,

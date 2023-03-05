@@ -59,7 +59,7 @@ export default class InterpolateProperty implements WorldEvent {
         ]))
     }
 
-    static registryEntry(propertyRegistry: PropertyRegistry): WorldEventRegistryEntry<InterpolateProperty> {
+    static registryEntry(propertyRegistry: PropertyRegistry<Property<any>>): WorldEventRegistryEntry<InterpolateProperty> {
         return {
             key: InterpolateProperty.key,
             category: 'movement',
@@ -105,7 +105,7 @@ interface Serialized {
 
 export class Serializer implements WorldEventSerializer<InterpolateProperty, Serialized> {
 
-    constructor(private readonly propertyRegistry: PropertyRegistry) {
+    constructor(private readonly propertyRegistry: PropertyRegistry<Property<any>>) {
         
     }
 

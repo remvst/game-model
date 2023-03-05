@@ -1,22 +1,14 @@
-import { EntityProperties } from './entity';
-import { Property } from './properties';
+import { GenericProperty } from './properties';
 
-export default class PropertyRegistry {
-    private readonly properties = new Map<string, Property<any>>();
+export default class PropertyRegistry<PropertyType extends GenericProperty<any, any>> {
+    private readonly properties = new Map<string, PropertyType>();
 
-    constructor() {
-        this.add(EntityProperties.x);
-        this.add(EntityProperties.y);
-        this.add(EntityProperties.z);
-        this.add(EntityProperties.angle);
-    }
-
-    add(property: Property<any>): this {
+    add(property: PropertyType): this {
         this.properties.set(property.identifier, property);
         return this;
     }
 
-    property(identifier: string): Property<any> | null {
+    property(identifier: string): PropertyType | null {
         return this.properties.get(identifier) || null;
     }
 

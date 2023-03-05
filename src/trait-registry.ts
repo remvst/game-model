@@ -4,6 +4,7 @@ import { TraitSerializer, AnySerialized } from './serialization/serializer';
 import Trait from "./trait";
 import PropertyRegistry from './property-registry';
 import { propertyValueConfigurable } from './configurable-utils';
+import { EntityProperties } from './entity';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
@@ -16,7 +17,14 @@ export interface RegistryEntry<TraitType extends Trait> {
 
 export default class TraitRegistry {
     private readonly entries = new Map<string, RegistryEntry<any>>();
-    readonly properties = new PropertyRegistry();
+    readonly properties = new PropertyRegistry<Property<any>>();
+
+    constructor() {
+        this.properties.add(EntityProperties.x);
+        this.properties.add(EntityProperties.y);
+        this.properties.add(EntityProperties.z);
+        this.properties.add(EntityProperties.angle);
+    }
 
     add(entry: RegistryEntry<any>): this {
         if (this.entries.has(entry.key)) {

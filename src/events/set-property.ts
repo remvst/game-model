@@ -30,7 +30,9 @@ export default class SetProperty implements WorldEvent {
         this.property.set(entity, this.value);
     }
 
-    static registryEntry(propertyRegistry: PropertyRegistry): WorldEventRegistryEntry<SetProperty> {
+    static registryEntry(
+        propertyRegistry: PropertyRegistry<Property<any>>,
+    ): WorldEventRegistryEntry<SetProperty> {
         return {
             key: SetProperty.key,
             category: 'scripting',
@@ -77,7 +79,7 @@ interface Serialized {
 
 class Serializer implements WorldEventSerializer<SetProperty, Serialized> {
 
-    constructor(private readonly propertyRegistry: PropertyRegistry) {
+    constructor(private readonly propertyRegistry: PropertyRegistry<Property<any>>) {
         
     }
 

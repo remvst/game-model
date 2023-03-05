@@ -1,14 +1,18 @@
 import { KeyProvider } from './key-provider';
 import { Trait } from ".";
 import Entity from "./entity";
+import { WorldEvent } from './events/world-event';
 
-export interface Property<ValueType> {
+export interface GenericProperty<OwnerType, ValueType> {
     readonly identifier: string;
     readonly type: PropertyType;
-    get(entity: Entity): ValueType;
-    set(entity: Entity, value: ValueType): void;
+    get(entity: OwnerType): ValueType;
+    set(entity: OwnerType, value: ValueType): void;
     constraints?: PropertyConstraints;
 }
+
+export interface Property<ValueType> extends GenericProperty<Entity, ValueType> {}
+export interface WorldEventProperty<ValueType> extends GenericProperty<WorldEvent, ValueType> {}
 
 export enum PropertyType {
     NUMBER,

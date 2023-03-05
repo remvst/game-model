@@ -1,6 +1,6 @@
 import { EntityProperties } from '../entity';
 import { CompositeConfigurable, NumberConfigurable } from "@remvst/configurable";
-import { Entity, EntityIdConfigurable } from "..";
+import { Entity, EntityIdConfigurable, PropertyType, worldEventGetSet } from "..";
 import adaptId from "../adapt-id";
 import { WorldEventSerializer } from "../serialization/serializer";
 import InterpolatorTrait from "../traits/interpolator-trait";
@@ -94,7 +94,12 @@ export default class MoveTo implements WorldEvent {
             readjust: (event, entity, triggererId) => {
                 event.entityId = adaptId(event.entityId, triggererId);
                 event.targetEntityId = adaptId(event.targetEntityId, triggererId);
-            }
+            },
+            properties: [
+                worldEventGetSet(MoveTo, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
+                worldEventGetSet(MoveTo, 'targetEntityId', PropertyType.id(), event => event.targetEntityId, (event, targetEntityId) => event.targetEntityId = targetEntityId),
+                worldEventGetSet(MoveTo, 'duration', PropertyType.num(0, 200, 0.1), event => event.duration, (event, duration) => event.duration = duration),
+            ],
         }
     }
 }

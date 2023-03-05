@@ -1,5 +1,5 @@
 import { EntityFilter, EntityFilters } from './configurable/entity-filter';
-import { getSet, Property, PropertyType, traitGetSet, NumberPropertyConstraints, PropertyConstraints } from './properties';
+import { getSet, Property, PropertyType, traitGetSet, PropertyConstraints, worldEventGetSet, GenericProperty, BooleanConstraints, ColorConstraints, EntityIdConstraints, NumberConstraints, StringConstraints, ListConstraints } from './properties';
 import { AnySerialized } from './serialization/serializer';
 import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer } from './serialization/serializer';
 import { KeyProvider } from './key-provider';
@@ -52,22 +52,40 @@ export {
     TraitRegistry,
     WorldEventRegistry,
     CyclePerformanceTracker,
+
+    // Properties
     Property,
     PropertyType,
     PropertyRegistry,
-    SetProperty,
-    NumberPropertyConstraints,
+    GenericProperty,
+
+    // Property types
     PropertyConstraints,
+    NumberConstraints,
+    StringConstraints,
+    EntityIdConstraints,
+    ColorConstraints,
+    BooleanConstraints,
+    ListConstraints,
+
     getSet,
     traitGetSet,
+    worldEventGetSet,
     EntityFilter,
     EntityFilters,
     EntitySelectionRequested,
     EntitySelectorTrait,
+
+    // Configurables
     EntityIdConfigurable,
+    
     InterpolatorTrait,
+
+    // Generic events
+    SetProperty,
     MoveTo,
     InterpolateProperty,
+    
     adaptId,
     jsonSerializers,
     rectangleSurface,

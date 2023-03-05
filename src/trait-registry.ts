@@ -42,7 +42,7 @@ export default class TraitRegistry {
                 for (const property of properties) {
                     autoConfigurable.add(property.identifier, propertyValueConfigurable(
                         trait.entity!.world,
-                        property,
+                        property.type,
                         () => property.get(trait.entity!),
                         (value) => property.set(trait.entity!, value),
                     ));

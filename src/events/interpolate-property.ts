@@ -1,11 +1,11 @@
 import { EntityProperties } from './../entity';
-import { CompositeConfigurable, EnumConfigurable, NumberConfigurable } from "@remvst/configurable";
+import { CompositeConfigurable, NumberConfigurable } from "@remvst/configurable";
 import { WorldEventSerializer } from "../serialization/serializer";
 import World from "../world";
 import { WorldEvent } from "./world-event";
 import { WorldEventRegistryEntry } from "./world-event-registry";
 import { Entity, EntityIdConfigurable, PropertyRegistry } from '..';
-import { Property, PropertyType } from '../properties';
+import { NumberConstraints, Property } from '../properties';
 import InterpolatorTrait from '../traits/interpolator-trait';
 import { anyProperty, propertyValueConfigurable } from '../configurable-utils';
 
@@ -74,13 +74,13 @@ export default class InterpolateProperty implements WorldEvent {
                     }))
                     .add('property', anyProperty({
                         'propertyRegistry': propertyRegistry,
-                        'filter': (prop) => prop.type === PropertyType.NUMBER,
+                        'filter': (prop) => prop.type instanceof NumberConstraints,
                         'read': () => event.property,
                         'write': (property) => event.property = property,
                     }))
                     .add('value', propertyValueConfigurable(
                         world,
-                        event.property,
+                        event.property.type,
                         () => event.value,
                         value => event.value = value,
                     ))

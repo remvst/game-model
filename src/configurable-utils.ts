@@ -1,57 +1,77 @@
-import { Configurable, BooleanConfigurable, StringConfigurable, NumberConfigurable, ColorConfigurable, EnumConfigurable } from '@remvst/configurable';
+import { Configurable, BooleanConfigurable, StringConfigurable, NumberConfigurable, ColorConfigurable, EnumConfigurable, CompositeConfigurable } from '@remvst/configurable';
 import EntityIdConfigurable from './configurable/entity-id-configurable';
-import { GenericProperty, NumberPropertyConstraints, Property, PropertyType } from "./properties";
+import { BooleanConstraints, ColorConstraints, EntityIdConstraints, GenericProperty, ListConstraints, NumberConstraints, Property, PropertyConstraints, StringConstraints } from "./properties";
 import PropertyRegistry from './property-registry';
 import World from './world';
 
 export function propertyValueConfigurable<T, U>(
     world: World | null,
-    property: GenericProperty<U, T>, 
+    type: PropertyConstraints, 
     read: () => T,
-    write: (value: T) => void,
+    write: (value: T, configurable: Configurable) => void,
 ): Configurable {
-    switch (property.type) {
-    case PropertyType.BOOLEAN:
-        return new BooleanConfigurable({
-            'read': () => !!read(),
-            'write': (value) => write(value as T),
-        });
-    case PropertyType.STRING:
-        return new StringConfigurable({
-            'read': () => (read() as any).toString(),
-            'write': (value) => write(value as T),
-        });
-    case PropertyType.NUMBER:
-        let min = undefined;
-        let max = undefined;
-        let step = undefined;
+    if (type instanceof ListConstraints) {
+        const items = read() as any[];
 
-        const { constraints } = property;
-        if (constraints instanceof NumberPropertyConstraints) {
-            min = constraints.min;
-            max = constraints.max;
-            step = constraints.step;
+        const configurable = new CompositeConfigurable();
+        for (let i = 0 ; i <= items.length ; i++) {
+            const itemConfigurable = propertyValueConfigurable(
+                world,
+                type.itemType,
+                () => items[i],
+                (value) => {
+                    const copy = items.slice(0);
+                    copy[i] = value;
+                    write(copy as T, configurable);
+                    configurable.invalidate();
+                }
+            );
+            configurable.add(`item[${i}]`, itemConfigurable);
         }
 
+        return configurable;
+    }
+
+    if (type instanceof NumberConstraints) {
         return new NumberConfigurable({
             'read': () => parseFloat(read() as any) || 0,
-            'write': (value) => write(value as T),
-            min, max, step,
-        });
-    case PropertyType.COLOR:
-        return new ColorConfigurable({
-            'read': () => parseInt(read() as any) || 0,
-            'write': (value) => write(value as T),
-        });
-    case PropertyType.ENTITY_ID:
-        return new EntityIdConfigurable({
-            world,
-            'read': () => (read() as any).toString(),
-            'write': (value) => write(value as T),
+            'write': (value, configurable) => write(value as T, configurable),
+            'min': type.min, 
+            'max': type.max, 
+            'step': type.step,
         });
     }
 
-    throw new Error(`Unknown property type: ${property.type}`);
+    if (type instanceof StringConstraints) {
+        return new StringConfigurable({
+            'read': () => (read() as any).toString(),
+            'write': (value, configurable) => write(value as T, configurable),
+        });
+    }
+
+    if (type instanceof BooleanConstraints) {
+        return new BooleanConfigurable({
+            'read': () => !!read(),
+            'write': (value, configurable) => write(value as T, configurable),
+        });
+    }
+
+    if (type instanceof ColorConstraints) {
+        return new ColorConfigurable({
+            'read': () => parseInt(read() as any) || 0,
+            'write': (value, configurable) => write(value as T, configurable),
+        });
+    }
+
+    if (type instanceof EntityIdConstraints) {
+        return new EntityIdConfigurable({
+            world,
+            'read': () => (read() as any).toString(),
+            'write': (value, configurable) => write(value as T, configurable),
+        });
+    }
+
+    throw new Error(`Unknown property type: ${type}`);
 }
 
 export function anyProperty(opts: {

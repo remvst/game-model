@@ -17,10 +17,10 @@ function processMicroTime() {
 const now = typeof window === 'undefined' ? processMicroTime : performance.now.bind(performance);
 
 export class EntityProperties {
-    static readonly x: Property<number> = getSet('position.x', PropertyType.NUMBER, entity => entity.x, (entity, x) => entity.x = x);
-    static readonly y: Property<number> = getSet('position.y', PropertyType.NUMBER, entity => entity.y, (entity, y) => entity.y = y);
-    static readonly z: Property<number> = getSet('position.z', PropertyType.NUMBER, entity => entity.z, (entity, z) => entity.z = z);
-    static readonly angle: Property<number> = getSet('angle', PropertyType.NUMBER, entity => entity.angle, (entity, angle) => entity.angle = angle);
+    static readonly x: Property<number> = getSet('position.x', PropertyType.num(), entity => entity.x, (entity, x) => entity.x = x);
+    static readonly y: Property<number> = getSet('position.y', PropertyType.num(), entity => entity.y, (entity, y) => entity.y = y);
+    static readonly z: Property<number> = getSet('position.z', PropertyType.num(), entity => entity.z, (entity, z) => entity.z = z);
+    static readonly angle: Property<number> = getSet('angle', PropertyType.num(), entity => entity.angle, (entity, angle) => entity.angle = angle);
 }
 
 export default class Entity {

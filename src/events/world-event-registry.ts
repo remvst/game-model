@@ -34,7 +34,7 @@ export default class WorldEventRegistry {
                 for (const property of entry.properties || []) {
                     autoConfigurable.add(property.identifier, propertyValueConfigurable(
                         world,
-                        property,
+                        property.type,
                         () => property.get(event),
                         (value) => property.set(event, value),
                     ));

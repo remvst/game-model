@@ -1,4 +1,4 @@
-import { Property } from '../properties';
+import { Property, PropertyType, worldEventGetSet } from '../properties';
 import World from '../world';
 import { WorldEvent } from './world-event';
 import { WorldEventSerializer } from '../serialization/serializer';
@@ -62,11 +62,14 @@ export default class SetProperty implements WorldEvent {
                     .add('property', property)
                     .add('value', propertyValueConfigurable(
                         world,
-                        event.property, 
+                        event.property.type, 
                         () => event.value, 
                         (value) => event.value = value
                     ));
             },
+            properties: [
+                worldEventGetSet(SetProperty, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
+            ],
         };
     }
 }

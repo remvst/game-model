@@ -40,8 +40,8 @@ export class NumberConstraints extends PropertyConstraints<number> {
         return this.min || 0;
     }
 
-    convert(value: any) {
-        return parseFloat(value) || 0;
+    convert(value: any): number {
+        return parseFloat(value) || this.min || 0;
     }
 }
 

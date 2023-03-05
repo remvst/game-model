@@ -6,6 +6,7 @@ import { PropertyConstraints, PropertyType } from './property-constraints';
 
 export interface GenericProperty<OwnerType, ValueType> {
     readonly identifier: string;
+    readonly localIdentifier?: string;
     readonly type: PropertyConstraints<ValueType>;
     get(entity: OwnerType): ValueType;
     set(entity: OwnerType, value: ValueType): void;
@@ -63,6 +64,7 @@ export function worldEventGetSet<T extends WorldEvent, ValueType>(
 ): WorldEventProperty<ValueType> {
     return { 
         'identifier': eventType.key + '.' + identifier,
+        'localIdentifier': identifier,
         type, 
         get, 
         set, 

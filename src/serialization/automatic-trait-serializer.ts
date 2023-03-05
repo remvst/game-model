@@ -17,7 +17,7 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
     serialize(value: Trait): Serialized {
         const serialized: Serialized = {};
         for (const property of this.registryEntry.properties!) {
-            serialized[property.identifier] = this.serializePropertyValue(property.type, value);
+            serialized[property.localIdentifier!] = this.serializePropertyValue(property.type, value);
         }
         return serialized;
     }

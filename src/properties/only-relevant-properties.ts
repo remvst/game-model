@@ -1,4 +1,4 @@
-import TraitRegistry from "../trait-registry";
+import TraitRegistry from "../registry/trait-registry";
 import World from "../world";
 import { EntityPropertyType, Property } from "./properties";
 

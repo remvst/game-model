@@ -1,10 +1,10 @@
-import { Property, traitEnabledProperty } from './properties/properties';
+import { Property, traitEnabledProperty } from '../properties/properties';
 import { Configurable, CompositeConfigurable } from '@remvst/configurable';
-import { TraitSerializer, AnySerialized } from './serialization/serializer';
-import Trait from "./trait";
+import { TraitSerializer, AnySerialized } from '../serialization/serializer';
+import Trait from "../trait";
 import PropertyRegistry from './property-registry';
-import { EntityProperties } from './entity';
-import { propertyValueConfigurable } from './configurable/property-value-configurable';
+import { EntityProperties } from '../entity';
+import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;

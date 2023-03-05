@@ -96,7 +96,7 @@ export function propertyValueConfigurable<T>(
         });
 
         for (const value of type.values) {
-            configurable.add(value.toString(), value);
+            configurable.add((value || '(empty)').toString(), value);
         }
 
         return configurable;

@@ -1,6 +1,6 @@
 import { Configurable, EnumConfigurable } from "@remvst/configurable";
 import { Property } from "..";
-import PropertyRegistry from "../property-registry";
+import PropertyRegistry from "../registry/property-registry";
 
 export function anyProperty(opts: {
     propertyRegistry: PropertyRegistry<Property<any>>,

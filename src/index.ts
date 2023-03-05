@@ -15,10 +15,10 @@ import EntityRemoved from './events/entity-removed';
 import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
 import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSerializers } from './serialization/json-serializers';
-import TraitRegistry from './trait-registry';
+import TraitRegistry from './registry/trait-registry';
 import WorldEventRegistry from './events/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
-import PropertyRegistry from './property-registry';
+import PropertyRegistry from './registry/property-registry';
 import EntitySelectionRequested from './events/entity-selection-requested';
 import EntitySelectorTrait from './traits/entity-selector-trait';
 import EntityIdConfigurable from './configurable/entity-id-configurable';
@@ -28,19 +28,31 @@ import InterpolateProperty from './events/interpolate-property';
 import adaptId from './adapt-id';
 import { Property, GenericProperty, getSet, traitGetSet, worldEventGetSet } from './properties/properties';
 import { PropertyType, PropertyConstraints, NumberConstraints, StringConstraints, EntityIdConstraints, ColorConstraints, BooleanConstraints, ListConstraints, EnumConstraints } from './properties/property-constraints';
+import AutomaticTraitSerializer from './serialization/automatic-trait-serializer';
 
 export {
     Trait,
     World,
-    WorldEvent,
-    EntityEventProcessed,
+    Entity,
+    KeyProvider,
+
+    // Collections
     ObjectSet,
     WatchableObjectSet,
-    Entity,
-    EntityEvent,
-    EntityRemoved,
-    KeyProvider,
+    
+    // Surfaces
     TraitSurfaceProvider,
+
+    // Traits
+    InterpolatorTrait,
+
+    // Events
+    WorldEvent,
+    EntityEvent,
+    EntityEventProcessed,
+    EntityRemoved,
+
+    // Serializers
     Serializer,
     TraitSerializer,
     EntitySerializer,
@@ -50,8 +62,14 @@ export {
     JsonSerializedEntity,
     JsonSerializedWorld,
     JsonSerializers,
+    AutomaticTraitSerializer,
+    jsonSerializers,
+
+    // Registries
     TraitRegistry,
     WorldEventRegistry,
+
+    // Perf
     CyclePerformanceTracker,
 
     // Properties
@@ -81,15 +99,13 @@ export {
     // Configurables
     EntityIdConfigurable,
 
-    InterpolatorTrait,
-
     // Generic events
     SetProperty,
     MoveTo,
     InterpolateProperty,
     
+    // Utils
     adaptId,
-    jsonSerializers,
     rectangleSurface,
     vector3,
 };

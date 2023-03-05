@@ -1,12 +1,12 @@
-import { NumberConstraints } from '../properties/property-constraints';
+import { NumberConstraints, PropertyType } from '../properties/property-constraints';
 import { EntityProperties } from './../entity';
 import { CompositeConfigurable, NumberConfigurable } from "@remvst/configurable";
 import { WorldEventSerializer } from "../serialization/serializer";
 import World from "../world";
 import { WorldEvent } from "./world-event";
 import { WorldEventRegistryEntry } from "./world-event-registry";
-import { Entity, EntityIdConfigurable, PropertyRegistry, TraitRegistry } from '..';
-import { Property } from '../properties/properties';
+import { Entity, EntityIdConfigurable, PropertyRegistry, SetProperty, TraitRegistry } from '..';
+import { Property, worldEventGetSet } from '../properties/properties';
 import InterpolatorTrait from '../traits/interpolator-trait';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import { anyProperty } from '../configurable/any-property-configurable';
@@ -97,6 +97,9 @@ export default class InterpolateProperty implements WorldEvent {
                         'write': duration => event.duration = duration,
                     }));
             },
+            properties: [
+                worldEventGetSet(SetProperty, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
+            ],
         }
     }
 }

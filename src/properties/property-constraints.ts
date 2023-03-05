@@ -13,8 +13,8 @@ export class PropertyType {
         return new ListConstraints(itemType); 
     }
 
-    static enum<T>(values: T[]) {
-        return new EnumConstraints(values);
+    static enum<T>(values: T[], enumToken: any) {
+        return new EnumConstraints(values, enumToken);
     }
 
     static composite(properties: Map<string, PropertyConstraints<any>>) {
@@ -112,7 +112,7 @@ export class ListConstraints<T> extends PropertyConstraints<T[]> {
 export class EnumConstraints<T> extends PropertyConstraints<T> {
     constructor(
         readonly values: T[], 
-        readonly enumToken: any,
+        readonly enumToken?: any,
     ) {
         super();
     }

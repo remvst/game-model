@@ -1,3 +1,4 @@
+import { EntityFilter, EntityFilters } from './configurable/entity-filter';
 import { getSet, Property, PropertyType, traitGetSet } from './properties';
 import { AnySerialized } from './serialization/serializer';
 import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer } from './serialization/serializer';
@@ -19,6 +20,8 @@ import TraitRegistry from './trait-registry';
 import WorldEventRegistry from './events/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
 import PropertyRegistry from './property-registry';
+import EntitySelectionRequested from './events/entity-selection-requested';
+import EntitySelectorTrait from './traits/entity-selector-trait';
 
 export {
     Trait,
@@ -50,6 +53,10 @@ export {
     SetProperty,
     getSet,
     traitGetSet,
+    EntityFilter,
+    EntityFilters,
+    EntitySelectionRequested,
+    EntitySelectorTrait,
     jsonSerializers,
     rectangleSurface,
     vector3,

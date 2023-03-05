@@ -36,7 +36,7 @@ export default class SetProperty implements WorldEvent {
             category: 'scripting',
             newEvent: () => new SetProperty('', EntityProperties.x, 0),
             serializer: () => new Serializer(propertyRegistry),
-            configurable: (event: SetProperty) => {
+            configurable: (event: SetProperty, world: World) => {
                 const property = new EnumConfigurable<Property<any>>({
                     'read': () => event.property,
                     'write': (property, configurable) => {
@@ -56,6 +56,7 @@ export default class SetProperty implements WorldEvent {
                     }))
                     .add('property', property)
                     .add('value', propertyValueConfigurable(
+                        world,
                         event.property, 
                         () => event.value, 
                         (value) => event.value = value

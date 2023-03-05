@@ -13,6 +13,8 @@ export enum PropertyType {
     NUMBER,
     BOOLEAN,
     STRING,
+    COLOR,
+    ENTITY_ID,
 }
 
 export function getSet<ValueType>(

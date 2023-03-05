@@ -34,10 +34,11 @@ export default class TraitRegistry {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of properties) {
                     autoConfigurable.add(property.identifier, propertyValueConfigurable(
+                        trait.entity!.world,
                         property,
                         () => property.get(trait.entity!),
                         (value) => property.set(trait.entity!, value),
-                    ))
+                    ));
                 }
                 return autoConfigurable;
             };

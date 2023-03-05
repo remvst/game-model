@@ -1,5 +1,4 @@
 import { EntityFilter, EntityFilters } from './configurable/entity-filter';
-import { getSet, Property, PropertyType, traitGetSet, PropertyConstraints, worldEventGetSet, GenericProperty, BooleanConstraints, ColorConstraints, EntityIdConstraints, NumberConstraints, StringConstraints, ListConstraints, EnumConstraints } from './properties';
 import { AnySerialized } from './serialization/serializer';
 import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer } from './serialization/serializer';
 import { KeyProvider } from './key-provider';
@@ -27,6 +26,8 @@ import InterpolatorTrait from './traits/interpolator-trait';
 import MoveTo from './events/move-to';
 import InterpolateProperty from './events/interpolate-property';
 import adaptId from './adapt-id';
+import { Property, GenericProperty, getSet, traitGetSet, worldEventGetSet } from './properties/properties';
+import { PropertyType, PropertyConstraints, NumberConstraints, StringConstraints, EntityIdConstraints, ColorConstraints, BooleanConstraints, ListConstraints, EnumConstraints } from './properties/property-constraints';
 
 export {
     Trait,

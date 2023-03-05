@@ -7,7 +7,8 @@ import EntityEventProcessed from './events/entity-event-processed';
 import Trait from './trait';
 import { vector3 } from './vector3';
 import World from './world';
-import { Property, getSet, PropertyType } from './properties';
+import { Property, getSet } from './properties/properties';
+import { PropertyType } from './properties/property-constraints';
 
 function processMicroTime() {
     const [seconds, nanoseconds] = process.hrtime()

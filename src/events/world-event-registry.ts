@@ -4,8 +4,8 @@ import { WorldEventSerializer } from '../serialization/serializer';
 import { PropertyRegistry, WorldEvent } from '..';
 import { CompositeConfigurable, Configurable } from '@remvst/configurable';
 import { AnySerialized } from '../serialization/serializer';
-import { WorldEventProperty } from '../properties';
-import { propertyValueConfigurable } from '../configurable-utils';
+import { WorldEventProperty } from '../properties/properties';
+import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 
 export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly key: string;

@@ -1,4 +1,4 @@
-import { GenericProperty } from './properties';
+import { GenericProperty } from './properties/properties';
 
 export default class PropertyRegistry<PropertyType extends GenericProperty<any, any>> {
     private readonly properties = new Map<string, PropertyType>();

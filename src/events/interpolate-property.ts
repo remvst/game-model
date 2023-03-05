@@ -1,3 +1,4 @@
+import { NumberConstraints } from '../properties/property-constraints';
 import { EntityProperties } from './../entity';
 import { CompositeConfigurable, NumberConfigurable } from "@remvst/configurable";
 import { WorldEventSerializer } from "../serialization/serializer";
@@ -5,9 +6,10 @@ import World from "../world";
 import { WorldEvent } from "./world-event";
 import { WorldEventRegistryEntry } from "./world-event-registry";
 import { Entity, EntityIdConfigurable, PropertyRegistry } from '..';
-import { NumberConstraints, Property } from '../properties';
+import { Property } from '../properties/properties';
 import InterpolatorTrait from '../traits/interpolator-trait';
-import { anyProperty, propertyValueConfigurable } from '../configurable-utils';
+import { propertyValueConfigurable } from '../configurable/property-value-configurable';
+import { anyProperty } from '../configurable/any-property-configurable';
 
 export default class InterpolateProperty implements WorldEvent {
     static readonly key = 'interpolate-property';

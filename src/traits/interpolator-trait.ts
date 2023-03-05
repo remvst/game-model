@@ -1,4 +1,4 @@
-import { Property } from "../properties";
+import { Property } from "../properties/properties";
 import Trait from "../trait";
 
 export default class InterpolatorTrait extends Trait {

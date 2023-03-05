@@ -1,8 +1,7 @@
-import { Configurable, BooleanConfigurable, StringConfigurable, NumberConfigurable, ColorConfigurable, EnumConfigurable, CompositeConfigurable, GroupConfigurable, ButtonConfigurable } from '@remvst/configurable';
-import EntityIdConfigurable from './configurable/entity-id-configurable';
-import { BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, ListConstraints, NumberConstraints, Property, PropertyConstraints, StringConstraints } from "./properties";
-import PropertyRegistry from './property-registry';
-import World from './world';
+import { BooleanConfigurable, ButtonConfigurable, ColorConfigurable, CompositeConfigurable, Configurable, EnumConfigurable, GroupConfigurable, NumberConfigurable, StringConfigurable } from "@remvst/configurable";
+import EntityIdConfigurable from "./entity-id-configurable";
+import { PropertyConstraints, ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../properties/property-constraints";
+import World from "../world";
 
 export function propertyValueConfigurable<T, U>(
     world: World | null,
@@ -104,30 +103,4 @@ export function propertyValueConfigurable<T, U>(
     }
 
     throw new Error(`Unknown property type: ${type}`);
-}
-
-export function anyProperty(opts: {
-    propertyRegistry: PropertyRegistry<Property<any>>,
-    filter: (property: Property<any>) => boolean,
-    read: () => Property<any>,
-    write: (value: Property<any>) => void,
-}): Configurable {
-    const configurable = new EnumConfigurable<Property<any>>({ 
-        'read': opts.read,
-        'write': opts.write,
-     });
-
-    for (const identifier of opts.propertyRegistry.keys()) {
-        const split = identifier.split('.');
-        const category = split.length > 0 ? split[0] : '';
-
-        const property = opts.propertyRegistry.property(identifier)!;
-        if (!opts.filter(property)) {
-            continue;
-        }
-
-        configurable.category(category).add(identifier, property);
-    }
-
-    return configurable;
 }

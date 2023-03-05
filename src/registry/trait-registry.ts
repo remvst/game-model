@@ -10,7 +10,7 @@ export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
     readonly category?: string;
     newTrait?(): TraitType;
-    serializer?(): TraitSerializer<TraitType, AnySerialized>;
+    serializer?(entry: RegistryEntry<TraitType>): TraitSerializer<TraitType, AnySerialized>;
     configurable?: (trait: TraitType) => Configurable;
     properties?: Property<any>[];
 }

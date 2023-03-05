@@ -14,10 +14,15 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
 
     }
 
-    serialize(value: Trait): Serialized {
+    serialize(trait: Trait): Serialized {
+        // Bind to a temporary entity so we can read the properties
+        const entity = new Entity(undefined, [trait]);
+        trait.bind(entity);
+
         const serialized: Serialized = {};
         for (const property of this.registryEntry.properties!) {
-            serialized[property.localIdentifier!] = this.serializePropertyValue(property.type, value);
+            const serializedProperty = this.serializePropertyValue(property.type, property.get(entity));
+            serialized[property.localIdentifier!] = serializedProperty;
         }
         return serialized;
     }
@@ -25,12 +30,12 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
     deserialize(serialized: Serialized): T {
         const trait = this.registryEntry.newTrait!();
 
-        // Bind to a temporary entity so we can read the properties
+        // Bind to a temporary entity so we can write the properties
         const entity = new Entity(undefined, [trait]);
         trait.bind(entity);
 
         for (const property of this.registryEntry.properties!) {
-            const propertyValue = this.deserializePropertyValue(property.type, serialized);
+            const propertyValue = this.deserializePropertyValue(property.type, serialized[property.localIdentifier!]);
             property.set(entity, propertyValue);
         }
         return trait;

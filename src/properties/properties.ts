@@ -48,6 +48,7 @@ export function traitGetSet<T extends Trait, ValueType>(
 ): Property<ValueType> {
     return {
         identifier: traitType.key + '.' + identifier,
+        localIdentifier: identifier,
         entityPropertyType: EntityPropertyType.SPECIFIC_TRAIT,
         type,
         get: (entity) => get(entity.traitOfType(traitType) as T),
@@ -63,8 +64,8 @@ export function worldEventGetSet<T extends WorldEvent, ValueType>(
     set: (event: T, value: ValueType) => void,
 ): WorldEventProperty<ValueType> {
     return { 
-        'identifier': eventType.key + '.' + identifier,
-        'localIdentifier': identifier,
+        identifier: eventType.key + '.' + identifier,
+        localIdentifier: identifier,
         type, 
         get, 
         set, 
@@ -74,6 +75,7 @@ export function worldEventGetSet<T extends WorldEvent, ValueType>(
 export function traitEnabledProperty(key: string) : Property<boolean> {
     return {
         identifier: key + '.enabled',
+        localIdentifier: 'enabled',
         type: PropertyType.bool(),
         entityPropertyType: EntityPropertyType.GENERAL_TRAIT,
         get: entity => entity.trait(key)!.enabled,

@@ -74,6 +74,10 @@ export default class Entity {
         for (const trait of this.traits.items()) {
             trait.postBind();
         }
+        
+        this.cycleStartPosition.x = this.position.x;
+        this.cycleStartPosition.y = this.position.y;
+        this.cycleStartPosition.z = this.position.z;
     }
 
     unbind() {

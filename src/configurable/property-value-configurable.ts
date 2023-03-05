@@ -1,4 +1,3 @@
-import { read } from 'fs';
 import { BooleanConfigurable, ButtonConfigurable, ColorConfigurable, CompositeConfigurable, Configurable, EnumConfigurable, GroupConfigurable, NumberConfigurable, StringConfigurable } from "@remvst/configurable";
 import EntityIdConfigurable from "./entity-id-configurable";
 import { PropertyConstraints, ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, CompositeConstraints } from "../properties/property-constraints";
@@ -27,15 +26,7 @@ export function propertyValueConfigurable<T>(
                 }
             );
 
-            let group: GroupConfigurable;
-            if (itemConfigurable instanceof GroupConfigurable) {
-                group = itemConfigurable;
-            } else {
-                group = new GroupConfigurable();
-                group.add(itemConfigurable);
-            }
-
-            group.add(new ButtonConfigurable({
+            const deleteButton = new ButtonConfigurable({
                 'label': 'del',
                 'onClick': () => {
                     const copy = items.slice(0);
@@ -43,9 +34,19 @@ export function propertyValueConfigurable<T>(
                     write(copy as T, configurable);
                     configurable.invalidate();
                 }
-            }))
+            });
 
-            configurable.add(`item[${i}]`, group);
+            if (itemConfigurable instanceof GroupConfigurable) {
+                itemConfigurable.add(deleteButton);
+                configurable.add(`item[${i}]`, itemConfigurable);
+            } else if (itemConfigurable instanceof CompositeConfigurable) {
+                itemConfigurable.add('del', deleteButton);
+                configurable.add(`item[${i}]`, itemConfigurable);
+            } else {
+                configurable.add(`item[${i}]`, new GroupConfigurable()
+                    .add(itemConfigurable)
+                    .add(deleteButton));
+            }
         }
 
         return configurable;
@@ -105,7 +106,7 @@ export function propertyValueConfigurable<T>(
     if (type instanceof EntityIdConstraints) {
         return new EntityIdConfigurable({
             world,
-            'read': () => (read() as any).toString(),
+            'read': () => (read() || '').toString(),
             'write': (value, configurable) => write(value as T, configurable),
         });
     }

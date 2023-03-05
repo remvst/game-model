@@ -16,8 +16,12 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
 
     serialize(trait: Trait): Serialized {
         // Bind to a temporary entity so we can read the properties
+        const oldEntity = trait.entity;
         const entity = new Entity(undefined, [trait]);
         trait.bind(entity);
+        if (oldEntity) {
+            trait.bind(oldEntity);
+        }
 
         const serialized: Serialized = {};
         for (const property of this.registryEntry.properties!) {

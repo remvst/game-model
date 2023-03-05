@@ -22,6 +22,7 @@ import { CyclePerformanceTracker } from './performance-tracker';
 import PropertyRegistry from './property-registry';
 import EntitySelectionRequested from './events/entity-selection-requested';
 import EntitySelectorTrait from './traits/entity-selector-trait';
+import EntityIdConfigurable from './configurable/entity-id-configurable';
 
 export {
     Trait,
@@ -57,6 +58,7 @@ export {
     EntityFilters,
     EntitySelectionRequested,
     EntitySelectorTrait,
+    EntityIdConfigurable,
     jsonSerializers,
     rectangleSurface,
     vector3,

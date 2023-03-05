@@ -26,6 +26,7 @@ import EntityIdConfigurable from './configurable/entity-id-configurable';
 import InterpolatorTrait from './traits/interpolator-trait';
 import MoveTo from './events/move-to';
 import InterpolateProperty from './events/interpolate-property';
+import adaptId from './adapt-id';
 
 export {
     Trait,
@@ -65,6 +66,7 @@ export {
     InterpolatorTrait,
     MoveTo,
     InterpolateProperty,
+    adaptId,
     jsonSerializers,
     rectangleSurface,
     vector3,

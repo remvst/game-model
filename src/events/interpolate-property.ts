@@ -1,5 +1,4 @@
 import { EntityProperties } from './../entity';
-import { vector3, Vector3 } from './../vector3';
 import { CompositeConfigurable, EnumConfigurable, NumberConfigurable } from "@remvst/configurable";
 import { WorldEventSerializer } from "../serialization/serializer";
 import World from "../world";
@@ -65,7 +64,7 @@ export default class InterpolateProperty implements WorldEvent {
             key: InterpolateProperty.key,
             category: 'movement',
             newEvent: () => new InterpolateProperty('', EntityProperties.x, 0, 1),
-            serializer: () => new MoveSerializer(propertyRegistry),
+            serializer: () => new Serializer(propertyRegistry),
             configurable: (event, world) => {
                 const property = new EnumConfigurable<Property<any>>({
                     'read': () => event.property,
@@ -93,6 +92,13 @@ export default class InterpolateProperty implements WorldEvent {
                         'read': () => event.property,
                         'write': (property) => event.property = property,
                     }))
+                    .add('value', new NumberConfigurable({
+                        'min': 0,
+                        'max': 200,
+                        'step': 0.1,
+                        'read': () => event.value,
+                        'write': value => event.value = value,
+                    }))
                     .add('duration', new NumberConfigurable({
                         'min': 0,
                         'max': 200,
@@ -112,7 +118,7 @@ interface Serialized {
     readonly duration: number,
 }
 
-export class MoveSerializer implements WorldEventSerializer<InterpolateProperty, Serialized> {
+export class Serializer implements WorldEventSerializer<InterpolateProperty, Serialized> {
 
     constructor(private readonly propertyRegistry: PropertyRegistry) {
         

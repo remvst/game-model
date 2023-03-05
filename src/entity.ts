@@ -19,6 +19,7 @@ const now = typeof window === 'undefined' ? processMicroTime : performance.now.b
 export class EntityProperties {
     static readonly x: Property<number> = getSet('x', PropertyType.NUMBER, entity => entity.x, (entity, x) => entity.x = x);
     static readonly y: Property<number> = getSet('y', PropertyType.NUMBER, entity => entity.y, (entity, y) => entity.y = y);
+    static readonly z: Property<number> = getSet('z', PropertyType.NUMBER, entity => entity.z, (entity, z) => entity.z = z);
 }
 
 export default class Entity {

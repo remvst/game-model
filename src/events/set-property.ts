@@ -46,7 +46,10 @@ export default class SetProperty implements WorldEvent {
                 });
 
                 for (const identifier of propertyRegistry.keys()) {
-                    property.add(identifier, propertyRegistry.property(identifier)!);
+                    const split = identifier.split('.');
+                    const category = split.length > 0 ? split[0] : '';
+
+                    property.category(category).add(identifier, propertyRegistry.property(identifier)!);
                 }
 
                 return new CompositeConfigurable()

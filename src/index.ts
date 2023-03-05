@@ -23,6 +23,9 @@ import PropertyRegistry from './property-registry';
 import EntitySelectionRequested from './events/entity-selection-requested';
 import EntitySelectorTrait from './traits/entity-selector-trait';
 import EntityIdConfigurable from './configurable/entity-id-configurable';
+import InterpolatorTrait from './traits/interpolator-trait';
+import MoveTo from './events/move-to';
+import InterpolateProperty from './events/interpolate-property';
 
 export {
     Trait,
@@ -59,6 +62,9 @@ export {
     EntitySelectionRequested,
     EntitySelectorTrait,
     EntityIdConfigurable,
+    InterpolatorTrait,
+    MoveTo,
+    InterpolateProperty,
     jsonSerializers,
     rectangleSurface,
     vector3,

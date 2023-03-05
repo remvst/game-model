@@ -25,6 +25,10 @@ export default abstract class Trait implements KeyProvider {
         return this._entity;
     }
 
+    get world(): World | null {
+        return this.entity?.world || null;
+    }
+
     bind(entity: Entity) {
         this._entity = entity;
         this.lastEntityPosition.x = entity.position.x;

@@ -4,7 +4,6 @@ import { TraitSerializer, AnySerialized } from './serialization/serializer';
 import Trait from "./trait";
 import PropertyRegistry from './property-registry';
 import { propertyValueConfigurable } from './configurable-utils';
-import Entity from './entity';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;

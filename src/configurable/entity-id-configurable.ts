@@ -77,7 +77,7 @@ export default class EntityIdConfigurable extends GroupConfigurable {
                 'label': 'select',
                 'onClick': async (configurable) => {
                     const entityId: string = await new Promise((resolve) => {
-                        const event = new EntitySelectionRequested(resolve);
+                        const event = new EntitySelectionRequested(this.filter, resolve);
                         for (const entitySelector of world.entities.bucket(EntitySelectorTrait.key)) {
                             entitySelector.addEvent(event);
                         }

@@ -7,6 +7,8 @@ export default class PropertyRegistry {
     constructor() {
         this.add(EntityProperties.x);
         this.add(EntityProperties.y);
+        this.add(EntityProperties.z);
+        this.add(EntityProperties.angle);
     }
 
     add(property: Property<any>): this {

@@ -13,7 +13,7 @@ export class PropertyType {
         return new ListConstraints(itemType); 
     }
 
-    static enum<T>(values: T[], enumToken: any) {
+    static enum<T>(values: T[], enumToken: any = null) {
         return new EnumConstraints(values, enumToken);
     }
 

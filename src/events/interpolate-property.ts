@@ -7,7 +7,7 @@ import { WorldEventRegistryEntry } from "./world-event-registry";
 import { Entity, EntityIdConfigurable, PropertyRegistry } from '..';
 import { Property, PropertyType } from '../properties';
 import InterpolatorTrait from '../traits/interpolator-trait';
-import { anyProperty } from '../configurable-utils';
+import { anyProperty, propertyValueConfigurable } from '../configurable-utils';
 
 export default class InterpolateProperty implements WorldEvent {
     static readonly key = 'interpolate-property';
@@ -78,16 +78,15 @@ export default class InterpolateProperty implements WorldEvent {
                         'read': () => event.property,
                         'write': (property) => event.property = property,
                     }))
-                    .add('value', new NumberConfigurable({
-                        'min': 0,
-                        'max': 200,
-                        'step': 0.1,
-                        'read': () => event.value,
-                        'write': value => event.value = value,
-                    }))
+                    .add('value', propertyValueConfigurable(
+                        world,
+                        event.property,
+                        () => event.value,
+                        value => event.value = value,
+                    ))
                     .add('duration', new NumberConfigurable({
                         'min': 0,
-                        'max': 200,
+                        'max': 120,
                         'step': 0.1,
                         'read': () => event.duration,
                         'write': duration => event.duration = duration,

@@ -9,6 +9,7 @@ import { EntityProperties } from '../entity';
 import { CompositeConfigurable, EnumConfigurable } from '@remvst/configurable';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import { anyProperty } from '../configurable/any-property-configurable';
+import { onlyRelevantProperties } from '../properties/only-relevant-properties';
 
 export default class SetProperty implements WorldEvent {
 
@@ -62,29 +63,23 @@ export default class SetProperty implements WorldEvent {
                     .add('entityId', new EntityIdConfigurable({
                         world,
                         'read': () => event.entityId,
-                        'write': (entityId) => event.entityId = entityId,
+                        'write': (entityId, configurable) => {
+                            event.entityId = entityId;
+                            configurable.invalidate();
+                        },
                     }))
                     .add('property', anyProperty({
                         'propertyRegistry': properties,
-                        'filter': (property) => {
-                            const entity = world.entity(event.entityId);
-                            if (!entity) {
-                                return true;
-                            }
-
-                            for (const trait of entity.traits.items()) {
-                                const registryEntry = traitRegistry.entry(trait.key);
-                                if (!registryEntry || !registryEntry.properties) continue;
-
-                                if (registryEntry.properties.indexOf(property) !== -1) {
-                                    return true;
-                                }
-                            }
-
-                            return false;
-                        },
+                        'filter': onlyRelevantProperties(traitRegistry, world, () => event.entityId),
                         'read': () => event.property,
-                        'write': (property) => event.property = property,
+                        'write': (property, configurable) => {
+                            event.property = property;
+
+                            // Make sure we still have the correct value type
+                            event.value = property.type.convert(event.value);
+
+                            configurable.invalidate();
+                        },
                     }))
                     .add('value', propertyValueConfigurable(
                         world,

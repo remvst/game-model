@@ -6,7 +6,7 @@ export function anyProperty(opts: {
     propertyRegistry: PropertyRegistry<Property<any>>,
     filter: (property: Property<any>) => boolean,
     read: () => Property<any>,
-    write: (value: Property<any>) => void,
+    write: (value: Property<any>, configurable: Configurable) => void,
 }): Configurable {
     const configurable = new EnumConfigurable<Property<any>>({ 
         'read': opts.read,

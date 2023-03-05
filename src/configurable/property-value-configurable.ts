@@ -3,9 +3,9 @@ import EntityIdConfigurable from "./entity-id-configurable";
 import { PropertyConstraints, ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../properties/property-constraints";
 import World from "../world";
 
-export function propertyValueConfigurable<T, U>(
+export function propertyValueConfigurable<T>(
     world: World | null,
-    type: PropertyConstraints, 
+    type: PropertyConstraints<T>, 
     read: () => T,
     write: (value: T, configurable: Configurable) => void,
 ): Configurable {

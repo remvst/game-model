@@ -5,11 +5,12 @@ import { WorldEventSerializer } from "../serialization/serializer";
 import World from "../world";
 import { WorldEvent } from "./world-event";
 import { WorldEventRegistryEntry } from "./world-event-registry";
-import { Entity, EntityIdConfigurable, PropertyRegistry } from '..';
+import { Entity, EntityIdConfigurable, PropertyRegistry, TraitRegistry } from '..';
 import { Property } from '../properties/properties';
 import InterpolatorTrait from '../traits/interpolator-trait';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import { anyProperty } from '../configurable/any-property-configurable';
+import { onlyRelevantProperties } from '../properties/only-relevant-properties';
 
 export default class InterpolateProperty implements WorldEvent {
     static readonly key = 'interpolate-property';
@@ -61,12 +62,14 @@ export default class InterpolateProperty implements WorldEvent {
         ]))
     }
 
-    static registryEntry(propertyRegistry: PropertyRegistry<Property<any>>): WorldEventRegistryEntry<InterpolateProperty> {
+    static registryEntry(traitRegistry: TraitRegistry): WorldEventRegistryEntry<InterpolateProperty> {
+        const { properties } = traitRegistry;
+
         return {
             key: InterpolateProperty.key,
             category: 'movement',
             newEvent: () => new InterpolateProperty('', EntityProperties.x, 0, 1),
-            serializer: () => new Serializer(propertyRegistry),
+            serializer: () => new Serializer(properties),
             configurable: (event, world) => {
                 return new CompositeConfigurable()
                     .add('entityId', new EntityIdConfigurable({
@@ -75,8 +78,8 @@ export default class InterpolateProperty implements WorldEvent {
                         'write': (entityId) => event.entityId = entityId,
                     }))
                     .add('property', anyProperty({
-                        'propertyRegistry': propertyRegistry,
-                        'filter': (prop) => prop.type instanceof NumberConstraints,
+                        'propertyRegistry': properties,
+                        'filter': (prop) => prop.type instanceof NumberConstraints && onlyRelevantProperties(traitRegistry, world, () => event.entityId)(prop),
                         'read': () => event.property,
                         'write': (property) => event.property = property,
                     }))

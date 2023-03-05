@@ -1,32 +1,33 @@
 import { EntityFilter, EntityFilters } from "../configurable/entity-filter";
 
 export class PropertyType {
-    static num(min?: number, max?: number, step?: number): PropertyConstraints { 
+    static num(min?: number, max?: number, step?: number) { 
         return new NumberConstraints(min, max, step); 
     }
 
-    static id(filter: EntityFilter = EntityFilters.any()): PropertyConstraints { 
+    static id(filter: EntityFilter = EntityFilters.any()) { 
         return new EntityIdConstraints(filter); 
     }
 
-    static list(itemType: PropertyConstraints): PropertyConstraints { 
+    static list<T>(itemType: PropertyConstraints<T>) { 
         return new ListConstraints(itemType); 
     }
 
-    static enum<T>(values: T[]): PropertyConstraints {
+    static enum<T>(values: T[]) {
         return new EnumConstraints(values);
     }
     
-    static bool(): PropertyConstraints { return new BooleanConstraints(); }
-    static str(): PropertyConstraints { return new StringConstraints(); }
-    static color(): PropertyConstraints { return new ColorConstraints(); }
+    static bool() { return new BooleanConstraints(); }
+    static str() { return new StringConstraints(); }
+    static color() { return new ColorConstraints(); }
 } 
 
-export abstract class PropertyConstraints {
-    abstract defaultValue(): any
+export abstract class PropertyConstraints<T> {
+    abstract defaultValue(): T;
+    abstract convert(value: any): T;
 }
 
-export class NumberConstraints extends PropertyConstraints {
+export class NumberConstraints extends PropertyConstraints<number> {
     constructor(
         readonly min?: number,
         readonly max?: number,
@@ -38,21 +39,33 @@ export class NumberConstraints extends PropertyConstraints {
     defaultValue() {
         return this.min || 0;
     }
+
+    convert(value: any) {
+        return parseFloat(value) || 0;
+    }
 }
 
-export class StringConstraints extends PropertyConstraints {
+export class StringConstraints extends PropertyConstraints<string> {
     defaultValue() {
         return '';
     }
-}
 
-export class BooleanConstraints extends PropertyConstraints {
-    defaultValue() {
-        return false;
+    convert(value: any): string {
+        return value ? value.toString() : '';
     }
 }
 
-export class EntityIdConstraints extends PropertyConstraints {
+export class BooleanConstraints extends PropertyConstraints<boolean> {
+    defaultValue() {
+        return false;
+    }
+
+    convert(value: any) {
+        return !!value;
+    }
+}
+
+export class EntityIdConstraints extends PropertyConstraints<string> {
     constructor(
         readonly filter: EntityFilter = EntityFilters.any(),
     ) {
@@ -62,30 +75,46 @@ export class EntityIdConstraints extends PropertyConstraints {
     defaultValue() {
         return '';
     }
-}
 
-export class ColorConstraints extends PropertyConstraints {
-    defaultValue() {
-        return 0xff0000;
+    convert(value: any): string {
+        return value ? value.toString() : '';
     }
 }
 
-export class ListConstraints extends PropertyConstraints {
-    constructor(readonly itemType: PropertyConstraints) {
+export class ColorConstraints extends PropertyConstraints<number> {
+    defaultValue() {
+        return 0xff0000;
+    }
+
+    convert(value: any) {
+        return parseInt(value) || 0;
+    }
+}
+
+export class ListConstraints<T> extends PropertyConstraints<T[]> {
+    constructor(readonly itemType: PropertyConstraints<T>) {
         super();
     }
 
     defaultValue() {
         return [];
     }
+
+    convert(value: any) {
+        return Array.isArray(value) ? value.map((item) => this.itemType.convert(item)) : [];
+    }
 }
 
-export class EnumConstraints<T> extends PropertyConstraints {
+export class EnumConstraints<T> extends PropertyConstraints<T> {
     constructor(readonly values: T[]) {
         super();
     }
 
     defaultValue() {
         return this.values[0];
+    }
+
+    convert(value: any) {
+        return this.values.indexOf(value) >= 0 ? value : this.defaultValue();
     }
 }

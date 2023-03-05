@@ -15,8 +15,8 @@ import EntityRemoved from './events/entity-removed';
 import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
 import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSerializers } from './serialization/json-serializers';
-import TraitRegistry from './registry/trait-registry';
-import WorldEventRegistry from './events/world-event-registry';
+import TraitRegistry, { RegistryEntry } from './registry/trait-registry';
+import WorldEventRegistry, { WorldEventRegistryEntry } from './registry/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
 import PropertyRegistry from './registry/property-registry';
 import EntitySelectionRequested from './events/entity-selection-requested';
@@ -67,7 +67,9 @@ export {
 
     // Registries
     TraitRegistry,
+    RegistryEntry,
     WorldEventRegistry,
+    WorldEventRegistryEntry,
 
     // Perf
     CyclePerformanceTracker,

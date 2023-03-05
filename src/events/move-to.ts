@@ -6,7 +6,7 @@ import InterpolatorTrait from "../traits/interpolator-trait";
 import { vector3 } from "../vector3";
 import World from "../world";
 import { WorldEvent } from "./world-event";
-import { WorldEventRegistryEntry } from "./world-event-registry";
+import { WorldEventRegistryEntry } from "../registry/world-event-registry";
 
 export default class MoveTo implements WorldEvent {
     static readonly key = 'move-to';

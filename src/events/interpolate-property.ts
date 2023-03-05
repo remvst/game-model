@@ -4,7 +4,7 @@ import { CompositeConfigurable, NumberConfigurable } from "@remvst/configurable"
 import { WorldEventSerializer } from "../serialization/serializer";
 import World from "../world";
 import { WorldEvent } from "./world-event";
-import { WorldEventRegistryEntry } from "./world-event-registry";
+import { WorldEventRegistryEntry } from "../registry/world-event-registry";
 import { Entity, EntityIdConfigurable, PropertyRegistry, SetProperty, TraitRegistry } from '..';
 import { Property, worldEventGetSet } from '../properties/properties';
 import InterpolatorTrait from '../traits/interpolator-trait';

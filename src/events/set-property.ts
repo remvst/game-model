@@ -4,7 +4,7 @@ import { Property, worldEventGetSet } from '../properties/properties';
 import World from '../world';
 import { WorldEvent } from './world-event';
 import { WorldEventSerializer } from '../serialization/serializer';
-import { WorldEventRegistryEntry } from './world-event-registry';
+import { WorldEventRegistryEntry } from '../registry/world-event-registry';
 import { EntityProperties } from '../entity';
 import { CompositeConfigurable, EnumConfigurable } from '@remvst/configurable';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';

@@ -26,6 +26,10 @@ export class PropertyType {
     static list(itemType: PropertyConstraints): PropertyConstraints { 
         return new ListConstraints(itemType); 
     }
+
+    static enum<T>(values: T[]): PropertyConstraints {
+        return new EnumConstraints(values);
+    }
     
     static bool(): PropertyConstraints { return new BooleanConstraints(); }
     static str(): PropertyConstraints { return new StringConstraints(); }
@@ -33,7 +37,7 @@ export class PropertyType {
 } 
 
 export abstract class PropertyConstraints {
-    validate(value: any) {}
+    abstract defaultValue(): any
 }
 
 export class NumberConstraints extends PropertyConstraints {
@@ -44,14 +48,22 @@ export class NumberConstraints extends PropertyConstraints {
     ) {
         super();
     }
+
+    defaultValue() {
+        return this.min || 0;
+    }
 }
 
 export class StringConstraints extends PropertyConstraints {
-
+    defaultValue() {
+        return '';
+    }
 }
 
 export class BooleanConstraints extends PropertyConstraints {
-
+    defaultValue() {
+        return false;
+    }
 }
 
 export class EntityIdConstraints extends PropertyConstraints {
@@ -60,15 +72,35 @@ export class EntityIdConstraints extends PropertyConstraints {
     ) {
         super();
     }
+
+    defaultValue() {
+        return '';
+    }
 }
 
 export class ColorConstraints extends PropertyConstraints {
-
+    defaultValue() {
+        return 0xff0000;
+    }
 }
 
 export class ListConstraints extends PropertyConstraints {
     constructor(readonly itemType: PropertyConstraints) {
         super();
+    }
+
+    defaultValue() {
+        return [];
+    }
+}
+
+export class EnumConstraints<T> extends PropertyConstraints {
+    constructor(readonly values: T[]) {
+        super();
+    }
+
+    defaultValue() {
+        return this.values[0];
     }
 }
 

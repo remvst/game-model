@@ -1,3 +1,4 @@
+import { EntityIdConfigurable } from '..';
 import { Property, PropertyType, worldEventGetSet } from '../properties';
 import World from '../world';
 import { WorldEvent } from './world-event';
@@ -55,7 +56,8 @@ export default class SetProperty implements WorldEvent {
                 }
 
                 return new CompositeConfigurable()
-                    .add('entityId', new StringConfigurable({
+                    .add('entityId', new EntityIdConfigurable({
+                        world,
                         'read': () => event.entityId,
                         'write': (entityId) => event.entityId = entityId,
                     }))

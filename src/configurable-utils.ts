@@ -1,6 +1,6 @@
-import { Configurable, BooleanConfigurable, StringConfigurable, NumberConfigurable, ColorConfigurable, EnumConfigurable, CompositeConfigurable } from '@remvst/configurable';
+import { Configurable, BooleanConfigurable, StringConfigurable, NumberConfigurable, ColorConfigurable, EnumConfigurable, CompositeConfigurable, GroupConfigurable, ButtonConfigurable } from '@remvst/configurable';
 import EntityIdConfigurable from './configurable/entity-id-configurable';
-import { BooleanConstraints, ColorConstraints, EntityIdConstraints, GenericProperty, ListConstraints, NumberConstraints, Property, PropertyConstraints, StringConstraints } from "./properties";
+import { BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, ListConstraints, NumberConstraints, Property, PropertyConstraints, StringConstraints } from "./properties";
 import PropertyRegistry from './property-registry';
 import World from './world';
 
@@ -18,7 +18,7 @@ export function propertyValueConfigurable<T, U>(
             const itemConfigurable = propertyValueConfigurable(
                 world,
                 type.itemType,
-                () => items[i],
+                () => items[i] || type.defaultValue(),
                 (value) => {
                     const copy = items.slice(0);
                     copy[i] = value;
@@ -26,7 +26,26 @@ export function propertyValueConfigurable<T, U>(
                     configurable.invalidate();
                 }
             );
-            configurable.add(`item[${i}]`, itemConfigurable);
+
+            let group: GroupConfigurable;
+            if (itemConfigurable instanceof GroupConfigurable) {
+                group = itemConfigurable;
+            } else {
+                group = new GroupConfigurable();
+                group.add(itemConfigurable);
+            }
+
+            group.add(new ButtonConfigurable({
+                'label': 'del',
+                'onClick': () => {
+                    const copy = items.slice(0);
+                    copy.splice(i, 1);
+                    write(copy as T, configurable);
+                    configurable.invalidate();
+                }
+            }))
+
+            configurable.add(`item[${i}]`, group);
         }
 
         return configurable;
@@ -69,6 +88,19 @@ export function propertyValueConfigurable<T, U>(
             'read': () => (read() as any).toString(),
             'write': (value, configurable) => write(value as T, configurable),
         });
+    }
+
+    if (type instanceof EnumConstraints) {
+        const configurable = new EnumConfigurable({
+            'read': () => read() as any,
+            'write': (value, configurable) => write(value as T, configurable),
+        });
+
+        for (const value of type.values) {
+            configurable.add(value.toString(), value);
+        }
+
+        return configurable;
     }
 
     throw new Error(`Unknown property type: ${type}`);

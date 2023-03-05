@@ -1,6 +1,5 @@
 import { EntityProperties } from '../entity';
-import { CompositeConfigurable, NumberConfigurable } from "@remvst/configurable";
-import { Entity, EntityIdConfigurable, PropertyType, worldEventGetSet } from "..";
+import { Entity, PropertyType, worldEventGetSet } from "..";
 import adaptId from "../adapt-id";
 import { WorldEventSerializer } from "../serialization/serializer";
 import InterpolatorTrait from "../traits/interpolator-trait";
@@ -73,24 +72,6 @@ export default class MoveTo implements WorldEvent {
             category: 'movement',
             newEvent: () => new MoveTo('', 1, ''),
             serializer: () => new MoveSerializer(),
-            configurable: (event, world) => new CompositeConfigurable()
-                .add('entityId', new EntityIdConfigurable({
-                    world,
-                    'read': () => event.entityId,
-                    'write': (entityId) => event.entityId = entityId,
-                }))
-                .add('targetEntityId', new EntityIdConfigurable({
-                    world,
-                    'read': () => event.targetEntityId,
-                    'write': (targetEntityId) => event.targetEntityId = targetEntityId,
-                }))
-                .add('duration', new NumberConfigurable({
-                    'min': 0,
-                    'max': 200,
-                    'step': 0.1,
-                    'read': () => event.duration,
-                    'write': duration => event.duration = duration,
-                })),
             readjust: (event, entity, triggererId) => {
                 event.entityId = adaptId(event.entityId, triggererId);
                 event.targetEntityId = adaptId(event.targetEntityId, triggererId);

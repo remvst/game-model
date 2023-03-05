@@ -113,6 +113,7 @@ export function propertyValueConfigurable<T>(
 
     if (type instanceof EnumConstraints) {
         const configurable = new EnumConfigurable({
+            'enumToken': type.enumToken,
             'read': () => read() as any,
             'write': (value, configurable) => write(value as T, configurable),
         });

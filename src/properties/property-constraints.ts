@@ -110,7 +110,10 @@ export class ListConstraints<T> extends PropertyConstraints<T[]> {
 }
 
 export class EnumConstraints<T> extends PropertyConstraints<T> {
-    constructor(readonly values: T[]) {
+    constructor(
+        readonly values: T[], 
+        readonly enumToken: any,
+    ) {
         super();
     }
 

@@ -42,5 +42,3 @@ export class EntityFilters {
     }
 }
 
-export const MINIMUM_ENTITY_SELECTION_FILTER = EntityFilters.any();
-

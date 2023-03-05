@@ -3,16 +3,17 @@ import Entity from "../entity";
 import EntitySelectionRequested from "../events/entity-selection-requested";
 import EntitySelectorTrait from "../traits/entity-selector-trait";
 import World from '../world';
-import { EntityFilter, EntityFilters, MINIMUM_ENTITY_SELECTION_FILTER } from "./entity-filter";
+import { EntityFilter, EntityFilters } from "./entity-filter";
 
 export default class EntityIdConfigurable extends GroupConfigurable {
 
     readonly read: (configurable: Configurable) => string;
     readonly write: (value: string, configurable: Configurable) => void;
-    private entityFilter: EntityFilter = EntityFilters.any();
+    private filter: EntityFilter;
 
     constructor(opts: {
-        world: World | null,
+        world?: World | null,
+        filter?: EntityFilter | null,
         read: (configurable: Configurable) => string,
         write: (value: string, configurable: Configurable) => void,
     }) {
@@ -28,13 +29,14 @@ export default class EntityIdConfigurable extends GroupConfigurable {
 
         this.read = opts.read;
         this.write = opts.write;
+        this.filter = opts.filter || EntityFilters.any();
 
         const { world } = opts;
         if (world) {
             const ids: string[] = [];
             const descriptionToEntity = new Map<string, Entity>();
             for (const entity of world.entities.items()) {
-                if(!this.entityFilter(entity)) {
+                if(!this.filter(entity)) {
                     continue;
                 }
 
@@ -90,10 +92,5 @@ export default class EntityIdConfigurable extends GroupConfigurable {
                 }
             }));
         }
-    }
-
-    filter(filter: EntityFilter): this {
-        this.entityFilter = EntityFilters.and(MINIMUM_ENTITY_SELECTION_FILTER, filter);
-        return this;
     }
 }

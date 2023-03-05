@@ -5,6 +5,8 @@ import Trait from "../trait";
 import PropertyRegistry from './property-registry';
 import { EntityProperties } from '../entity';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
+import { KeyProvider } from '../key-provider';
+import AutomaticTraitSerializer from '../serialization/automatic-trait-serializer';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
@@ -24,6 +26,20 @@ export default class TraitRegistry {
         this.properties.add(EntityProperties.y);
         this.properties.add(EntityProperties.z);
         this.properties.add(EntityProperties.angle);
+    }
+
+    addAuto<T extends Trait>(opts: {
+        traitType: (new () => T) & KeyProvider,
+        properties: Property<any>[],
+        category?: string,
+    }): this {
+        return this.add({
+            key: opts.traitType.key,
+            category: opts.category,
+            newTrait: () => new opts.traitType(),
+            serializer: (entry) => new AutomaticTraitSerializer(entry),
+            properties: opts.properties,
+        });
     }
 
     add(entry: RegistryEntry<any>): this {

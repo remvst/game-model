@@ -26,9 +26,8 @@ describe('the automatic trait serializer', () => {
     beforeEach(() => {
         registry = new TraitRegistry();
 
-        registry.add({
-            key: TestTrait.key,
-            newTrait: () => new TestTrait(),
+        registry.addAuto({
+            traitType: TestTrait,
             properties: [
                 traitGetSet(TestTrait, 'stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp),
                 traitGetSet(TestTrait, 'stringArrayProp', PropertyType.list(PropertyType.str()), (trait) => trait.stringArrayProp, (trait, stringArrayProp) => trait.stringArrayProp = stringArrayProp),
@@ -42,7 +41,6 @@ describe('the automatic trait serializer', () => {
                 traitGetSet(TestTrait, 'numberProp', PropertyType.num(), (trait) => trait.numberProp, (trait, numberProp) => trait.numberProp = numberProp),
                 traitGetSet(TestTrait, 'numberArrayProp', PropertyType.list(PropertyType.num()), (trait) => trait.numberArrayProp, (trait, numberArrayProp) => trait.numberArrayProp = numberArrayProp),
             ],
-            serializer: (entry) => new AutomaticTraitSerializer(entry),
         });
 
         const entry = registry.entry(TestTrait.key);

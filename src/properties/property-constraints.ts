@@ -20,6 +20,13 @@ export class PropertyType {
     static composite(properties: Map<string, PropertyConstraints<any>>) {
         return new CompositeConstraints(properties);
     }
+
+    static vec2(min?: number, max?: number, step?: number) {
+        return this.composite(new Map<string, PropertyConstraints<any>>([
+            ['x', PropertyType.num(min, max, step)],
+            ['y', PropertyType.num(min, max, step)],
+        ]));
+    }
     
     static bool() { return new BooleanConstraints(); }
     static str() { return new StringConstraints(); }

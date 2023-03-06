@@ -56,8 +56,7 @@ export default class Shift implements WorldEvent {
             properties: [
                 worldEventGetSet(Shift, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
                 worldEventGetSet(Shift, 'duration', PropertyType.num(0, 120, 0.1), event => event.duration, (event, duration) => event.duration = duration),
-                worldEventGetSet(Shift, 'translationX', PropertyType.num(-900, 900), event => event.translation.x, (event, translationX) => event.translation.x = translationX),
-                worldEventGetSet(Shift, 'translationY', PropertyType.num(-900, 900), event => event.translation.y, (event, translationY) => event.translation.y = translationY),
+                worldEventGetSet(Shift, 'translation', PropertyType.vec2(), event => event.translation, (event, translation) => event.translation = translation),
             ],
         };
     }

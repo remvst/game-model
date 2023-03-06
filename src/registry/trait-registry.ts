@@ -17,6 +17,12 @@ export interface RegistryEntry<TraitType extends Trait> {
     properties?: Property<any>[];
 }
 
+export interface AutoRegistryEntry<TraitType extends Trait> {
+    readonly traitType: (new () => TraitType) & KeyProvider,
+    readonly properties: Property<any>[],
+    readonly category?: string,
+}
+
 export default class TraitRegistry {
     private readonly entries = new Map<string, RegistryEntry<any>>();
     readonly properties = new PropertyRegistry<Property<any>>();
@@ -28,11 +34,7 @@ export default class TraitRegistry {
         this.properties.add(EntityProperties.angle);
     }
 
-    addAuto<T extends Trait>(opts: {
-        traitType: (new () => T) & KeyProvider,
-        properties: Property<any>[],
-        category?: string,
-    }): this {
+    addAuto<T extends Trait>(opts: AutoRegistryEntry<T>): this {
         return this.add({
             key: opts.traitType.key,
             category: opts.category,

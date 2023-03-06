@@ -15,7 +15,7 @@ export default abstract class Trait implements KeyProvider {
     protected readonly lastEntityPosition = vector3();
 
     readonly queriableSectorSize: number = 1000;
-    readonly surfaceProvider: TraitSurfaceProvider = entityPositionSurface;
+    readonly surfaceProvider: TraitSurfaceProvider<this> = entityPositionSurface;
 
     constructor() {
         this.enabled = true;

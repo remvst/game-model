@@ -12,7 +12,7 @@ export function onlyRelevantProperties(
     return (property) => {
         switch (property.entityPropertyType) {
         case EntityPropertyType.GENERAL_ENTITY: return true;
-        case EntityPropertyType.GENERAL_TRAIT: return true;
+        case EntityPropertyType.GENERAL_TRAIT: 
         case EntityPropertyType.SPECIFIC_TRAIT:
             const entity = world.entity(entityId());
             if (!entity) {

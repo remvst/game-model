@@ -28,7 +28,7 @@ export default class Shift implements WorldEvent {
         world.entities.add(new Entity(undefined, [
             new InterpolatorTrait(
                 this.entityId,
-                EntityProperties.y,
+                EntityProperties.x,
                 entity.x,
                 entity.x + this.translation.x,
                 this.duration,

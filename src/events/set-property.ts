@@ -1,5 +1,5 @@
 import { PropertyType } from '..';
-import { EntityIdConfigurable, TraitRegistry, PropertyRegistry } from '..';
+import { EntityIdConfigurable, PropertyRegistry } from '..';
 import { Property, worldEventGetSet } from '../properties/properties';
 import World from '../world';
 import { WorldEvent } from './world-event';
@@ -11,6 +11,7 @@ import { propertyValueConfigurable } from '../configurable/property-value-config
 import { anyProperty } from '../configurable/any-property-configurable';
 import { onlyRelevantProperties } from '../properties/only-relevant-properties';
 import GameModelApp from '../game-model-app';
+import adaptId from '../adapt-id';
 
 export default class SetProperty implements WorldEvent {
 
@@ -87,6 +88,9 @@ export default class SetProperty implements WorldEvent {
                         () => event.value, 
                         (value) => event.value = value
                     ));
+            },
+            readjust: (event, entity, triggererId) => {
+                event.entityId = adaptId(event.entityId, triggererId);
             },
             properties: [
                 worldEventGetSet(SetProperty, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),

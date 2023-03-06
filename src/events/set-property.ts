@@ -10,6 +10,7 @@ import { CompositeConfigurable, EnumConfigurable } from '@remvst/configurable';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import { anyProperty } from '../configurable/any-property-configurable';
 import { onlyRelevantProperties } from '../properties/only-relevant-properties';
+import GameModelApp from '../game-model-app';
 
 export default class SetProperty implements WorldEvent {
 
@@ -33,9 +34,8 @@ export default class SetProperty implements WorldEvent {
         this.property.set(entity, this.value);
     }
 
-    static registryEntry(
-        traitRegistry: TraitRegistry,
-    ): WorldEventRegistryEntry<SetProperty> {
+    static registryEntry(app: GameModelApp): WorldEventRegistryEntry<SetProperty> {
+        const { traitRegistry } = app;
         const { properties } = traitRegistry;
 
         return {

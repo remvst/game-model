@@ -4,6 +4,7 @@ import { EntityEvent } from "../events/entity-event";
 import Remove from "../events/remove";
 import TriggerEvent from "../events/trigger-event";
 import { WorldEvent } from "../events/world-event";
+import GameModelApp from "../game-model-app";
 import { KeyProvider } from "../key-provider";
 import { CompositeSerializerMeta } from "../serialization/composite-serializer";
 import { AnySerialized, TraitSerializer, WorldEventSerializer } from "../serialization/serializer";
@@ -57,15 +58,14 @@ export default class EventHolderTrait extends Trait {
         world.addEvent(copy);
     }
 
-    static registryEntry(
-        worldEventRegistry: WorldEventRegistry,
-        eventSerializer: WorldEventSerializer<any, any>,
-    ): RegistryEntry<EventHolderTrait> {
+    static registryEntry(app: GameModelApp): RegistryEntry<EventHolderTrait> {
+        const { worldEventRegistry } = app; 
+        const { worldEvent } = app.serializers; 
         return {
             key: EventHolderTrait.key,
             category: 'scripting',
             newTrait: () => new EventHolderTrait(worldEventRegistry, new Remove(), 0, 1),
-            serializer: () => new EventHolderSerializer(worldEventRegistry, eventSerializer),
+            serializer: () => new EventHolderSerializer(worldEventRegistry, worldEvent),
             configurable: (trait: EventHolderTrait) => trait.configurable,
         };
     }

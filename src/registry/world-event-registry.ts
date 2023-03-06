@@ -25,19 +25,34 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     properties?: WorldEventProperty<any>[];
 }
 
+export type AnyWorldEventRegistryEntry<EventType extends WorldEvent> = WorldEventRegistryEntry<EventType> | AutoWorldEventRegistryEntry<EventType>;
+
 export default class WorldEventRegistry {
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();
     readonly properties = new PropertyRegistry<WorldEventProperty<any>>();
 
-    add<T extends WorldEvent>(entry: WorldEventRegistryEntry<T>): this {
-        if (this.entries.has(entry.key)) {
-            throw new Error(`Entry conflict for key ${entry.key}`);
+    add<T extends WorldEvent>(entry: AnyWorldEventRegistryEntry<T>): WorldEventRegistryEntry<T> {
+        const autoEntry = entry as AutoWorldEventRegistryEntry<T>;
+        const manualEntry = entry as WorldEventRegistryEntry<T>;
+
+        if (autoEntry.eventType) {
+            return this.add({
+                key: autoEntry.eventType.key,
+                category: autoEntry.category,
+                newEvent: () => new autoEntry.eventType(),
+                serializer: (autoEntry) => new AutomaticWorldEventSerializer(autoEntry),
+                properties: autoEntry.properties,
+            });
         }
-        this.entries.set(entry.key, entry);
+
+        if (this.entries.has(manualEntry.key)) {
+            throw new Error(`Entry conflict for key ${manualEntry.key}`);
+        }
+        this.entries.set(manualEntry.key, manualEntry);
 
         // In case no configurable was defined, add a default one
-        if (!entry.configurable) {
-            entry.configurable = (event, world) => {
+        if (!manualEntry.configurable) {
+            manualEntry.configurable = (event, world) => {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of entry.properties || []) {
                     autoConfigurable.add(property.identifier, propertyValueConfigurable(
@@ -51,17 +66,7 @@ export default class WorldEventRegistry {
             };
         }
 
-        return this;
-    }
-
-    addAuto<T extends WorldEvent>(entry: AutoWorldEventRegistryEntry<T>): this {
-        return this.add({
-            key: entry.eventType.key,
-            category: entry.category,
-            newEvent: () => new entry.eventType(),
-            serializer: (entry) => new AutomaticWorldEventSerializer(entry),
-            properties: entry.properties,
-        });
+        return manualEntry;
     }
 
     entry(key: string): WorldEventRegistryEntry<any> | null {

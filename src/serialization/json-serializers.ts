@@ -77,7 +77,7 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
     constructor(
         private readonly entitySerializer: EntitySerializer<AnySerialized>,
-        private readonly worldSetup: WorldSetup,
+        public worldSetup: WorldSetup,
     ) {
 
     }

@@ -11,6 +11,7 @@ import InterpolatorTrait from '../traits/interpolator-trait';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import { anyProperty } from '../configurable/any-property-configurable';
 import { onlyRelevantProperties } from '../properties/only-relevant-properties';
+import GameModelApp from '../game-model-app';
 
 export default class InterpolateProperty implements WorldEvent {
     static readonly key = 'interpolate-property';
@@ -62,7 +63,8 @@ export default class InterpolateProperty implements WorldEvent {
         ]))
     }
 
-    static registryEntry(traitRegistry: TraitRegistry): WorldEventRegistryEntry<InterpolateProperty> {
+    static registryEntry(app: GameModelApp): WorldEventRegistryEntry<InterpolateProperty> {
+        const { traitRegistry } = app;
         const { properties } = traitRegistry;
 
         return {

@@ -23,6 +23,8 @@ export interface AutoRegistryEntry<TraitType extends Trait> {
     readonly category?: string,
 }
 
+export type AnyRegistryEntry<TraitType extends Trait> = RegistryEntry<TraitType> | AutoRegistryEntry<TraitType>;
+
 export default class TraitRegistry {
     private readonly entries = new Map<string, RegistryEntry<any>>();
     readonly properties = new PropertyRegistry<Property<any>>();
@@ -34,28 +36,31 @@ export default class TraitRegistry {
         this.properties.add(EntityProperties.angle);
     }
 
-    addAuto<T extends Trait>(opts: AutoRegistryEntry<T>): this {
-        return this.add({
-            key: opts.traitType.key,
-            category: opts.category,
-            newTrait: () => new opts.traitType(),
-            serializer: (entry) => new AutomaticTraitSerializer(entry),
-            properties: opts.properties,
-        });
-    }
+    add<T extends Trait>(entry: AnyRegistryEntry<T>): RegistryEntry<T> {
+        const autoEntry = entry as AutoRegistryEntry<T>;
+        const manualEntry = entry as RegistryEntry<T>;
 
-    add(entry: RegistryEntry<any>): this {
-        if (this.entries.has(entry.key)) {
-            throw new Error(`Entry conflict for key ${entry.key}`);
+        if (autoEntry.traitType) {
+            return this.add({
+                key: autoEntry.traitType.key,
+                category: autoEntry.category,
+                newTrait: () => new autoEntry.traitType(),
+                serializer: (autoEntry) => new AutomaticTraitSerializer(autoEntry),
+                properties: autoEntry.properties,
+            });
         }
-        this.entries.set(entry.key, entry);
 
-        const properties = entry.properties || [];
-        properties.push(traitEnabledProperty(entry.key));
+        if (this.entries.has(manualEntry.key)) {
+            throw new Error(`Entry conflict for key ${manualEntry.key}`);
+        }
+        this.entries.set(manualEntry.key, manualEntry);
+
+        const properties = manualEntry.properties || [];
+        properties.push(traitEnabledProperty(manualEntry.key));
 
         // In case no configurable was defined, add a default one
-        if (!entry.configurable) {
-            entry.configurable = (trait: Trait) => {
+        if (!manualEntry.configurable) {
+            manualEntry.configurable = (trait: Trait) => {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of properties) {
                     autoConfigurable.add(property.identifier, propertyValueConfigurable(
@@ -73,7 +78,7 @@ export default class TraitRegistry {
             this.properties.add(property);
         }
 
-        return this;
+        return manualEntry;
     }
 
     entry(key: string): RegistryEntry<any> | null {

@@ -3,7 +3,7 @@ import { Rectangle } from "@remvst/geometry";
 class Sector<ObjectType> {
 
     constructor(
-        readonly objects: ObjectType[],
+        readonly objects: ObjectType[] = [],
     ) {
 
     }
@@ -79,9 +79,7 @@ export default class SectorObjectSet<ObjectType> {
                 const index = this.sectorKey(sectorX, sectorY);
                 const sector = this.sectors.get(index);
                 if (sector) {
-                    for (const object of sector.objects) {
-                        yield object;
-                    }
+                    yield* sector.objects;
                 }
             }
         }

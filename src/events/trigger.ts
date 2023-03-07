@@ -1,4 +1,3 @@
-import adaptId from '../adapt-id';
 import Entity from '../entity';
 import { worldEventGetSet } from '../properties/properties';
 import { PropertyType } from '../properties/property-constraints';
@@ -44,11 +43,9 @@ export default class Trigger implements WorldEvent {
         return {
             eventType: Trigger,
             category: 'scripting',
-            readjust: (event, _, triggererId) => {
-                event.triggererId = adaptId(event.triggererId, triggererId);
-            },
             properties: [
                 worldEventGetSet(Trigger, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
+                worldEventGetSet(Trigger, 'triggererId', PropertyType.id(), event => event.triggererId, (event, triggererId) => event.triggererId = triggererId),
             ],
         };
     }

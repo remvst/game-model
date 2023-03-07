@@ -1,5 +1,5 @@
 import { CompositeConfigurable, EnumConfigurable, NumberConfigurable } from "@remvst/configurable";
-import { Entity, RegistryEntry, WorldEventRegistry } from "..";
+import { Entity, EntityIdConstraints, RegistryEntry, WorldEventRegistry } from "..";
 import { EntityEvent } from "../events/entity-event";
 import Remove from "../events/remove";
 import TriggerEvent from "../events/trigger-event";
@@ -11,6 +11,7 @@ import { AnySerialized, TraitSerializer, WorldEventSerializer } from "../seriali
 import Trait from "../trait";
 import World from "../world";
 import DelayedActionTrait from "./delayed-action-trait";
+import adaptId from "../adapt-id";
 
 export default class EventHolderTrait extends Trait {
     static readonly key = 'event-holder';
@@ -47,12 +48,14 @@ export default class EventHolderTrait extends Trait {
         const registryEntry = this.worldEventRegistry.entry(this.event.key);
         const serializer = registryEntry.serializer(registryEntry);
         const copy = serializer.deserialize(serializer.serialize(this.event));
-        if (registryEntry.readjust) {
-            registryEntry.readjust(copy, this.entity, triggererId);
-        }
-
         if (registryEntry.properties) {
-            
+            for (const property of registryEntry.properties) {
+                if (property.type instanceof EntityIdConstraints) {
+                    let value = property.get(copy);
+                    value = adaptId(value, triggererId, world);
+                    property.set(copy, value);
+                }
+            }
         }
 
         world.addEvent(copy);

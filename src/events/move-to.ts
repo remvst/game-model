@@ -1,6 +1,5 @@
 import { EntityProperties } from '../entity';
 import { Entity, PropertyType, worldEventGetSet } from "..";
-import adaptId from "../adapt-id";
 import { WorldEventSerializer } from "../serialization/serializer";
 import InterpolatorTrait from "../traits/interpolator-trait";
 import { vector3 } from "../vector3";
@@ -72,10 +71,6 @@ export default class MoveTo implements WorldEvent {
             category: 'movement',
             newEvent: () => new MoveTo('', 1, ''),
             serializer: () => new MoveSerializer(),
-            readjust: (event, entity, triggererId) => {
-                event.entityId = adaptId(event.entityId, triggererId);
-                event.targetEntityId = adaptId(event.targetEntityId, triggererId);
-            },
             properties: [
                 worldEventGetSet(MoveTo, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
                 worldEventGetSet(MoveTo, 'targetEntityId', PropertyType.id(), event => event.targetEntityId, (event, targetEntityId) => event.targetEntityId = targetEntityId),

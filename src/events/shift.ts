@@ -1,6 +1,5 @@
 import { EntityProperties } from './../entity';
 import { Entity, InterpolatorTrait, vector3 } from "..";
-import adaptId from "../adapt-id";
 import { worldEventGetSet } from "../properties/properties";
 import { PropertyType } from "../properties/property-constraints";
 import { AutoWorldEventRegistryEntry } from "../registry/world-event-registry";
@@ -50,9 +49,6 @@ export default class Shift implements WorldEvent {
         return {
             eventType: Shift,
             category: 'movement',
-            readjust: (event, _, triggererId) => {
-                event.entityId = adaptId(event.entityId, triggererId);
-            },
             properties: [
                 worldEventGetSet(Shift, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
                 worldEventGetSet(Shift, 'duration', PropertyType.num(0, 120, 0.1), event => event.duration, (event, duration) => event.duration = duration),

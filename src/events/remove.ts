@@ -1,4 +1,3 @@
-import adaptId from '../adapt-id';
 import { worldEventGetSet } from '../properties/properties';
 import { PropertyType } from '../properties/property-constraints';
 import { AutoWorldEventRegistryEntry } from '../registry/world-event-registry';
@@ -24,9 +23,6 @@ export default class Remove implements WorldEvent {
         return {
             eventType: Remove,
             category: 'scripting',
-            readjust: (event, _, triggererId) => {
-                event.entityId = adaptId(event.entityId, triggererId);
-            },
             properties: [
                 worldEventGetSet(Remove, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
             ],

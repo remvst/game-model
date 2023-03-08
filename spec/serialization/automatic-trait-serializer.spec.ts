@@ -34,7 +34,7 @@ describe('the automatic trait serializer', () => {
             ['delay', PropertyType.num()],
         ]));
 
-        registry.addAuto({
+        registry.add({
             traitType: TestTrait,
             properties: [
                 traitGetSet(TestTrait, 'stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp),

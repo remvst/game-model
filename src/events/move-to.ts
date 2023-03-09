@@ -2,7 +2,6 @@ import { EntityProperties } from '../entity';
 import { Entity, PropertyType, worldEventGetSet } from "..";
 import { WorldEventSerializer } from "../serialization/serializer";
 import InterpolatorTrait from "../traits/interpolator-trait";
-import { vector3 } from "../vector3";
 import World from "../world";
 import { WorldEvent } from "./world-event";
 import { WorldEventRegistryEntry } from "../registry/world-event-registry";
@@ -24,45 +23,46 @@ export default class MoveTo implements WorldEvent {
             return;
         }
 
-        const targetPosition = vector3();
-        if (this.targetEntityId) {
-            const targetEntity = world.entity(this.targetEntityId);
-            if (targetEntity) {
-                targetPosition.x = targetEntity.position.x;
-                targetPosition.y = targetEntity.position.y;
-                targetPosition.y = targetEntity.position.y;
-            }
+        const targetEntity = world.entity(this.targetEntityId);
+        if (!targetEntity) {
+            return;
         }
 
-        world.entities.add(new Entity(undefined, [
-            new InterpolatorTrait(
-                this.entityId,
-                EntityProperties.x,
-                entity.position.x,
-                targetPosition.x,
-                this.duration,
-            ),
-        ]));
+        if (entity.position.x !== targetEntity.position.x) {
+            world.entities.add(new Entity(undefined, [
+                new InterpolatorTrait(
+                    this.entityId,
+                    EntityProperties.x,
+                    entity.position.x,
+                    targetEntity.position.x,
+                    this.duration,
+                ),
+            ]));
+        }
 
-        world.entities.add(new Entity(undefined, [
-            new InterpolatorTrait(
-                this.entityId,
-                EntityProperties.y,
-                entity.position.y,
-                targetPosition.y,
-                this.duration,
-            ),
-        ]));
+        if (entity.position.y !== targetEntity.position.y) {
+            world.entities.add(new Entity(undefined, [
+                new InterpolatorTrait(
+                    this.entityId,
+                    EntityProperties.y,
+                    entity.position.y,
+                    targetEntity.position.y,
+                    this.duration,
+                ),
+            ]));
+        }
 
-        world.entities.add(new Entity(undefined, [
-            new InterpolatorTrait(
-                this.entityId,
-                EntityProperties.z,
-                entity.position.z,
-                targetPosition.z,
-                this.duration,
-            ),
-        ]));
+        if (entity.position.y !== targetEntity.position.y) {
+            world.entities.add(new Entity(undefined, [
+                new InterpolatorTrait(
+                    this.entityId,
+                    EntityProperties.z,
+                    entity.position.z,
+                    targetEntity.position.z,
+                    this.duration,
+                ),
+            ]));
+        }
     }
 
     static registryEntry(): WorldEventRegistryEntry<MoveTo> {

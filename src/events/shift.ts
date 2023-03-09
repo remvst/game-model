@@ -24,25 +24,29 @@ export default class Shift implements WorldEvent {
             return;
         }
 
-        world.entities.add(new Entity(undefined, [
-            new InterpolatorTrait(
-                this.entityId,
-                EntityProperties.x,
-                entity.x,
-                entity.x + this.translation.x,
-                this.duration,
-            ),
-        ]));
+        if (this.translation.x) {
+            world.entities.add(new Entity(undefined, [
+                new InterpolatorTrait(
+                    this.entityId,
+                    EntityProperties.x,
+                    entity.x,
+                    entity.x + this.translation.x,
+                    this.duration,
+                ),
+            ]));
+        }
 
-        world.entities.add(new Entity(undefined, [
-            new InterpolatorTrait(
-                this.entityId,
-                EntityProperties.y,
-                entity.y,
-                entity.y + this.translation.y,
-                this.duration,
-            ),
-        ]));
+        if (this.translation.y) {
+            world.entities.add(new Entity(undefined, [
+                new InterpolatorTrait(
+                    this.entityId,
+                    EntityProperties.y,
+                    entity.y,
+                    entity.y + this.translation.y,
+                    this.duration,
+                ),
+            ]));
+        }
     }
 
     static registryEntry(): AutoWorldEventRegistryEntry<Shift> {

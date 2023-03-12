@@ -1,4 +1,5 @@
-import { PropertyType } from '..';
+import { EntityIdConstraints, PropertyType } from './../properties/property-constraints';
+import adaptId from '../adapt-id';
 import { EntityIdConfigurable, PropertyRegistry } from '..';
 import { Property, worldEventGetSet } from '../properties/properties';
 import World from '../world';
@@ -43,6 +44,11 @@ export default class SetProperty implements WorldEvent {
             category: 'scripting',
             newEvent: () => new SetProperty('', EntityProperties.x, 0),
             serializer: () => new Serializer(properties),
+            readjust: (event, entity, triggererId) => {
+                if (event.property.type instanceof EntityIdConstraints) {
+                    event.value = adaptId(event.value, triggererId, entity.world);
+                }
+            },
             configurable: (event: SetProperty, world: World) => {
                 const property = new EnumConfigurable<Property<any>>({
                     'read': () => event.property,

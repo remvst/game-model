@@ -39,6 +39,10 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
         trait.bind(entity);
 
         for (const property of this.registryEntry.properties!) {
+            if (!serialized.hasOwnProperty(property.localIdentifier)) {
+                continue;
+            }
+
             const propertyValue = this.deserializePropertyValue(property.type, serialized[property.localIdentifier!]);
             property.set(entity, propertyValue);
         }

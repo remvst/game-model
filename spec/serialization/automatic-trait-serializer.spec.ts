@@ -93,4 +93,22 @@ describe('the automatic trait serializer', () => {
         expect(deserialized.entityIdArrayProp).toEqual(trait.entityIdArrayProp);
         expect(deserialized.compositeProp).toEqual(trait.compositeProp);
     });
+
+    it('will not deserialize properties that weren\'t first serialized', () => {
+        const defaultTrait = new TestTrait();
+
+        const deserialized = serializer.deserialize({
+            'stringProp': 'haha serialized string',
+        });
+        expect(deserialized.stringProp).toEqual('haha serialized string');
+
+        expect(deserialized.boolProp).toEqual(defaultTrait.boolProp);
+        expect(deserialized.boolArrayProp).toEqual(defaultTrait.boolArrayProp);
+        expect(deserialized.stringArrayProp).toEqual(defaultTrait.stringArrayProp);
+        expect(deserialized.numberProp).toEqual(defaultTrait.numberProp);
+        expect(deserialized.numberArrayProp).toEqual(defaultTrait.numberArrayProp);
+        expect(deserialized.entityIdProp).toEqual(defaultTrait.entityIdProp);
+        expect(deserialized.entityIdArrayProp).toEqual(defaultTrait.entityIdArrayProp);
+        expect(deserialized.compositeProp).toEqual(defaultTrait.compositeProp);
+    });
 });

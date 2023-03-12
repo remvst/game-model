@@ -9,15 +9,12 @@
     "build": "rm -rf lib && tsc",
     "prepublishOnly": "npm i && npm run build"
   },
-  "author": "",
+  "author": "Rémi Vansteelandt",
   "license": "UNLICENSED",
   "dependencies": {
     "@remvst/configurable": "^1.5.0",
     "@remvst/geometry": "^2.4.0",
-    "jasmine-ts": "^0.4.0",
-    "nyc": "^15.1.0",
     "rxjs": "^7.5.7",
-    "ts-node": "^10.9.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -26,6 +23,9 @@
     "@types/uuid": "^8.3.0",
     "istanbul": "^0.4.5",
     "jasmine": "^4.4.0",
-    "typescript": "^4.1.3"
+    "jasmine-ts": "^0.4.0",
+    "nyc": "^15.1.0",
+    "typescript": "^4.1.3",
+    "ts-node": "^10.9.1"
   }
 }

@@ -11,7 +11,7 @@ import AutomaticWorldEventSerializer from '../serialization/automatic-world-even
 export interface AutoWorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly eventType: (new () => EventType) & KeyProvider;
     readonly category?: string;
-    readjust?: (event: EventType, entity: Entity, triggererId: string) => void;
+    readjust?: (event: EventType, world: World, entity: Entity, triggererId: string) => void;
     properties?: WorldEventProperty<any>[];
 }
 
@@ -20,7 +20,7 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly category?: string;
     newEvent(): EventType;
     serializer(entry: WorldEventRegistryEntry<EventType>): WorldEventSerializer<EventType, AnySerialized>;
-    readjust?: (event: EventType, entity: Entity, triggererId: string) => void;
+    readjust?: (event: EventType, world: World, entity: Entity, triggererId: string) => void;
     configurable?: (event: EventType, world: World) => Configurable;
     properties?: WorldEventProperty<any>[];
 }

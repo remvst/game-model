@@ -44,9 +44,9 @@ export default class SetProperty implements WorldEvent {
             category: 'scripting',
             newEvent: () => new SetProperty('', EntityProperties.x, 0),
             serializer: () => new Serializer(properties),
-            readjust: (event, entity, triggererId) => {
+            readjust: (event, world, _, triggererId) => {
                 if (event.property.type instanceof EntityIdConstraints) {
-                    event.value = adaptId(event.value, triggererId, entity.world);
+                    event.value = adaptId(event.value, triggererId, world);
                 }
             },
             configurable: (event: SetProperty, world: World) => {

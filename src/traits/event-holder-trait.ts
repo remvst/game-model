@@ -59,7 +59,7 @@ export default class EventHolderTrait extends Trait {
         }
 
         if (registryEntry.readjust) {
-            registryEntry.readjust(copy, this.entity, triggererId);
+            registryEntry.readjust(copy, world, this.entity, triggererId);
         }
 
         world.addEvent(copy);

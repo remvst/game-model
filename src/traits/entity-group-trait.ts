@@ -17,8 +17,8 @@ export default class EntityGroupTrait extends Trait {
 
     constructor(
         public traits: string[] = [],
-        public radiusX: number = 10,
-        public radiusY: number = 10,
+        public radiusX: number = 0,
+        public radiusY: number = 0,
         public onRelevantTriggerEntityId: string = '',
         public onIrrelevantTriggerEntityId: string = '',
     ) {
@@ -28,11 +28,11 @@ export default class EntityGroupTrait extends Trait {
     * entities(world: World): Iterable<Entity> {
         for (const trait of this.traits) {
             if (this.radiusX === 0 || this.radiusY === 0) {
-                for (const entity of this.entity!.world!.entities.bucket(trait)) {
+                for (const entity of world.entities.bucket(trait)) {
                     yield entity;
                 }
             } else {
-                for (const entity of  this.entity!.world!.entities.bucket(trait)) {
+                for (const entity of  world.entities.bucket(trait)) {
                     if (
                         isBetween(this.entity!.x - this.radiusX, entity.x, this.entity!.x + this.radiusX) &&
                         isBetween(this.entity!.y - this.radiusY, entity.y, this.entity!.y + this.radiusY)

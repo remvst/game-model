@@ -1,3 +1,4 @@
+import { resolveIds } from '../adapt-id';
 import { worldEventGetSet } from '../properties/properties';
 import { PropertyType } from '../properties/property-constraints';
 import { AutoWorldEventRegistryEntry } from '../registry/world-event-registry';
@@ -13,8 +14,7 @@ export default class Remove implements WorldEvent {
     }
 
     apply(world: World) {
-        const entity = world.entity(this.entityId);
-        if (entity) {
+        for (const entity of resolveIds(this.entityId, null, world)) {
             entity.remove();
         }
     }

@@ -1,6 +1,6 @@
 import { EntityIdConstraints, PropertyType } from './../properties/property-constraints';
-import adaptId from '../adapt-id';
-import { EntityIdConfigurable, PropertyRegistry } from '..';
+import adaptId, { resolveIds } from '../adapt-id';
+import { EntityGroupTrait, EntityIdConfigurable, PropertyRegistry } from '..';
 import { Property, worldEventGetSet } from '../properties/properties';
 import World from '../world';
 import { WorldEvent } from './world-event';
@@ -27,12 +27,13 @@ export default class SetProperty implements WorldEvent {
     }
 
     apply(world: World): void {
-        const entity = world.entity(this.entityId);
-        if (!entity) {
-            return;
+        for (const entity of resolveIds(this.entityId, null, world)) {
+            try {
+                this.property.set(entity, this.value);
+            } catch (e) {
+                console.warn(`Unable to set ${this.property.identifier} on entity ${entity.id}`);
+            }
         }
-
-        this.property.set(entity, this.value);
     }
 
     static registryEntry(app: GameModelApp): WorldEventRegistryEntry<SetProperty> {

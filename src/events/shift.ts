@@ -6,6 +6,7 @@ import { AutoWorldEventRegistryEntry } from "../registry/world-event-registry";
 import World from "../world";
 import { WorldEvent } from "./world-event";
 import { Vector3 } from '../vector3';
+import { resolveIds } from '../adapt-id';
 
 export default class Shift implements WorldEvent {
     static readonly key = 'shift';
@@ -19,33 +20,30 @@ export default class Shift implements WorldEvent {
     }
 
     apply(world: World) {
-        const entity = world.entity(this.entityId);
-        if (!entity) {
-            return;
-        }
+        for (const entity of resolveIds(this.entityId, null, world)) {
+            if (this.translation.x) {
+                world.entities.add(new Entity(undefined, [
+                    new InterpolatorTrait(
+                        this.entityId,
+                        EntityProperties.x,
+                        entity.x,
+                        entity.x + this.translation.x,
+                        this.duration,
+                    ),
+                ]));
+            }
 
-        if (this.translation.x) {
-            world.entities.add(new Entity(undefined, [
-                new InterpolatorTrait(
-                    this.entityId,
-                    EntityProperties.x,
-                    entity.x,
-                    entity.x + this.translation.x,
-                    this.duration,
-                ),
-            ]));
-        }
-
-        if (this.translation.y) {
-            world.entities.add(new Entity(undefined, [
-                new InterpolatorTrait(
-                    this.entityId,
-                    EntityProperties.y,
-                    entity.y,
-                    entity.y + this.translation.y,
-                    this.duration,
-                ),
-            ]));
+            if (this.translation.y) {
+                world.entities.add(new Entity(undefined, [
+                    new InterpolatorTrait(
+                        this.entityId,
+                        EntityProperties.y,
+                        entity.y,
+                        entity.y + this.translation.y,
+                        this.duration,
+                    ),
+                ]));
+            }
         }
     }
 

@@ -1,3 +1,4 @@
+import { resolveIds } from '../adapt-id';
 import Entity from '../entity';
 import { worldEventGetSet } from '../properties/properties';
 import { PropertyType } from '../properties/property-constraints';
@@ -20,17 +21,14 @@ export default class Trigger implements WorldEvent {
     }
 
     apply(world: World) {
-        const holder = world.entity(this.entityId);
-        if (!holder) {
-            return;
-        }
-
-        this.applyToEntity(holder)
-        
-        const entityGroupTrait = holder.traitOfType(EntityGroupTrait);
-        if (entityGroupTrait) {
-            for (const entity of entityGroupTrait.entities(world)) {
-                this.applyToEntity(entity);
+        for (const entity of resolveIds(this.entityId, null, world)) {
+            this.applyToEntity(entity)
+            
+            const entityGroupTrait = entity.traitOfType(EntityGroupTrait);
+            if (entityGroupTrait) {
+                for (const entity of entityGroupTrait.entities(world)) {
+                    this.applyToEntity(entity);
+                }
             }
         }
     }

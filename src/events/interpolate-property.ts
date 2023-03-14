@@ -12,6 +12,7 @@ import { propertyValueConfigurable } from '../configurable/property-value-config
 import { anyProperty } from '../configurable/any-property-configurable';
 import { onlyRelevantProperties } from '../properties/only-relevant-properties';
 import GameModelApp from '../game-model-app';
+import { resolveIds } from '../adapt-id';
 
 export default class InterpolateProperty implements WorldEvent {
     static readonly key = 'interpolate-property';
@@ -26,41 +27,38 @@ export default class InterpolateProperty implements WorldEvent {
     }
 
     apply(world: World) {
-        const entity = world.entity(this.entityId);
-        if (!entity) {
-            return;
-        }
+        for (const entity of resolveIds(this.entityId, null, world)) {
+            // Remove any existing movers. 
+            // This might be limiting but helps prevent flickering when multiple movers are applied.
+            for (const existingMover of world.entities.bucket(InterpolatorTrait.key)) {
+                const existingMoverTrait = existingMover.traitOfType(InterpolatorTrait);
+                if (existingMoverTrait!.targetEntityId !== this.entityId) {
+                    continue;
+                }
 
-        // Remove any existing movers. 
-        // This might be limiting but helps prevent flickering when multiple movers are applied.
-        for (const existingMover of world.entities.bucket(InterpolatorTrait.key)) {
-            const existingMoverTrait = existingMover.traitOfType(InterpolatorTrait);
-            if (existingMoverTrait!.targetEntityId !== this.entityId) {
-                continue;
+                existingMover.remove();
             }
 
-            existingMover.remove();
-        }
-
-        let initialValue: number;
-        if (this.entityId) {
-            const entity = world.entity(this.entityId);
-            if (entity) {
-                initialValue = this.property.get(entity);
-            } else {
-                return;
+            let initialValue: number;
+            if (this.entityId) {
+                const entity = world.entity(this.entityId);
+                if (entity) {
+                    initialValue = this.property.get(entity);
+                } else {
+                    return;
+                }
             }
-        }
 
-        world.entities.add(new Entity(undefined, [
-            new InterpolatorTrait(
-                this.entityId,
-                this.property,
-                initialValue!,
-                this.value,
-                this.duration,
-            ),
-        ]))
+            world.entities.add(new Entity(undefined, [
+                new InterpolatorTrait(
+                    this.entityId,
+                    this.property,
+                    initialValue!,
+                    this.value,
+                    this.duration,
+                ),
+            ]));
+        }
     }
 
     static registryEntry(app: GameModelApp): WorldEventRegistryEntry<InterpolateProperty> {

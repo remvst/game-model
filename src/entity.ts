@@ -158,6 +158,7 @@ export default class Entity {
 
         for (const trait of otherEntity.traits.items()) {
             const existingTrait = this.trait(trait.key);
+            trait.bind(this);
             existingTrait.copy(trait, app);
         }
     }

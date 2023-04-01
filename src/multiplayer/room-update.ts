@@ -1,6 +1,6 @@
 import { WorldUpdate } from "./world-update";
 
 export interface RoomUpdate {
-    playerId: string;
+    players: string[];
     world: WorldUpdate<any, any>;
 }

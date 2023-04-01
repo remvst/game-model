@@ -46,7 +46,6 @@ import GameModelApp from './game-model-app';
 import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
 import Room from './multiplayer/room';
 import { WorldUpdate } from './multiplayer/world-update';
-import Player from './multiplayer/player';
 import WorldUpdatesHelper from './multiplayer/world-updates-helper';
 import { RoomUpdate } from './multiplayer/room-update';
 
@@ -123,7 +122,6 @@ export {
     RoomUpdate,
     WorldUpdatesHelper,
     WorldUpdate,
-    Player,
 
     // Perf
     CyclePerformanceTracker,

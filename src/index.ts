@@ -43,6 +43,12 @@ import Trigger from './events/trigger';
 import EntityGroupTrait from './traits/entity-group-trait';
 import DependencyTrait from './traits/dependency-trait';
 import GameModelApp from './game-model-app';
+import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
+import Room from './multiplayer/room';
+import { WorldUpdate } from './multiplayer/world-update';
+import Player from './multiplayer/player';
+import WorldUpdatesHelper from './multiplayer/world-updates-helper';
+import { RoomUpdate } from './multiplayer/room-update';
 
 export {
     Trait,
@@ -108,6 +114,16 @@ export {
 
     // App
     GameModelApp,
+
+    // Multiplayer
+    Authority,
+    AuthorityType,
+    LocalAuthority,
+    Room,
+    RoomUpdate,
+    WorldUpdatesHelper,
+    WorldUpdate,
+    Player,
 
     // Perf
     CyclePerformanceTracker,

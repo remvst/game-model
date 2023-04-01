@@ -9,6 +9,7 @@ import Trait from './trait';
 import SectorObjectSet from './collections/sector-object-set';
 import { KeyProvider  } from './key-provider';
 import { CyclePerformanceTracker } from './performance-tracker';
+import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
 
 type EntityRelevanceProvider = (entity: Entity) => boolean;
 
@@ -23,11 +24,21 @@ export default class World {
     cyclePerformanceTracker: CyclePerformanceTracker | null = null;
     entityRelevanceProvider: EntityRelevanceProvider = () => true;
 
+    authority: Authority = new LocalAuthority();
+
     constructor() {
         this.entities = new WatchableObjectSet(new ObjectSet(
             entity => entity.id,
             entity => entity.traits.map(trait => trait.key)
         ));
+        this.entities.allowAddition = (entity) => {
+            switch (this.authority.entityAuthority(entity)) {
+            case AuthorityType.NONE: return false;
+            case AuthorityType.FULL: 
+            case AuthorityType.LOCAL: 
+                return true;
+            }
+        };
         this.entities.additions.subscribe(entity => entity.bind(this));
         this.entities.removals.subscribe(entity => {
             entity.addEvent(this.reusableRemoveEvent);
@@ -73,6 +84,13 @@ export default class World {
     }
 
     addEvent(event: WorldEvent) {
+        switch (this.authority.worldEventAuthority(event)) {
+        case AuthorityType.NONE: return;
+        case AuthorityType.FULL: 
+        case AuthorityType.LOCAL: 
+            break;
+        }
+
         event.apply(this);
         this.events.next(event);
     }

@@ -1,7 +1,7 @@
 import { Rectangle } from '@remvst/geometry';
 import { KeyProvider } from './key-provider';
 import { TraitSurfaceProvider, entityPositionSurface } from './trait-surface-provider';
-import { vector3, World } from '.';
+import { GameModelApp, TraitRegistry, vector3, World } from '.';
 import Entity from './entity';
 import { EntityEvent } from './events/entity-event';
 
@@ -84,5 +84,17 @@ export default abstract class Trait implements KeyProvider {
 
     processEvent(event: EntityEvent, world: World) {
         // to be implemented in subtraits
+    }
+
+    copy(otherTrait: Trait, app: GameModelApp) {
+        this.enabled = otherTrait.enabled;
+
+        const entry = app.traitRegistry.entry(this.key);
+        if (entry) {
+            for (const property of entry.properties || []) {
+                const value = property.get(otherTrait.entity);
+                property.set(this.entity, value);
+            }
+        }
     }
 }

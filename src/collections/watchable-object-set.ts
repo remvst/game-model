@@ -1,6 +1,7 @@
 'use strict';
 
 import { Subject } from 'rxjs';
+import Entity from '../entity';
 
 import { BaseObjectSet } from './base-object-set';
 
@@ -10,6 +11,7 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
 
     additions: Subject<ObjectType>;
     removals: Subject<ObjectType>;
+    allowAddition: (entity: ObjectType) => boolean = () => true;
 
     constructor(wrappedSet: BaseObjectSet<ObjectType>) {
         this.wrappedSet = wrappedSet;
@@ -31,6 +33,10 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
     }
 
     add(object: ObjectType): boolean {
+        if (!this.allowAddition(object)) {
+            return false;
+        }
+
         const added = this.wrappedSet.add(object);
         if (added) {
             this.additions.next(object);

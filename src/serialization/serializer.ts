@@ -15,3 +15,10 @@ export interface TraitSerializer<TraitType extends Trait, SerializedTrait extend
 export interface EntitySerializer<SerializedEntity extends AnySerialized> extends Serializer<Entity, SerializedEntity> {}
 export interface WorldSerializer<SerializedWorld extends AnySerialized> extends Serializer<World, SerializedWorld> {};
 export interface WorldEventSerializer<WorldEventType extends WorldEvent, SerializedWorldEvent extends AnySerialized> extends Serializer<WorldEventType, SerializedWorldEvent> {}
+
+export interface Serializers {
+    trait: TraitSerializer<Trait, AnySerialized>;
+    entity: EntitySerializer<AnySerialized>;
+    world: WorldSerializer<AnySerialized>;
+    worldEvent: WorldEventSerializer<WorldEvent, AnySerialized>;
+}

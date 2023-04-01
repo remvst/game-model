@@ -14,10 +14,10 @@ export interface Authority {
 
 export class LocalAuthority implements Authority {
     entityAuthority(): AuthorityType {
-        return AuthorityType.FULL;
+        return AuthorityType.LOCAL;
     }
 
     worldEventAuthority(): AuthorityType {
-        return AuthorityType.FULL;
+        return AuthorityType.LOCAL;
     }
 }

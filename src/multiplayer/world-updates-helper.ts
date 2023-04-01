@@ -78,7 +78,12 @@ export default class WorldUpdatesHelper {
         for (const entityId of this.watchedEntities) {
             const entity = this.world.entity(entityId);
             if (!entity) continue;
-            entities.push(this.app.serializers.entity.serialize(entity));
+            try {
+                const serialized = this.app.serializers.entity.serialize(entity)
+                entities.push(serialized);
+            } catch (e) {
+                console.warn(`Unable to serialize entity with ID ${entityId}`, e);
+            }
         }
 
         const worldEvents = this.queuedEvents;

@@ -31,11 +31,29 @@ export class PropertyType {
     static bool() { return new BooleanConstraints(); }
     static str() { return new StringConstraints(); }
     static color() { return new ColorConstraints(); }
+    static json<Format>(defVal: Format) { return new JsonConstraints(defVal); }
 } 
 
 export abstract class PropertyConstraints<T> {
     abstract defaultValue(): T;
     abstract convert(value: any): T;
+}
+
+export class JsonConstraints<Format> extends PropertyConstraints<Format> {
+
+    private readonly stringifiedDefault = JSON.stringify(this.defVal);
+
+    constructor(readonly defVal: any) {
+        super();
+    }
+
+    defaultValue() {
+        return JSON.parse(this.stringifiedDefault);
+    }
+
+    convert(): Format {
+        return this.defaultValue();
+    }
 }
 
 export class NumberConstraints extends PropertyConstraints<number> {

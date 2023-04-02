@@ -1,5 +1,5 @@
 import Entity from '../entity';
-import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, PropertyConstraints, CompositeConstraints } from '../properties/property-constraints';
+import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, PropertyConstraints, CompositeConstraints, JsonConstraints } from '../properties/property-constraints';
 import Trait from '../trait';
 import { RegistryEntry } from '../registry/trait-registry';
 import { TraitSerializer } from './serializer';
@@ -65,6 +65,10 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
             return res;
         }
 
+        if (type instanceof JsonConstraints) {
+            return JSON.stringify(value);
+        }
+
         if (
             type instanceof NumberConstraints ||
             type instanceof StringConstraints ||
@@ -93,6 +97,10 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
                 res[key] = this.deserializePropertyValue(subType, serializedProperty[key]);
             }
             return res;
+        }
+
+        if (type instanceof JsonConstraints) {
+            return JSON.parse(serializedProperty);
         }
 
         if (

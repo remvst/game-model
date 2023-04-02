@@ -10,6 +10,7 @@ import World from './world';
 import { Property, getSet } from './properties/properties';
 import { PropertyType } from './properties/property-constraints';
 import GameModelApp from './game-model-app';
+import { AuthorityType } from './multiplayer/authority';
 
 function processMicroTime() {
     const [seconds, nanoseconds] = process.hrtime()
@@ -140,14 +141,21 @@ export default class Entity {
             return;
         }
 
+        this.reusableEventProcessedEvent.event = event;
+
+        switch (world.authority.worldEventAuthority(this.reusableEventProcessedEvent)) {
+        case AuthorityType.FULL:
+        case AuthorityType.LOCAL:
+            break;
+        case AuthorityType.NONE:
+            return;
+        }
+
         for (const trait of this.traits.items()) {
             trait.processEvent(event, world);
         }
 
-        if (world) {
-            this.reusableEventProcessedEvent.event = event;
-            world.addEvent(this.reusableEventProcessedEvent);
-        }
+        world.addEvent(this.reusableEventProcessedEvent);
     }
 
     copy(otherEntity: Entity, app: GameModelApp) {

@@ -4,13 +4,14 @@ import { WorldEvent } from "../events/world-event";
 export enum AuthorityType {
     NONE,
     LOCAL,
-    // FORWARD,
+    CREATE,
     FULL,
 }
 
 export interface Authority {
     entityAuthority(entity: Entity): AuthorityType;
     worldEventAuthority(event: WorldEvent): AuthorityType;
+    determinesRemoval(entity: Entity): boolean;
 }
 
 export class LocalAuthority implements Authority {
@@ -20,5 +21,9 @@ export class LocalAuthority implements Authority {
 
     worldEventAuthority(): AuthorityType {
         return AuthorityType.LOCAL;
+    }
+
+    determinesRemoval(): boolean {
+        return true;
     }
 }

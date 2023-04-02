@@ -5,6 +5,8 @@ import World from "../world";
 import { Authority, AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
 
+const ALWAYS_TRUE = () => true;
+
 export default class WorldUpdatesReceiver {
 
     private previousEntityIds = new Set<string>();
@@ -25,7 +27,10 @@ export default class WorldUpdatesReceiver {
         for (const serializedEntity of update.entities) {
             const deserialized = this.app.serializers.entity.deserialize(serializedEntity);
             missingIds.delete(serializedEntity.id);
-            this.previousEntityIds.add(serializedEntity.id);
+
+            if (this.authority.determinesRemoval(deserialized)) {
+                this.previousEntityIds.add(serializedEntity.id);
+            }
 
             switch (this.authority.entityAuthority(deserialized)) {
             case AuthorityType.NONE:
@@ -34,7 +39,7 @@ export default class WorldUpdatesReceiver {
                     // Entity doesn't exist locally yet, just add it
                     const previousAllow = this.world.entities.allowAddition;
                     try {
-                        this.world.entities.allowAddition = () => true;
+                        this.world.entities.allowAddition = ALWAYS_TRUE;
                         this.world.entities.add(deserialized);
                     } finally {
                         this.world.entities.allowAddition = previousAllow;

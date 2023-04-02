@@ -37,6 +37,7 @@ export default class Room {
         this.updatesCollector?.stop();
 
         const authority = this.authority(this, this.selfId);
+        this.world.authority = authority;
         this.updatesCollector = new WorldUpdatesCollector(this.app, world, authority);
         this.updatesReceiver = new WorldUpdatesReceiver(this.app, world, authority);
     }

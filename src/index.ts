@@ -28,7 +28,7 @@ import MoveTo from './events/move-to';
 import InterpolateProperty from './events/interpolate-property';
 import adaptId, { resolveIds } from './adapt-id';
 import { Property, GenericProperty, getSet, traitGetSet, worldEventGetSet } from './properties/properties';
-import { PropertyType, PropertyConstraints, NumberConstraints, StringConstraints, EntityIdConstraints, ColorConstraints, BooleanConstraints, ListConstraints, EnumConstraints, CompositeConstraints } from './properties/property-constraints';
+import { PropertyType, PropertyConstraints, NumberConstraints, StringConstraints, EntityIdConstraints, ColorConstraints, BooleanConstraints, ListConstraints, EnumConstraints, CompositeConstraints, JsonConstraints } from './properties/property-constraints';
 import AutomaticTraitSerializer from './serialization/automatic-trait-serializer';
 import DelayedActionTrait from './traits/delayed-action-trait';
 import DisappearingTrait from './traits/disappearing-trait';
@@ -140,6 +140,7 @@ export {
     ListConstraints,
     EnumConstraints,
     CompositeConstraints,
+    JsonConstraints,
 
     getSet,
     traitGetSet,

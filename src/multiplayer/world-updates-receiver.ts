@@ -9,7 +9,7 @@ const ALWAYS_TRUE = () => true;
 
 export default class WorldUpdatesReceiver {
 
-    private previousEntityIds = new Set<string>();
+    private previousEntityIds = new Map<string, Set<string>>();
 
     constructor(
         private readonly app: GameModelApp,
@@ -20,19 +20,22 @@ export default class WorldUpdatesReceiver {
 
     applyUpdate(
         update: WorldUpdate<JsonSerializedEntity, CompositeSerializerMeta>, 
+        fromPlayerId: string,
     ) {
-        const missingIds = this.previousEntityIds;
-        this.previousEntityIds = new Set();
+        const missingIds = this.previousEntityIds.get(fromPlayerId) || new Set();
+        const newPreviousEntityIds = new Set<string>();
+        this.previousEntityIds.set(fromPlayerId, newPreviousEntityIds);
 
         for (const serializedEntity of update.entities) {
             const deserialized = this.app.serializers.entity.deserialize(serializedEntity);
             missingIds.delete(serializedEntity.id);
 
-            if (this.authority.determinesRemoval(deserialized)) {
-                this.previousEntityIds.add(serializedEntity.id);
+            if (this.authority.determinesRemoval(deserialized, fromPlayerId)) {
+                newPreviousEntityIds.add(serializedEntity.id);
             }
 
             switch (this.authority.entityAuthority(deserialized)) {
+            case AuthorityType.FORWARD:
             case AuthorityType.NONE:
                 const existing = this.world.entity(deserialized.id);
                 if (!existing) {
@@ -71,6 +74,7 @@ export default class WorldUpdatesReceiver {
                 
             case AuthorityType.LOCAL:
             case AuthorityType.FULL:
+            case AuthorityType.FORWARD:
                 continue;
             }
         }

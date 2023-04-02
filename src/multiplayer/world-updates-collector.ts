@@ -51,6 +51,7 @@ export default class WorldUpdatesHelper {
         case AuthorityType.LOCAL:
             return;
         case AuthorityType.FULL:
+        case AuthorityType.FORWARD:
             const serialized = this.app.serializers.worldEvent.serialize(event as any);
             this.queuedEvents.push(serialized);
             break;
@@ -63,6 +64,7 @@ export default class WorldUpdatesHelper {
         case AuthorityType.LOCAL:
             return;
         case AuthorityType.FULL:
+        case AuthorityType.FORWARD:
             this.watchedEntities.add(entity.id);
             break;
         }

@@ -6,6 +6,7 @@ export enum AuthorityType {
     NONE,
     LOCAL,
     CREATE,
+    FORWARD,
     FULL,
 }
 
@@ -13,7 +14,7 @@ export interface Authority {
     entityAuthority(entity: Entity): AuthorityType;
     worldEventAuthority(event: WorldEvent): AuthorityType;
     entityEventAuthority(event: EntityEvent, entity: Entity): AuthorityType;
-    determinesRemoval(entity: Entity): boolean;
+    determinesRemoval(entity: Entity, fromPlayerId: string): boolean;
 }
 
 export class LocalAuthority implements Authority {

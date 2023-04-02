@@ -35,6 +35,7 @@ export default class World {
             switch (this.authority.entityAuthority(entity)) {
             case AuthorityType.NONE: return false;
             case AuthorityType.FULL: 
+            case AuthorityType.FORWARD: 
             case AuthorityType.LOCAL: 
                 return true;
             }
@@ -88,6 +89,7 @@ export default class World {
         case AuthorityType.NONE: return;
         case AuthorityType.FULL: 
         case AuthorityType.LOCAL: 
+        case AuthorityType.FORWARD: 
             break;
         }
 

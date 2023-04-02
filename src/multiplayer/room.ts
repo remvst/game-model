@@ -54,7 +54,7 @@ export default class Room {
 
         // TODO add more checks
 
-        this.updatesReceiver.applyUpdate(update.world);
+        this.updatesReceiver.applyUpdate(update.world, playerId);
     }
 
     broadcast() {

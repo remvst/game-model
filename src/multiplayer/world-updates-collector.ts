@@ -78,6 +78,7 @@ export default class WorldUpdatesHelper {
         for (const entityId of this.watchedEntities) {
             const entity = this.world.entity(entityId);
             if (!entity) continue;
+            
             try {
                 const serialized = this.app.serializers.entity.serialize(entity)
                 entities.push(serialized);
@@ -90,39 +91,5 @@ export default class WorldUpdatesHelper {
         this.queuedEvents = [];
 
         return { entities, worldEvents };
-    }
-
-    applyUpdate(
-        update: WorldUpdate<JsonSerializedEntity, CompositeSerializerMeta>, 
-        authority: Authority,
-    ) {
-        for (const serializedEntity of update.entities) {
-            const deserialized = this.app.serializers.entity.deserialize(serializedEntity);
-            switch (authority.entityAuthority(deserialized)) {    
-            case AuthorityType.NONE:
-            case AuthorityType.LOCAL:
-                continue;
-            case AuthorityType.FULL:
-                const existing = this.world.entity(deserialized.id);
-                if (!existing) {
-                    // Entity doesn't exist locally yet, just add it
-                    this.world.entities.add(deserialized);
-                } else {
-                    // Entity already exists, copy properties
-                    existing.copy(deserialized, this.app);
-                }
-            }
-        }
-
-        for (const serializedWorldEvent of update.worldEvents) {
-            const deserialized = this.app.serializers.worldEvent.deserialize(serializedWorldEvent);
-            switch (authority.worldEventAuthority(deserialized)) {    
-                case AuthorityType.NONE:
-                case AuthorityType.LOCAL:
-                    continue;
-                case AuthorityType.FULL:
-                    this.world.addEvent(deserialized);
-                }
-        }
     }
 }

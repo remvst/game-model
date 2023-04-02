@@ -2,7 +2,16 @@ import GameModelApp from "../game-model-app";
 import World from "../world";
 import { Authority } from "./authority";
 import { RoomUpdate } from "./room-update";
-import WorldUpdatesHelper from "./world-updates-helper";
+import WorldUpdatesCollector from "./world-updates-collector";
+import WorldUpdatesReceiver from "./world-updates-receiver";
+
+class Player {
+    constructor(
+        readonly id: string,
+    ) {
+
+    }
+}
 
 export default class Room {
     
@@ -10,7 +19,8 @@ export default class Room {
 
     players = new Set<string>();
 
-    private updatesHelper: WorldUpdatesHelper;
+    private updatesReceiver: WorldUpdatesReceiver;
+    private updatesCollector: WorldUpdatesCollector;
 
     constructor(
         readonly hostId: string,
@@ -24,8 +34,11 @@ export default class Room {
 
     setWorld(world: World) {
         this.world = world;
-        this.updatesHelper?.stop();
-        this.updatesHelper = new WorldUpdatesHelper(this.app, world, this.authority(this, this.selfId));
+        this.updatesCollector?.stop();
+
+        const authority = this.authority(this, this.selfId);
+        this.updatesCollector = new WorldUpdatesCollector(this.app, world, authority);
+        this.updatesReceiver = new WorldUpdatesReceiver(this.app, world, authority);
     }
 
     onUpdateReceived(playerId: string, update: RoomUpdate) {
@@ -40,19 +53,20 @@ export default class Room {
 
         // TODO add more checks
 
-        const authority = this.authority(this, playerId);
-        this.updatesHelper.applyUpdate(update.world, authority);
+        this.updatesReceiver.applyUpdate(update.world);
     }
 
     broadcast() {
-        if (!this.updatesHelper) {
+        if (!this.updatesCollector) {
             throw new Error('Did you forget to call setWorld?');
         }
 
-        const worldUpdate = this.updatesHelper.generateUpdate();
+        const worldUpdate = this.updatesCollector.generateUpdate();
 
-        const receivers = this.hostId === this.selfId ? this.players : this.hostId;
+        const receivers = this.hostId === this.selfId ? this.players : [this.hostId];
         for (const receiverId of receivers) {
+            if (receiverId === this.selfId) continue;
+            
             this.sendUpdate(this, receiverId, {
                 players: Array.from(this.players),
                 world: worldUpdate,

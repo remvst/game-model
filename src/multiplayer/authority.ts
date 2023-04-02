@@ -4,6 +4,7 @@ import { WorldEvent } from "../events/world-event";
 export enum AuthorityType {
     NONE,
     LOCAL,
+    // FORWARD,
     FULL,
 }
 

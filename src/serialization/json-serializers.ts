@@ -3,7 +3,7 @@ import Entity from "../entity";
 import Trait from "../trait";
 import World from "../world";
 import CompositeSerializer from "./composite-serializer";
-import { AnySerialized, EntitySerializer, TraitSerializer, WorldSerializer } from "./serializer";
+import { AnySerialized, EntitySerializer, Serializers, TraitSerializer, WorldSerializer } from "./serializer";
 import { WorldEvent } from '../events/world-event';
 
 export interface SerializedTrait {
@@ -113,11 +113,11 @@ class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
 
 }
 
-export type JsonSerializers = {
-    'trait': CompositeSerializer<Trait>,
-    'entity': JsonEntitySerializer,
-    'world': JsonWorldSerializer,
-    'worldEvent': CompositeSerializer<WorldEvent & KeyProvider>,
+export interface JsonSerializers extends Serializers {
+    trait: CompositeSerializer<Trait>;
+    entity: JsonEntitySerializer;
+    world: JsonWorldSerializer;
+    worldEvent: CompositeSerializer<WorldEvent & KeyProvider>;
 };
 
 export type WorldSetup = (world: World) => void;

@@ -46,7 +46,6 @@ import GameModelApp from './game-model-app';
 import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
 import Room from './multiplayer/room';
 import { WorldUpdate } from './multiplayer/world-update';
-import WorldUpdatesHelper from './multiplayer/world-updates-helper';
 import { RoomUpdate } from './multiplayer/room-update';
 
 export {
@@ -120,7 +119,6 @@ export {
     LocalAuthority,
     Room,
     RoomUpdate,
-    WorldUpdatesHelper,
     WorldUpdate,
 
     // Perf

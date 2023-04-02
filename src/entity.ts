@@ -141,9 +141,7 @@ export default class Entity {
             return;
         }
 
-        this.reusableEventProcessedEvent.event = event;
-
-        switch (world.authority.worldEventAuthority(this.reusableEventProcessedEvent)) {
+        switch (world.authority.entityEventAuthority(this.reusableEventProcessedEvent, this)) {
         case AuthorityType.FULL:
         case AuthorityType.LOCAL:
             break;
@@ -155,6 +153,7 @@ export default class Entity {
             trait.processEvent(event, world);
         }
 
+        this.reusableEventProcessedEvent.event = event;
         world.addEvent(this.reusableEventProcessedEvent);
     }
 

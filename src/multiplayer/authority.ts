@@ -1,4 +1,5 @@
 import Entity from "../entity";
+import { EntityEvent } from "../events/entity-event";
 import { WorldEvent } from "../events/world-event";
 
 export enum AuthorityType {
@@ -11,6 +12,7 @@ export enum AuthorityType {
 export interface Authority {
     entityAuthority(entity: Entity): AuthorityType;
     worldEventAuthority(event: WorldEvent): AuthorityType;
+    entityEventAuthority(event: EntityEvent, entity: Entity): AuthorityType;
     determinesRemoval(entity: Entity): boolean;
 }
 
@@ -20,6 +22,10 @@ export class LocalAuthority implements Authority {
     }
 
     worldEventAuthority(): AuthorityType {
+        return AuthorityType.LOCAL;
+    }
+
+    entityEventAuthority(): AuthorityType {
         return AuthorityType.LOCAL;
     }
 

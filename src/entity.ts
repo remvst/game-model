@@ -141,7 +141,7 @@ export default class Entity {
             return;
         }
 
-        switch (world.authority.entityEventAuthority(this.reusableEventProcessedEvent, this)) {
+        switch (world.authority.entityEventAuthority(event, this)) {
         case AuthorityType.FULL:
         case AuthorityType.LOCAL:
         case AuthorityType.FORWARD:

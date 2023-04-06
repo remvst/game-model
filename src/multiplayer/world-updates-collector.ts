@@ -8,7 +8,7 @@ import World from "../world";
 import { Authority, AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
 
-export default class WorldUpdatesHelper {
+export default class WorldUpdatesCollector {
 
     private queuedEvents: CompositeSerializerMeta[] = [];
     private watchedEntities = new Set<string>();

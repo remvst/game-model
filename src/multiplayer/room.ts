@@ -5,7 +5,14 @@ import { RoomUpdate } from "./room-update";
 import WorldUpdatesCollector from "./world-updates-collector";
 import WorldUpdatesReceiver from "./world-updates-receiver";
 
-class Player {
+export class Player {
+
+    latency = 0;
+    sentUpdateId = 0;
+    receivedUpdateId = 0;
+    acknowledgedUpdateId = 0;
+    latencyProbe: {updateId: number, at: number} = null;
+
     constructor(
         readonly id: string,
     ) {
@@ -17,7 +24,9 @@ export default class Room {
     
     private world: World;
 
-    players = new Set<string>();
+    readonly players = new Map<string, Player>();
+
+    private nextUpdateId: number = 0;
 
     private updatesReceiver: WorldUpdatesReceiver;
     private updatesCollector: WorldUpdatesCollector;
@@ -49,10 +58,36 @@ export default class Room {
         }
 
         if (playerId === this.hostId) {
-            this.players = new Set(update.players);
+            const ids = new Set(update.players.map(p => p.id));
+            for (const playerId of this.players.keys()) {
+                if (!ids.has(playerId)) {
+                    this.players.delete(playerId);
+                }
+            }
+
+            for (const player of update.players) {
+                if (!this.players.has(player.id)) {
+                    this.players.set(player.id, new Player(player.id));
+                }
+
+                this.players.get(player.id).latency = player.latency;
+            }
         }
 
-        // TODO add more checks
+        const player = this.players.get(playerId);
+        if (player.receivedUpdateId >= update.updateId) {
+            // We've received something more recent from this player, ignore
+            return;
+        }
+
+        player.acknowledgedUpdateId = update.ackId;
+        player.receivedUpdateId = update.updateId;
+
+        const { latencyProbe } = player;
+        if (latencyProbe && update.ackId >= latencyProbe.updateId) {
+            player.latency = Date.now() - latencyProbe.at;
+            player.latencyProbe = null;
+        }
 
         this.updatesReceiver.applyUpdate(update.world, playerId);
     }
@@ -62,16 +97,34 @@ export default class Room {
             throw new Error('Did you forget to call setWorld?');
         }
 
-        const worldUpdate = this.updatesCollector.generateUpdate();
+        const world = this.updatesCollector.generateUpdate();
 
-        const receivers = this.hostId === this.selfId ? this.players : [this.hostId];
-        for (const receiverId of receivers) {
-            if (receiverId === this.selfId) continue;
+        const updateId = this.nextUpdateId++;
+        const players = Array.from(this.players.values()).map(p => ({
+            id: p.id,
+            latency: p.latency,
+        }));
+
+        const receivers = this.hostId === this.selfId ? this.players.values() : [this.players.get(this.hostId)];
+        for (const receiver of receivers) {
+            if (!receiver) continue;
+            if (receiver.id === this.selfId) continue;
             
-            this.sendUpdate(this, receiverId, {
-                players: Array.from(this.players),
-                world: worldUpdate,
+            this.sendUpdate(this, receiver.id, {
+                updateId,
+                players,
+                world,
+                ackId: receiver.receivedUpdateId,
             });
+
+            receiver.sentUpdateId = updateId;
+
+            if (!receiver.latencyProbe) {
+                receiver.latencyProbe = {
+                    updateId,
+                    at: Date.now(),
+                };
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ import EntityGroupTrait from './traits/entity-group-trait';
 import DependencyTrait from './traits/dependency-trait';
 import GameModelApp from './game-model-app';
 import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
-import Room from './multiplayer/room';
+import Room, { Player } from './multiplayer/room';
 import { WorldUpdate } from './multiplayer/world-update';
 import { RoomUpdate } from './multiplayer/room-update';
 
@@ -120,6 +120,7 @@ export {
     Room,
     RoomUpdate,
     WorldUpdate,
+    Player,
 
     // Perf
     CyclePerformanceTracker,

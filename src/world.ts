@@ -84,8 +84,8 @@ export default class World {
         }
     }
 
-    addEvent(event: WorldEvent) {
-        switch (this.authority.worldEventAuthority(event)) {
+    addEvent(event: WorldEvent, authority: Authority = this.authority) {
+        switch (authority.worldEventAuthority(event)) {
         case AuthorityType.NONE: return;
         case AuthorityType.FULL: 
         case AuthorityType.LOCAL: 

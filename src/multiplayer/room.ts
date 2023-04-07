@@ -89,7 +89,7 @@ export default class Room {
             player.latencyProbe = null;
         }
 
-        this.updatesReceiver.applyUpdate(update.world, playerId);
+        this.updatesReceiver.applyUpdate(update.world, playerId, this.authority(this, playerId));
     }
 
     broadcast() {

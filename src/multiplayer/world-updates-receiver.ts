@@ -21,6 +21,7 @@ export default class WorldUpdatesReceiver {
     applyUpdate(
         update: WorldUpdate<JsonSerializedEntity, CompositeSerializerMeta>, 
         fromPlayerId: string,
+        authority: Authority,
     ) {
         const missingIds = this.previousEntityIds.get(fromPlayerId) || new Set();
         const newPreviousEntityIds = new Set<string>();
@@ -69,12 +70,12 @@ export default class WorldUpdatesReceiver {
 
             switch (this.authority.worldEventAuthority(deserialized)) {
             case AuthorityType.NONE:
-                this.world.addEvent(deserialized);
+            case AuthorityType.LOCAL:
+            case AuthorityType.FORWARD:
+                this.world.addEvent(deserialized, authority);
                 break;
                 
-            case AuthorityType.LOCAL:
             case AuthorityType.FULL:
-            case AuthorityType.FORWARD:
                 continue;
             }
         }

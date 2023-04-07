@@ -47,6 +47,7 @@ import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authorit
 import Room, { Player } from './multiplayer/room';
 import { WorldUpdate } from './multiplayer/world-update';
 import { RoomUpdate } from './multiplayer/room-update';
+import EventOnRemovalTrait from './traits/event-on-removal-trait';
 
 export {
     Trait,
@@ -72,6 +73,7 @@ export {
     EntitySelectorTrait,
     EntityGroupTrait,
     DependencyTrait,
+    EventOnRemovalTrait,
 
     // Events
     WorldEvent,

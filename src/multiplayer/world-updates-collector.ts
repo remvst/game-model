@@ -18,7 +18,6 @@ export default class WorldUpdatesCollector {
     constructor(
         private readonly app: GameModelApp,
         private readonly world: World,
-        private readonly authority: Authority,
     ) {
         this.start();
     }
@@ -47,7 +46,7 @@ export default class WorldUpdatesCollector {
     }
 
     private onWorldEvent(event: WorldEvent) {
-        switch (this.authority.worldEventAuthority(event)) {    
+        switch (this.world.authority.worldEventAuthority(event)) {    
         case AuthorityType.NONE:
         case AuthorityType.LOCAL:
             return;
@@ -60,7 +59,7 @@ export default class WorldUpdatesCollector {
     }
 
     private onEntityAdded(entity: Entity) {
-        switch (this.authority.entityAuthority(entity)) {    
+        switch (this.world.authority.entityAuthority(entity)) {    
         case AuthorityType.NONE:
         case AuthorityType.LOCAL:
             return;
@@ -92,8 +91,8 @@ export default class WorldUpdatesCollector {
 
             // For entities that tend not to change a lot, try to avoid sending them every frame
             const lastUpdate = this.lastGeneratedUpdates.get(entityId);
-            if (lastUpdate !== undefined) {
-                const maxUpdateInterval = this.authority.maxUpdateInterval(entity);
+            if (lastUpdate > 0) {
+                const maxUpdateInterval = this.world.authority.maxUpdateInterval(entity);
                 if (Math.max(0, entity.age - lastUpdate) < maxUpdateInterval) {
                     shortEntities.push(entity.id);
                     continue;

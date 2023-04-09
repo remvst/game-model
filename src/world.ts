@@ -33,9 +33,10 @@ export default class World {
         ));
         this.entities.allowAddition = (entity) => {
             switch (this.authority.entityAuthority(entity)) {
-            case AuthorityType.NONE: return false;
-            case AuthorityType.FULL: 
+            case AuthorityType.NONE: 
             case AuthorityType.FORWARD: 
+                return false;
+            case AuthorityType.FULL: 
             case AuthorityType.LOCAL: 
                 return true;
             }

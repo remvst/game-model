@@ -13,6 +13,7 @@ export interface SerializedTrait {
 
 export interface JsonSerializedEntity {
     id: string;
+    age: number;
     x: number;
     y: number;
     z: number;
@@ -40,6 +41,7 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 
         return {
             'id': value.id,
+            'age': value.age,
             'x': value.x,
             'y': value.y,
             'z': value.z,
@@ -66,6 +68,7 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 
             return deserialized;
         }));
+        entity.age = serialized.age;
         entity.x = serialized.x;
         entity.y = serialized.y;
         entity.z = serialized.z;

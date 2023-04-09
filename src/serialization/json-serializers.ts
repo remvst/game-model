@@ -85,9 +85,13 @@ class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
 
     }
 
-    serialize(value: World): JsonSerializedWorld {
+    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean): JsonSerializedWorld {
         const entities: AnySerialized[] = [];
-        value.entities.forEach((entity) => {
+        world.entities.forEach((entity) => {
+            if (!entityFilter(entity)) {
+                return;
+            }
+
             try {
                 const serialized = this.entitySerializer.serialize(entity);
                 entities.push(serialized);
@@ -97,6 +101,14 @@ class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
         });
 
         return { entities };
+    }
+
+    serialize(value: World): JsonSerializedWorld {
+        return this.filterAndSerialize(value, () => true);
+    }
+
+    doSerialize() {
+        
     }
 
     deserialize(serialized: JsonSerializedWorld): World {

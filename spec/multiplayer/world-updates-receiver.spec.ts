@@ -6,12 +6,14 @@ describe('a helper', () => {
     let app: GameModelApp;
     let helper: WorldUpdatesReceiver;
     let authority: Authority;
+    let remoteAuthority: Authority;
 
     beforeEach(() => {
         app = new GameModelApp();
         app.addWorldEvent(Remove.registryEntry());
 
         authority = new LocalAuthority();
+        remoteAuthority = new LocalAuthority();
         world = new World();
         helper = new WorldUpdatesReceiver(app, world, authority);
     });
@@ -22,7 +24,8 @@ describe('a helper', () => {
         helper.applyUpdate({
             worldEvents: [],
             entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
-        });
+            shortEntities: [],
+        }, '', remoteAuthority);
 
         expect(world.entity('myentity')).toBeTruthy();
     });
@@ -37,7 +40,8 @@ describe('a helper', () => {
         helper.applyUpdate({
             worldEvents: [],
             entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
-        });
+            shortEntities: [],
+        }, '', remoteAuthority);
 
         expect(localEntity.copy).toHaveBeenCalledWith(jasmine.any(Entity), app);
     });
@@ -52,14 +56,38 @@ describe('a helper', () => {
         helper.applyUpdate({
             worldEvents: [],
             entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
-        });
+            shortEntities: [],
+        }, '', remoteAuthority);
         expect(world.entities.size).toBe(1);
 
         helper.applyUpdate({
             worldEvents: [],
             entities: [],
-        });
+            shortEntities: [],
+        }, '', remoteAuthority);
         expect(world.entities.size).toBe(0);
+    });
+
+    it('will not remove entities that are in the short list', () => {
+        spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.NONE);
+
+        const localEntity = new Entity('myentity', []);
+        spyOn(localEntity, 'copy');
+        world.entities.add(localEntity);
+
+        helper.applyUpdate({
+            worldEvents: [],
+            entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
+            shortEntities: [],
+        }, '', remoteAuthority);
+        expect(world.entities.size).toBe(1);
+
+        helper.applyUpdate({
+            worldEvents: [],
+            entities: [],
+            shortEntities: ['myentity'],
+        }, '', remoteAuthority);
+        expect(world.entities.size).toBe(1);
     });
 
     it('will not copy entities if it has authority over them', () => {
@@ -68,7 +96,8 @@ describe('a helper', () => {
         helper.applyUpdate({
             worldEvents: [],
             entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
-        });
+            shortEntities: [],
+        }, '', remoteAuthority);
 
         expect(world.entities.size).toBe(0);
     });
@@ -82,7 +111,8 @@ describe('a helper', () => {
         helper.applyUpdate({
             worldEvents: [app.serializers.worldEvent.serialize(new Remove('removedentity'))],
             entities: [],
-        });
+            shortEntities: [],
+        }, '', remoteAuthority);
 
         expect(eventSpy).not.toHaveBeenCalled();
     });
@@ -96,7 +126,8 @@ describe('a helper', () => {
         helper.applyUpdate({
             worldEvents: [app.serializers.worldEvent.serialize(new Remove('removedentity'))],
             entities: [],
-        });
+            shortEntities: [],
+        }, '', remoteAuthority);
 
         expect(eventSpy).toHaveBeenCalled();
     });

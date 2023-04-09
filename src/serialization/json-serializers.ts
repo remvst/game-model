@@ -68,7 +68,7 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 
             return deserialized;
         }));
-        entity.age = serialized.age;
+        entity.age = serialized.age || 0;
         entity.x = serialized.x;
         entity.y = serialized.y;
         entity.z = serialized.z;

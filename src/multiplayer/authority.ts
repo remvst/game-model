@@ -14,6 +14,7 @@ export interface Authority {
     worldEventAuthority(event: WorldEvent): AuthorityType;
     entityEventAuthority(event: EntityEvent, entity: Entity): AuthorityType;
     determinesRemoval(entity: Entity, fromPlayerId: string): boolean;
+    maxUpdateInterval(entity: Entity): number;
 }
 
 export class LocalAuthority implements Authority {
@@ -31,5 +32,9 @@ export class LocalAuthority implements Authority {
 
     determinesRemoval(): boolean {
         return true;
+    }
+
+    maxUpdateInterval(entity: Entity): number {
+        return 0;
     }
 }

@@ -23,6 +23,7 @@ describe('a helper', () => {
         expect(update).toEqual({
             'entities': [],
             'worldEvents': [],
+            'shortEntities': [],
         });
     });
 
@@ -36,6 +37,7 @@ describe('a helper', () => {
         expect(update).toEqual({
             'entities': [],
             'worldEvents': [app.serializers.worldEvent.serialize(event)],
+            'shortEntities': [],
         });
     });
 
@@ -47,6 +49,7 @@ describe('a helper', () => {
         expect(helper.generateUpdate()).toEqual({
             'entities': [],
             'worldEvents': [],
+            'shortEntities': [],
         });
     });
 
@@ -61,6 +64,7 @@ describe('a helper', () => {
         expect(update).toEqual({
             'entities': [],
             'worldEvents': [],
+            'shortEntities': [],
         });
     });
 
@@ -74,6 +78,7 @@ describe('a helper', () => {
         expect(update).toEqual({
             'entities': [app.serializers.entity.serialize(localEntity)],
             'worldEvents': [],
+            'shortEntities': [],
         });
     });
 
@@ -87,6 +92,7 @@ describe('a helper', () => {
         expect(update).toEqual({
             'entities': [],
             'worldEvents': [],
+            'shortEntities': [],
         });
     });
 });

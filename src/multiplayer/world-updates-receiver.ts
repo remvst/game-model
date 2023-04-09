@@ -61,6 +61,10 @@ export default class WorldUpdatesReceiver {
             }
         }
 
+        for (const short of update.shortEntities) {
+            missingIds.delete(short);
+        }
+
         for (const missingId of missingIds) {
             this.world.entity(missingId)?.remove();
         }

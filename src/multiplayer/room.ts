@@ -22,7 +22,7 @@ export class Player {
 
 export default class Room {
     
-    private world: World;
+    world: World;
 
     readonly players = new Map<string, Player>();
 
@@ -41,6 +41,15 @@ export default class Room {
 
     }
 
+    addPlayer(playerId: string) {
+        this.players.set(playerId, new Player(playerId));
+        this.updatesCollector.resetUpdateSkipping();
+    }
+
+    removePlayer(playerId: string) {
+        this.players.delete(playerId);
+    }
+
     setWorld(world: World) {
         this.world = world;
         this.updatesCollector?.stop();
@@ -57,17 +66,18 @@ export default class Room {
             return;
         }
 
+        // If we're receiving an update from the host, update the players list
         if (playerId === this.hostId) {
             const ids = new Set(update.players.map(p => p.id));
             for (const playerId of this.players.keys()) {
                 if (!ids.has(playerId)) {
-                    this.players.delete(playerId);
+                    this.removePlayer(playerId);
                 }
             }
 
             for (const player of update.players) {
                 if (!this.players.has(player.id)) {
-                    this.players.set(player.id, new Player(player.id));
+                    this.addPlayer(player.id);
                 }
 
                 this.players.get(player.id).latency = player.latency;

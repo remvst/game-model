@@ -1,4 +1,4 @@
-import { Subscription } from "rxjs";
+import { Subscription, last } from "rxjs";
 import Entity from "../entity";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
@@ -13,6 +13,7 @@ export default class WorldUpdatesCollector {
     private queuedEvents: CompositeSerializerMeta[] = [];
     private watchedEntities = new Set<string>();
     private worldSubscriptions: Subscription[] = [];
+    private readonly lastGeneratedUpdates = new Map<string, number>();
 
     constructor(
         private readonly app: GameModelApp,
@@ -74,16 +75,32 @@ export default class WorldUpdatesCollector {
         this.watchedEntities.delete(entity.id);
     }
 
+    resetUpdateSkipping() {
+        this.lastGeneratedUpdates.clear();
+    }
+
     generateUpdate(): WorldUpdate<JsonSerializedEntity, CompositeSerializerMeta> {
         const entities: JsonSerializedEntity[] = [];
+        const shortEntities = [];
 
         for (const entityId of this.watchedEntities) {
             const entity = this.world.entity(entityId);
             if (!entity) continue;
+
+            // For entities that tend not to change a lot, try to avoid sending them every frame
+            const lastUpdate = this.lastGeneratedUpdates.get(entityId);
+            if (lastUpdate !== undefined) {
+                const maxUpdateInterval = this.authority.maxUpdateInterval(entity);
+                if (entity.age - lastUpdate < maxUpdateInterval) {
+                    shortEntities.push(entity.id);
+                    continue;
+                }
+            }
             
             try {
                 const serialized = this.app.serializers.entity.serialize(entity)
                 entities.push(serialized);
+                this.lastGeneratedUpdates.set(entityId, entity.age);
             } catch (e) {
                 console.warn(`Unable to serialize entity with ID ${entityId}`, e);
             }
@@ -92,6 +109,6 @@ export default class WorldUpdatesCollector {
         const worldEvents = this.queuedEvents;
         this.queuedEvents = [];
 
-        return { entities, worldEvents };
+        return { entities, worldEvents, shortEntities };
     }
 }

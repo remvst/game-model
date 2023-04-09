@@ -159,6 +159,7 @@ export default class Entity {
     }
 
     copy(otherEntity: Entity, app: GameModelApp) {
+        this.age = otherEntity.age;
         this.position.x = otherEntity.position.x;
         this.position.y = otherEntity.position.y;
         this.position.z = otherEntity.position.z;

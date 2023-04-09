@@ -85,13 +85,16 @@ export default class WorldUpdatesCollector {
 
         for (const entityId of this.watchedEntities) {
             const entity = this.world.entity(entityId);
-            if (!entity) continue;
+            if (!entity) {
+                this.lastGeneratedUpdates.delete(entityId);
+                continue;
+            }
 
             // For entities that tend not to change a lot, try to avoid sending them every frame
             const lastUpdate = this.lastGeneratedUpdates.get(entityId);
             if (lastUpdate !== undefined) {
                 const maxUpdateInterval = this.authority.maxUpdateInterval(entity);
-                if (entity.age - lastUpdate < maxUpdateInterval) {
+                if (Math.max(0, entity.age - lastUpdate) < maxUpdateInterval) {
                     shortEntities.push(entity.id);
                     continue;
                 }

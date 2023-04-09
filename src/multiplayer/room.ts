@@ -43,7 +43,7 @@ export default class Room {
 
     addPlayer(playerId: string) {
         this.players.set(playerId, new Player(playerId));
-        this.updatesCollector.resetUpdateSkipping();
+        this.updatesCollector?.resetUpdateSkipping();
     }
 
     removePlayer(playerId: string) {

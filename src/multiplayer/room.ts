@@ -32,13 +32,25 @@ export default class Room {
     private updatesCollector: WorldUpdatesCollector;
 
     constructor(
-        readonly hostId: string,
+        public hostId: string,
         readonly selfId: string,
         private readonly app: GameModelApp,
         private readonly authority: (room: Room, playerId: string) => Authority,
         private readonly sendUpdate: (room: Room, playerId: string, update: RoomUpdate) => void,
     ) {
 
+    }
+
+    setHostId(hostId: string) {
+        if (hostId === this.hostId) {
+            return;
+        }
+
+        this.hostId = hostId;
+
+        if (this.world) {
+            this.setWorld(this.world);
+        }
     }
 
     addPlayer(playerId: string) {

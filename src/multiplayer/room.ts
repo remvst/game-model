@@ -41,6 +41,10 @@ export default class Room {
 
     }
 
+    resetAllKeyFrames() {
+        this.updatesCollector?.resetUpdateSkipping();
+    }
+
     setHostId(hostId: string) {
         if (hostId === this.hostId) {
             return;

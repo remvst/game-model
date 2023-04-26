@@ -71,6 +71,10 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
             return JSON.stringify(value);
         }
 
+        if (type instanceof BooleanConstraints) {
+            return value ? 1 : 0;
+        }
+
         if (
             type instanceof NumberConstraints ||
             type instanceof StringConstraints ||
@@ -103,6 +107,10 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
 
         if (type instanceof JsonConstraints) {
             return JSON.parse(serializedProperty);
+        }
+
+        if (type instanceof BooleanConstraints) {
+            return !!serializedProperty;
         }
 
         if (

@@ -28,10 +28,10 @@ export default class WorldUpdatesReceiver {
 
         for (const serializedEntity of update.entities) {
             const deserialized = this.app.serializers.entity.deserialize(serializedEntity);
-            missingIds.delete(serializedEntity.id);
+            missingIds.delete(deserialized.id);
 
             if (this.world.authority.determinesRemoval(deserialized, fromPlayerId)) {
-                newPreviousEntityIds.add(serializedEntity.id);
+                newPreviousEntityIds.add(deserialized.id);
             }
 
             switch (this.world.authority.entityAuthority(deserialized)) {

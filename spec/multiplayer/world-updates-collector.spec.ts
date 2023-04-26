@@ -13,7 +13,8 @@ describe('a helper', () => {
 
         authority = new LocalAuthority();
         world = new World();
-        helper = new WorldUpdatesCollector(app, world, authority);
+        world.authority = authority;
+        helper = new WorldUpdatesCollector(app, world);
     });
 
     it('can generate an empty update', () => {

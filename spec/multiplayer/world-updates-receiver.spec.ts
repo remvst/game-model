@@ -15,7 +15,9 @@ describe('a helper', () => {
         authority = new LocalAuthority();
         remoteAuthority = new LocalAuthority();
         world = new World();
-        helper = new WorldUpdatesReceiver(app, world, authority);
+        world.authority = authority;
+
+        helper = new WorldUpdatesReceiver(app, world);
     });
 
     it('will create remotely added entities if it has no authority over them', () => {
@@ -31,11 +33,11 @@ describe('a helper', () => {
     });
 
     it('will copy remote entities if it has no authority over them if they already exist', () => {
-        spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.NONE);
-
         const localEntity = new Entity('myentity', []);
         spyOn(localEntity, 'copy');
         world.entities.add(localEntity);
+
+        spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.NONE);
 
         helper.applyUpdate({
             worldEvents: [],

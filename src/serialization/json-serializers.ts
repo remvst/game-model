@@ -7,17 +7,17 @@ import { AnySerialized, EntitySerializer, Serializers, TraitSerializer, WorldSer
 import { WorldEvent } from '../events/world-event';
 
 export interface SerializedTrait {
-    enabled: boolean;
+    enabled?: 1 | 0; // undefined = true
     data: AnySerialized;
 }
 
 export interface JsonSerializedEntity {
-    id: string;
-    age: number;
-    x: number;
-    y: number;
-    z: number;
-    angle: number;
+    id?: string;
+    age?: number;
+    x?: number;
+    y?: number;
+    z?: number;
+    angle?: number;
     traits: SerializedTrait[];
 }
 
@@ -34,45 +34,50 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
 
     serialize(value: Entity): JsonSerializedEntity {
         const serializedTraits = value.traits
-            .map(trait => ({
-                'enabled': trait.enabled,
-                'data': this.traitsSerializer.serialize(trait),
-            }));
+            .map(trait => {       
+                const serialized: SerializedTrait = {
+                    'data': this.traitsSerializer.serialize(trait),
+                };
+                if (!trait.enabled) {
+                    serialized.enabled = 0;
+                }
+                return serialized;
+            });
 
-        return {
+        const serialized: JsonSerializedEntity = {
             'id': value.id,
-            'age': value.age,
-            'x': value.x,
-            'y': value.y,
-            'z': value.z,
-            'angle': value.angle,
             'traits': serializedTraits,
         };
+
+        if (value.x) serialized.x = value.x;
+        if (value.y) serialized.y = value.y;
+        if (value.z) serialized.z = value.z;
+        if (value.angle) serialized.angle = value.angle;
+        if (value.age) serialized.age = value.age;
+
+        return serialized;
     }
 
     deserialize(serialized: JsonSerializedEntity): Entity {
-        const entity = new Entity(serialized.id, serialized.traits.map((serializedTrait) => {
+        const entity = new Entity(serialized.id, serialized.traits.map((serializedTrait: SerializedTrait) => {
             // If the trait is serialized using the old serialization format, convert it
-            const isOldFormat = !serializedTrait.hasOwnProperty('data') || !serializedTrait.hasOwnProperty('enabled');
+            const isOldFormat = !serializedTrait.hasOwnProperty('data');
             if (isOldFormat) {
-                serializedTrait = {
-                    'enabled': true,
-                    'data': serializedTrait,
-                };
+                serializedTrait = {'data': serializedTrait};
             }
 
             const deserialized = this.traitsSerializer.deserialize(serializedTrait.data);
 
             // Apply general properties
-            deserialized.enabled = (serializedTrait as SerializedTrait).enabled;
+            deserialized.enabled = serializedTrait.enabled === undefined ? true : !!serializedTrait.enabled;
 
             return deserialized;
         }));
         entity.age = serialized.age || 0;
-        entity.x = serialized.x;
-        entity.y = serialized.y;
-        entity.z = serialized.z;
-        entity.angle = serialized.angle;
+        entity.x = serialized.x || 0;
+        entity.y = serialized.y || 0;
+        entity.z = serialized.z || 0;
+        entity.angle = serialized.angle || 0;
         return entity;
     }
 }

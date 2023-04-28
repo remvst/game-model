@@ -40,7 +40,6 @@ export default class Entity {
 
     angle: number;
     age: number;
-    timeFactor: number;
 
     constructor(
         id: string | undefined,
@@ -49,7 +48,6 @@ export default class Entity {
         this.id = id || v4();
         this.angle = 0;
         this.age = 0;
-        this.timeFactor = 1;
 
         this.traits = new ObjectSet(trait => trait.key);
 
@@ -97,7 +95,8 @@ export default class Entity {
     }
 
     cycle(elapsed: number) {
-        const adjusted = elapsed * this.timeFactor;
+        const timeFactor = this.world?.entityTimeFactorProvider(this) || 1;
+        const adjusted = elapsed * timeFactor;
 
         this.age += adjusted;
 

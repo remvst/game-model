@@ -23,6 +23,7 @@ export default class World {
 
     cyclePerformanceTracker: CyclePerformanceTracker | null = null;
     entityRelevanceProvider: EntityRelevanceProvider = () => true;
+    entityTimeFactorProvider: (entity: Entity) => number = () => 1;
 
     authority: Authority = new LocalAuthority();
 

@@ -61,7 +61,7 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
     deserialize(serialized: JsonSerializedEntity): Entity {
         const entity = new Entity(serialized.id, serialized.traits.map((serializedTrait: SerializedTrait) => {
             // If the trait is serialized using the old serialization format, convert it
-            const isOldFormat = !serializedTrait.hasOwnProperty('data');
+            const isOldFormat = serializedTrait.hasOwnProperty('key');
             if (isOldFormat) {
                 serializedTrait = {'data': serializedTrait};
             }

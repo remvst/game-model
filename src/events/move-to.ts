@@ -19,10 +19,17 @@ export default class MoveTo implements WorldEvent {
     }
 
     apply(world: World) {
+        const targetEntity = world.entity(this.targetEntityId);
+        if (!targetEntity) {
+            return;
+        }
+
         for (const entity of resolveIds(this.entityId, null, world)) {
-            const targetEntity = world.entity(this.targetEntityId);
-            if (!targetEntity) {
-                return;
+            if (this.duration <= 0) {
+                entity.position.x = targetEntity.position.x;
+                entity.position.y = targetEntity.position.y;
+                entity.position.z = targetEntity.position.z;
+                continue;
             }
 
             if (entity.position.x !== targetEntity.position.x) {

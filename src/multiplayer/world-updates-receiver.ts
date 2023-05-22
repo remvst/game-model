@@ -5,8 +5,6 @@ import World from "../world";
 import { Authority, AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
 
-const ALWAYS_TRUE = () => true;
-
 export default class WorldUpdatesReceiver {
 
     private previousEntityIds = new Map<string, Set<string>>();
@@ -40,13 +38,7 @@ export default class WorldUpdatesReceiver {
                 const existing = this.world.entity(deserialized.id);
                 if (!existing) {
                     // Entity doesn't exist locally yet, just add it
-                    const previousAllow = this.world.entities.allowAddition;
-                    try {
-                        this.world.entities.allowAddition = ALWAYS_TRUE;
-                        this.world.entities.add(deserialized);
-                    } finally {
-                        this.world.entities.allowAddition = previousAllow;
-                    }
+                    this.world.entities.forceAdd(deserialized);
                 } else {
                     // Entity already exists, copy properties
                     deserialized.bind(this.world); // Bind to the world to avoid crashes

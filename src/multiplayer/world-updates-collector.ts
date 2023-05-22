@@ -1,11 +1,11 @@
-import { Subscription, last } from "rxjs";
+import { Subscription } from "rxjs";
 import Entity from "../entity";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import { CompositeSerializerMeta } from "../serialization/composite-serializer";
 import { JsonSerializedEntity } from "../serialization/json-serializers";
 import World from "../world";
-import { Authority, AuthorityType } from "./authority";
+import { AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
 
 export default class WorldUpdatesCollector {
@@ -13,6 +13,7 @@ export default class WorldUpdatesCollector {
     private queuedEvents: CompositeSerializerMeta[] = [];
     private watchedEntities = new Set<string>();
     private worldSubscriptions: Subscription[] = [];
+    private readonly entityInitializations = new Map<string, JsonSerializedEntity>();
     private readonly lastGeneratedUpdates = new Map<string, number>();
 
     constructor(
@@ -66,6 +67,7 @@ export default class WorldUpdatesCollector {
         case AuthorityType.FULL:
         case AuthorityType.FORWARD:
             this.watchedEntities.add(entity.id);
+            this.entityInitializations.set(entity.id, this.app.serializers.entity.serialize(entity));
             break;
         }
     }
@@ -98,6 +100,8 @@ export default class WorldUpdatesCollector {
                     continue;
                 }
             }
+
+            this.entityInitializations.delete(entityId);
             
             try {
                 const serialized = this.app.serializers.entity.serialize(entity)
@@ -108,8 +112,16 @@ export default class WorldUpdatesCollector {
             }
         }
 
+        // Entities that were removed by the time the update is generated, send their initial state
+        for (const [id, initialState] of this.entityInitializations.entries()) {
+            console.log(initialState);
+            entities.push(initialState);
+            this.lastGeneratedUpdates.set(id, 0);
+        }
+
         const worldEvents = this.queuedEvents;
         this.queuedEvents = [];
+        this.entityInitializations.clear();
 
         return { entities, worldEvents, shortEntities };
     }

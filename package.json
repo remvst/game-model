@@ -1,6 +1,6 @@
 {
   "name": "@remvst/game-model",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Game models",
   "main": "lib/index.js",
   "scripts": {

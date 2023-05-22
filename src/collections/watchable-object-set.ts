@@ -32,16 +32,20 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
         return this.wrappedSet.bucketSize(bucketKey);
     }
 
-    add(object: ObjectType): boolean {
-        if (!this.allowAddition(object)) {
-            return false;
-        }
-
+    forceAdd(object: ObjectType): boolean {
         const added = this.wrappedSet.add(object);
         if (added) {
             this.additions.next(object);
         }
         return added;
+    }
+
+    add(object: ObjectType): boolean {
+        if (!this.allowAddition(object)) {
+            return false;
+        }
+
+        return this.forceAdd(object);
     }
 
     remove(object: ObjectType): ObjectType | null {

@@ -1,4 +1,5 @@
 import { KeyProvider } from "../key-provider";
+import SerializationOptions from "./serialization-options";
 import { AnySerialized, Serializer } from "./serializer";
 
 export interface CompositeSerializerMeta {
@@ -14,7 +15,7 @@ export default class CompositeSerializer<ObjectType extends KeyProvider> impleme
         return this;
     }
 
-    serialize(value: ObjectType): CompositeSerializerMeta {
+    serialize(value: ObjectType, options: SerializationOptions): CompositeSerializerMeta {
         const serializer = this.serializers.get(value.key);
         if (!serializer) {
             throw new Error(`Cannot serialize item with key ${value.key}`);
@@ -22,7 +23,7 @@ export default class CompositeSerializer<ObjectType extends KeyProvider> impleme
 
         return {
             'key': value.key,
-            'data': serializer.serialize(value),
+            'data': serializer.serialize(value, options),
         };
     }
 

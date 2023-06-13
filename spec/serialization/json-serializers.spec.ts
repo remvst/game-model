@@ -1,5 +1,5 @@
 import { WorldSetup } from './../../src/serialization/json-serializers';
-import { Trait, JsonSerializers, jsonSerializers, TraitSerializer, Entity, World } from '../../src';
+import { Trait, JsonSerializers, jsonSerializers, TraitSerializer, Entity, World, SerializationOptions } from '../../src';
 
 describe('JSON serializers', () => {
     
@@ -37,7 +37,7 @@ describe('JSON serializers', () => {
 
     it('can serialize an empty world', () => {
         const world = new World();
-        const serialized = serializers.world.serialize(world);
+        const serialized = serializers.world.serialize(world, new SerializationOptions());
         const deserialized = serializers.world.deserialize(serialized);
 
         expect(deserialized.entities.size).toBe(0);
@@ -49,7 +49,7 @@ describe('JSON serializers', () => {
         const world = new World();
         world.entities.add(entity);
 
-        const serialized = serializers.world.serialize(world);
+        const serialized = serializers.world.serialize(world, new SerializationOptions());
         const deserialized = serializers.world.deserialize(serialized);
 
         expect(deserialized.entities.size).toBe(1);
@@ -66,7 +66,7 @@ describe('JSON serializers', () => {
         const world = new World();
         world.entities.add(entity);
 
-        const serialized = serializers.world.serialize(world);
+        const serialized = serializers.world.serialize(world, new SerializationOptions());
         const deserialized = serializers.world.deserialize(serialized);
 
         expect(deserialized.entities.size).toBe(1);
@@ -90,7 +90,7 @@ describe('JSON serializers', () => {
         const world = new World();
         world.entities.add(entity);
 
-        const serialized = serializers.world.serialize(world);
+        const serialized = serializers.world.serialize(world, new SerializationOptions());
         const deserialized = serializers.world.deserialize(serialized);
 
         expect(deserialized.entities.size).toBe(0);

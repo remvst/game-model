@@ -7,6 +7,7 @@ import { JsonSerializedEntity } from "../serialization/json-serializers";
 import World from "../world";
 import { AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
+import SerializationOptions from "../serialization/serialization-options";
 
 export default class WorldUpdatesCollector {
 
@@ -15,6 +16,8 @@ export default class WorldUpdatesCollector {
     private worldSubscriptions: Subscription[] = [];
     private readonly entityInitializations = new Map<string, JsonSerializedEntity>();
     private readonly lastGeneratedUpdates = new Map<string, number>();
+
+    readonly serializationOptions = new SerializationOptions();
 
     constructor(
         private readonly app: GameModelApp,
@@ -53,7 +56,7 @@ export default class WorldUpdatesCollector {
             return;
         case AuthorityType.FULL:
         case AuthorityType.FORWARD:
-            const serialized = this.app.serializers.worldEvent.serialize(event as any);
+            const serialized = this.app.serializers.worldEvent.serialize(event as any, this.serializationOptions);
             this.queuedEvents.push(serialized);
             break;
         }
@@ -67,7 +70,7 @@ export default class WorldUpdatesCollector {
         case AuthorityType.FULL:
         case AuthorityType.FORWARD:
             this.watchedEntities.add(entity.id);
-            this.entityInitializations.set(entity.id, this.app.serializers.entity.serialize(entity));
+            this.entityInitializations.set(entity.id, this.app.serializers.entity.serialize(entity, this.serializationOptions));
             break;
         }
     }
@@ -104,7 +107,7 @@ export default class WorldUpdatesCollector {
             this.entityInitializations.delete(entityId);
             
             try {
-                const serialized = this.app.serializers.entity.serialize(entity)
+                const serialized = this.app.serializers.entity.serialize(entity, this.serializationOptions)
                 entities.push(serialized);
                 this.lastGeneratedUpdates.set(entityId, entity.age);
             } catch (e) {

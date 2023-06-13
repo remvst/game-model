@@ -1,6 +1,7 @@
 import { TraitSerializer } from '../../src/serialization/serializer';
 import { Trait, traitGetSet, TraitRegistry, PropertyType, PackedTraitSerializer } from "../../src";
 import DualSupportTraitSerializer from '../../src/serialization/dual-support-trait-serializer';
+import SerializationOptions, { SerializationType } from '../../src/serialization/serialization-options';
 
 describe('the dual support trait serializer', () => {
     
@@ -33,16 +34,28 @@ describe('the dual support trait serializer', () => {
     });
 
     it('will serialize everything as packed', () => {
+        const options = new SerializationOptions();
+        options.type = SerializationType.PACKED;
+
         const trait = new TestTrait();
-        const serialized = serializer.serialize(trait);
-        expect(serialized).toEqual(packedSerializer.serialize(trait));
+        const serialized = serializer.serialize(trait, options);
+        expect(serialized).toEqual(packedSerializer.serialize(trait, options));
+    });
+
+    it('will serialize everything as verbose', () => {
+        const options = new SerializationOptions();
+        options.type = SerializationType.VERBOSE;
+
+        const trait = new TestTrait();
+        const serialized = serializer.serialize(trait, options);
+        expect(serialized).toEqual(jsonSerializer.serialize(trait, options));
     });
 
     it('can deserialize from the packed serializer', () => {
         const trait = new TestTrait();
         trait.stringProp = 'yoyo';
 
-        const serialized = packedSerializer.serialize(trait);
+        const serialized = packedSerializer.serialize(trait, new SerializationOptions());
         const deserialized = serializer.deserialize(serialized);
 
         expect(deserialized.stringProp).toEqual(trait.stringProp);
@@ -52,7 +65,7 @@ describe('the dual support trait serializer', () => {
         const trait = new TestTrait();
         trait.stringProp = 'yoyo';
 
-        const serialized = jsonSerializer.serialize(trait);
+        const serialized = jsonSerializer.serialize(trait, new SerializationOptions());
         const deserialized = serializer.deserialize(serialized);
 
         expect(deserialized.stringProp).toEqual(trait.stringProp);

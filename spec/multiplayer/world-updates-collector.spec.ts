@@ -1,4 +1,4 @@
-import { Authority, AuthorityType, Entity, GameModelApp, LocalAuthority, Remove, World } from '../../src';
+import { Authority, AuthorityType, Entity, GameModelApp, LocalAuthority, Remove, SerializationOptions, SerializationType, World } from '../../src';
 import WorldUpdatesCollector from '../../src/multiplayer/world-updates-collector';
 
 describe('a helper', () => {
@@ -34,10 +34,13 @@ describe('a helper', () => {
         const event = new Remove('myent');
         world.addEvent(event);
 
+        const options = new SerializationOptions();
+        options.type = SerializationType.PACKED;
+
         const update = helper.generateUpdate();
         expect(update).toEqual({
             'entities': [],
-            'worldEvents': [app.serializers.worldEvent.serialize(event)],
+            'worldEvents': [app.serializers.worldEvent.serialize(event, options)],
             'shortEntities': [],
         });
     });
@@ -75,9 +78,12 @@ describe('a helper', () => {
         const localEntity = new Entity('myentity', []);
         world.entities.add(localEntity);
 
+        const options = new SerializationOptions();
+        options.type = SerializationType.PACKED;
+
         const update = helper.generateUpdate();
         expect(update).toEqual({
-            'entities': [app.serializers.entity.serialize(localEntity)],
+            'entities': [app.serializers.entity.serialize(localEntity, options)],
             'worldEvents': [],
             'shortEntities': [],
         });

@@ -5,6 +5,7 @@ import World from "../world";
 import CompositeSerializer from "./composite-serializer";
 import { AnySerialized, EntitySerializer, Serializers, TraitSerializer, WorldSerializer } from "./serializer";
 import { WorldEvent } from '../events/world-event';
+import SerializationOptions from './serialization-options';
 
 export interface SerializedTrait {
     enabled?: 1 | 0; // undefined = true
@@ -32,11 +33,11 @@ class JsonEntitySerializer implements EntitySerializer<JsonSerializedEntity> {
         
     }
 
-    serialize(value: Entity): JsonSerializedEntity {
+    serialize(value: Entity, options: SerializationOptions): JsonSerializedEntity {
         const serializedTraits = value.traits
             .map(trait => {       
                 const serialized: SerializedTrait = {
-                    'data': this.traitsSerializer.serialize(trait),
+                    'data': this.traitsSerializer.serialize(trait, options),
                 };
                 if (!trait.enabled) {
                     serialized.enabled = 0;
@@ -90,7 +91,7 @@ class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
 
     }
 
-    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean): JsonSerializedWorld {
+    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions): JsonSerializedWorld {
         const entities: AnySerialized[] = [];
         world.entities.forEach((entity) => {
             if (!entityFilter(entity)) {
@@ -98,7 +99,7 @@ class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
             }
 
             try {
-                const serialized = this.entitySerializer.serialize(entity);
+                const serialized = this.entitySerializer.serialize(entity, options);
                 entities.push(serialized);
             } catch (e) {
                 // entity is not serializable, skip
@@ -108,8 +109,8 @@ class JsonWorldSerializer implements WorldSerializer<JsonSerializedWorld> {
         return { entities };
     }
 
-    serialize(value: World): JsonSerializedWorld {
-        return this.filterAndSerialize(value, () => true);
+    serialize(value: World, options: SerializationOptions): JsonSerializedWorld {
+        return this.filterAndSerialize(value, () => true, options);
     }
 
     doSerialize() {

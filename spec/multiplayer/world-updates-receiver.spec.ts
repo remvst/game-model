@@ -1,4 +1,4 @@
-import { Authority, AuthorityType, Entity, GameModelApp, LocalAuthority, Remove, World } from '../../src';
+import { Authority, AuthorityType, Entity, GameModelApp, LocalAuthority, Remove, SerializationOptions, World } from '../../src';
 import WorldUpdatesReceiver from '../../src/multiplayer/world-updates-receiver';
 
 describe('a helper', () => {
@@ -25,7 +25,7 @@ describe('a helper', () => {
 
         helper.applyUpdate({
             worldEvents: [],
-            entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
+            entities: [app.serializers.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
             shortEntities: [],
         }, '', remoteAuthority);
 
@@ -41,7 +41,7 @@ describe('a helper', () => {
 
         helper.applyUpdate({
             worldEvents: [],
-            entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
+            entities: [app.serializers.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
             shortEntities: [],
         }, '', remoteAuthority);
 
@@ -57,7 +57,7 @@ describe('a helper', () => {
 
         helper.applyUpdate({
             worldEvents: [],
-            entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
+            entities: [app.serializers.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
             shortEntities: [],
         }, '', remoteAuthority);
         expect(world.entities.size).toBe(1);
@@ -79,7 +79,7 @@ describe('a helper', () => {
 
         helper.applyUpdate({
             worldEvents: [],
-            entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
+            entities: [app.serializers.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
             shortEntities: [],
         }, '', remoteAuthority);
         expect(world.entities.size).toBe(1);
@@ -97,7 +97,7 @@ describe('a helper', () => {
 
         helper.applyUpdate({
             worldEvents: [],
-            entities: [app.serializers.entity.serialize(new Entity('myentity', []))],
+            entities: [app.serializers.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
             shortEntities: [],
         }, '', remoteAuthority);
 
@@ -111,7 +111,7 @@ describe('a helper', () => {
         world.events.subscribe(eventSpy);
 
         helper.applyUpdate({
-            worldEvents: [app.serializers.worldEvent.serialize(new Remove('removedentity'))],
+            worldEvents: [app.serializers.worldEvent.serialize(new Remove('removedentity'), new SerializationOptions())],
             entities: [],
             shortEntities: [],
         }, '', remoteAuthority);
@@ -126,7 +126,7 @@ describe('a helper', () => {
         world.events.subscribe(eventSpy);
 
         helper.applyUpdate({
-            worldEvents: [app.serializers.worldEvent.serialize(new Remove('removedentity'))],
+            worldEvents: [app.serializers.worldEvent.serialize(new Remove('removedentity'), new SerializationOptions())],
             entities: [],
             shortEntities: [],
         }, '', remoteAuthority);

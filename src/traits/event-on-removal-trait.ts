@@ -1,4 +1,4 @@
-import { EntityIdConstraints, EntityRemoved, RegistryEntry, WorldEventRegistry } from "..";
+import { EntityIdConstraints, EntityRemoved, RegistryEntry, SerializationOptions, WorldEventRegistry } from "..";
 import { EntityEvent } from "../events/entity-event";
 import Remove from "../events/remove";
 import { WorldEvent } from "../events/world-event";
@@ -13,6 +13,8 @@ import adaptId from "../adapt-id";
 export default class EventOnRemovalTrait extends Trait {
     static readonly key = 'event-on-removal';
     readonly key = EventOnRemovalTrait.key;
+
+    private readonly serializationOptions = new SerializationOptions();
 
     constructor(
         private readonly worldEventRegistry: WorldEventRegistry,
@@ -30,7 +32,7 @@ export default class EventOnRemovalTrait extends Trait {
     private trigger(world: World, triggererId: string) {
         const registryEntry = this.worldEventRegistry.entry(this.event.key);
         const serializer = registryEntry.serializer(registryEntry);
-        const copy = serializer.deserialize(serializer.serialize(this.event));
+        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions));
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
                 if (property.type instanceof EntityIdConstraints) {
@@ -65,6 +67,9 @@ interface Serialized extends AnySerialized {
 }
 
 export class EventOnRemovalSerializer implements TraitSerializer<EventOnRemovalTrait, Serialized> {
+
+    private readonly serializationOptions = new SerializationOptions();
+
     constructor(
         private readonly worldEventRegistry: WorldEventRegistry,
         private readonly eventSerializer: WorldEventSerializer<any, any>,
@@ -72,9 +77,9 @@ export class EventOnRemovalSerializer implements TraitSerializer<EventOnRemovalT
         
     }
 
-    serialize(trait: EventOnRemovalTrait): Serialized {
+    serialize(trait: EventOnRemovalTrait, options: SerializationOptions): Serialized {
         return {
-            'event': this.eventSerializer.serialize(trait.event),
+            'event': this.eventSerializer.serialize(trait.event, options),
         };
     }
 

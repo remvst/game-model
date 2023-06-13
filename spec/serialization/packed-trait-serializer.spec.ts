@@ -1,5 +1,6 @@
 import { TraitSerializer } from './../../src/serialization/serializer';
 import { Trait, traitGetSet, TraitRegistry, PropertyType, PropertyConstraints, PackedTraitSerializer } from "../../src";
+import SerializationOptions from '../../src/serialization/serialization-options';
 
 describe('the packed trait serializer', () => {
     
@@ -60,7 +61,7 @@ describe('the packed trait serializer', () => {
 
     it('can serialize then deserialize', () => {
         const trait = new TestTrait();
-        expect(() => serializer.serialize(trait)).not.toThrow();
+        expect(() => serializer.serialize(trait, new SerializationOptions())).not.toThrow();
     });
 
     it('can serialize then deserialize and the properties will be accurate', () => {
@@ -80,7 +81,7 @@ describe('the packed trait serializer', () => {
         trait.compositeProp = {'id': 'ha', 'delay': 1000};
         trait.compositeArrayProp = [{'id': 'ha', 'delay': 1000}, {'id': 'ha', 'delay': 1000}];
 
-        const serialized = serializer.serialize(trait);
+        const serialized = serializer.serialize(trait, new SerializationOptions());
         const deserialized = serializer.deserialize(serialized);
 
         expect(deserialized.stringProp).toEqual(trait.stringProp);
@@ -98,7 +99,7 @@ describe('the packed trait serializer', () => {
         const trait = new TestTrait();
         trait.stringProp = null;
 
-        const serialized = serializer.serialize(trait);
+        const serialized = serializer.serialize(trait, new SerializationOptions());
         const deserialized = serializer.deserialize(serialized);
 
         expect(deserialized.stringProp).toBe(trait.stringProp);

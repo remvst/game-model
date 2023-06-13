@@ -1,5 +1,5 @@
 import { CompositeConfigurable, EnumConfigurable, NumberConfigurable } from "@remvst/configurable";
-import { Entity, EntityIdConstraints, RegistryEntry, WorldEventRegistry } from "..";
+import { Entity, EntityIdConstraints, RegistryEntry, SerializationOptions, WorldEventRegistry } from "..";
 import { EntityEvent } from "../events/entity-event";
 import Remove from "../events/remove";
 import TriggerEvent from "../events/trigger-event";
@@ -16,6 +16,8 @@ import adaptId from "../adapt-id";
 export default class EventHolderTrait extends Trait {
     static readonly key = 'event-holder';
     readonly key = EventHolderTrait.key;
+    
+    private readonly serializationOptions = new SerializationOptions();
 
     constructor(
         private readonly worldEventRegistry: WorldEventRegistry,
@@ -47,7 +49,7 @@ export default class EventHolderTrait extends Trait {
     private trigger(world: World, triggererId: string) {
         const registryEntry = this.worldEventRegistry.entry(this.event.key);
         const serializer = registryEntry.serializer(registryEntry);
-        const copy = serializer.deserialize(serializer.serialize(this.event));
+        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions));
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
                 if (property.type instanceof EntityIdConstraints) {
@@ -121,6 +123,7 @@ interface Serialized extends AnySerialized {
 }
 
 export class EventHolderSerializer implements TraitSerializer<EventHolderTrait, Serialized> {
+
     constructor(
         private readonly worldEventRegistry: WorldEventRegistry,
         private readonly eventSerializer: WorldEventSerializer<any, any>,
@@ -128,9 +131,9 @@ export class EventHolderSerializer implements TraitSerializer<EventHolderTrait, 
         
     }
 
-    serialize(trait: EventHolderTrait): Serialized {
+    serialize(trait: EventHolderTrait, options: SerializationOptions): Serialized {
         return {
-            'event': this.eventSerializer.serialize(trait.event),
+            'event': this.eventSerializer.serialize(trait.event, options),
             'delay': trait.delay,
             'triggerCount': trait.triggerCount,
         };

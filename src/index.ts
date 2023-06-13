@@ -1,3 +1,4 @@
+import SerializationOptions, { SerializationType } from './serialization/serialization-options';
 import { Encoder, Decoder, ArrayEncoder, ArrayDecoder } from './serialization/encoder';
 import { RegistryEntryProvider, WorldEventRegistryEntryProvider } from './registry/registry-entry-provider';
 import { EntityFilter, EntityFilters } from './configurable/entity-filter';
@@ -108,6 +109,8 @@ export {
     ArrayEncoder,
     ArrayDecoder,
     PackedTraitSerializer,
+    SerializationType,
+    SerializationOptions,
 
     // Registries
     TraitRegistry,

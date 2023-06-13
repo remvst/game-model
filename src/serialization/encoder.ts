@@ -1,6 +1,5 @@
 export interface Encoder {
     reset(): this;
-    startList(length: number): this;
     appendString(str: string): this;
     appendNumber(num: number): this;
     appendBool(bool: boolean): this;
@@ -9,7 +8,6 @@ export interface Encoder {
 
 export interface Decoder {
     setEncoded(encoded: string): void;
-    startList(): number;
     nextString(): string;
     nextNumber(): number;
     nextBool(): boolean;
@@ -26,11 +24,6 @@ export class ArrayEncoder implements Encoder {
 
     getResult(): string {
         return JSON.stringify(this.items);
-    } 
-
-    startList(length: number): this {
-        this.items.push(length);
-        return this;
     }
 
     appendString(str: string): this {
@@ -57,10 +50,6 @@ export class ArrayDecoder implements Decoder {
     setEncoded(encoded: string): void {
         this.items = JSON.parse(encoded);
         this.currentIndex = 0;
-    }
-
-    startList(): number {
-        return this.nextNumber();
     }
 
     nextString(): string {

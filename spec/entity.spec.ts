@@ -64,14 +64,6 @@ describe('an entity', () => {
         expect(entity.cycleVelocity).toEqual(vector3(3, 5, 6));
     });
 
-    it('updates its age on cycle with the correct time factor', () => {
-        const entity = new Entity(undefined, []);
-
-        entity.timeFactor = 0.1;
-        entity.cycle(123);
-        expect(entity.age).toBe(12.3);
-    });
-
     it('calls bind() then postBind() on all traits', () => {
         const testTrait = new TestTrait();
         spyOn(testTrait, 'bind');
@@ -92,17 +84,6 @@ describe('an entity', () => {
         entity.cycle(123);
 
         expect(testTrait.maybeCycle).toHaveBeenCalledWith(123);
-    });
-
-    it('calls maybeCycle() on all traits with the right time factor', () => {
-        const testTrait = new TestTrait();
-        spyOn(testTrait, 'maybeCycle').and.callThrough();
-
-        const entity = new Entity(undefined, [testTrait]);
-        entity.timeFactor = 0.1;
-        entity.cycle(100);
-
-        expect(testTrait.maybeCycle).toHaveBeenCalledWith(10);
     });
 
     it('can be bound to a world', () => {

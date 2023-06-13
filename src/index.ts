@@ -1,3 +1,4 @@
+import { Encoder, Decoder, ArrayEncoder, ArrayDecoder } from './serialization/encoder';
 import { RegistryEntryProvider, WorldEventRegistryEntryProvider } from './registry/registry-entry-provider';
 import { EntityFilter, EntityFilters } from './configurable/entity-filter';
 import { AnySerialized } from './serialization/serializer';
@@ -101,6 +102,10 @@ export {
     JsonSerializers,
     AutomaticTraitSerializer,
     jsonSerializers,
+    Encoder,
+    Decoder,
+    ArrayEncoder,
+    ArrayDecoder,
 
     // Registries
     TraitRegistry,

@@ -3,12 +3,15 @@ import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstrain
 import Trait from '../trait';
 import { RegistryEntry } from '../registry/trait-registry';
 import { TraitSerializer } from './serializer';
+import PackedTraitSerializer from './packed-trait-serializer';
 
 interface Serialized {
     [key: string]: any;
 }
 
 export default class AutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, Serialized> {
+
+    private readonly packed = new PackedTraitSerializer(this.registryEntry);
 
     constructor(private readonly registryEntry: RegistryEntry<T>) {
 
@@ -34,6 +37,10 @@ export default class AutomaticTraitSerializer<T extends Trait> implements TraitS
     }
 
     deserialize(serialized: Serialized): T {
+        if (typeof serialized === 'string') {
+            return this.packed.deserialize(serialized);
+        }
+
         const trait = this.registryEntry.newTrait!();
 
         // Bind to a temporary entity so we can write the properties

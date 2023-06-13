@@ -114,7 +114,6 @@ export default class WorldUpdatesCollector {
 
         // Entities that were removed by the time the update is generated, send their initial state
         for (const [id, initialState] of this.entityInitializations.entries()) {
-            console.log(initialState);
             entities.push(initialState);
             this.lastGeneratedUpdates.set(id, 0);
         }

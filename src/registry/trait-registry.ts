@@ -7,6 +7,7 @@ import { EntityProperties } from '../entity';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import { KeyProvider } from '../key-provider';
 import AutomaticTraitSerializer from '../serialization/automatic-trait-serializer';
+import FlippingTraitSerializer from '../serialization/dual-support-trait-serializer';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
@@ -45,7 +46,7 @@ export default class TraitRegistry {
                 key: autoEntry.traitType.key,
                 category: autoEntry.category,
                 newTrait: () => new autoEntry.traitType(),
-                serializer: (autoEntry) => new AutomaticTraitSerializer(autoEntry),
+                serializer: (autoEntry) => new FlippingTraitSerializer(autoEntry),
                 properties: autoEntry.properties,
             });
         }

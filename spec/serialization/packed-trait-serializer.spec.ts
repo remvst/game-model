@@ -83,8 +83,6 @@ describe('the packed trait serializer', () => {
         const serialized = serializer.serialize(trait);
         const deserialized = serializer.deserialize(serialized);
 
-        console.log((serialized as string).length);
-
         expect(deserialized.stringProp).toEqual(trait.stringProp);
         expect(deserialized.stringArrayProp).toEqual(trait.stringArrayProp);
         expect(deserialized.numberProp).toEqual(trait.numberProp);

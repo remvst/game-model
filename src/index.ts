@@ -49,6 +49,7 @@ import Room, { Player } from './multiplayer/room';
 import { WorldUpdate } from './multiplayer/world-update';
 import { RoomUpdate } from './multiplayer/room-update';
 import EventOnRemovalTrait from './traits/event-on-removal-trait';
+import PackedTraitSerializer from './serialization/packed-trait-serializer';
 
 export {
     Trait,
@@ -106,6 +107,7 @@ export {
     Decoder,
     ArrayEncoder,
     ArrayDecoder,
+    PackedTraitSerializer,
 
     // Registries
     TraitRegistry,

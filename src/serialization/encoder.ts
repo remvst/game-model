@@ -44,7 +44,7 @@ export class ArrayEncoder implements Encoder {
     }
 
     appendBool(bool: boolean): this {
-        this.items.push(bool);
+        this.items.push(bool ? 1 : 0);
         return this;
     }
 
@@ -73,7 +73,7 @@ export class ArrayDecoder implements Decoder {
     }
 
     nextBool(): boolean {
-        return this.items[this.currentIndex++];
+        return !!this.items[this.currentIndex++];
     }
 
     nextSequence(): EncoderSequence[] {

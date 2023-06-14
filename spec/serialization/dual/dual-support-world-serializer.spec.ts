@@ -1,10 +1,11 @@
 import { Entity, EntitySerializer, SerializationOptions, SerializationType, World } from "../../../src";
 import DualSupportWorldSerializer from "../../../src/serialization/dual/dual-support-world-serializer";
+import { EncoderSequence } from "../../../src/serialization/encoder";
 import { PackedWorldSerializer } from "../../../src/serialization/packed/packed-world-serializer";
 import { VerboseWorldSerializer } from "../../../src/serialization/verbose/verbose-world-serializer";
 
 describe('the dual support world serializer', () => {
-    let entitySerializer: EntitySerializer<string>;
+    let entitySerializer: EntitySerializer<EncoderSequence>;
     let worldSetup: (world: World) => void;
     
     let serializationOptions: SerializationOptions;
@@ -14,7 +15,7 @@ describe('the dual support world serializer', () => {
 
     beforeEach(() => {
         entitySerializer = {
-            'serialize': jasmine.createSpy().and.returnValue('zeeentityserialized'),
+            'serialize': jasmine.createSpy().and.returnValue(['zeeentityserialized']),
             'deserialize': jasmine.createSpy(),
         };
 

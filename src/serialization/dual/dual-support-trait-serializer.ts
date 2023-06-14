@@ -1,4 +1,5 @@
 import Trait from "../../trait";
+import { EncoderSequence } from "../encoder";
 import SerializationOptions, { SerializationType } from "../serialization-options";
 import { TraitSerializer } from "../serializer";
 
@@ -6,7 +7,7 @@ export default class DualSupportTraitSerializer<T extends Trait> implements Trai
 
     constructor(
         private readonly verbose: TraitSerializer<T, any>,
-        private readonly packed: TraitSerializer<T, string>,
+        private readonly packed: TraitSerializer<T, EncoderSequence>,
     ) {
 
     }
@@ -21,7 +22,7 @@ export default class DualSupportTraitSerializer<T extends Trait> implements Trai
 
     deserialize(serialized: any, options: SerializationOptions): T {
         if (options.type === SerializationType.PACKED) {
-            return this.packed.deserialize(serialized as string, options);
+            return this.packed.deserialize(serialized as EncoderSequence, options);
         } else {
             return this.verbose.deserialize(serialized, options);
         }

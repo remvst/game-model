@@ -1,23 +1,23 @@
 import Entity from "../../entity";
 import World from "../../world";
-import { ArrayEncoder, ArrayDecoder } from "../encoder";
+import { ArrayEncoder, ArrayDecoder, EncoderSequence } from "../encoder";
 import { WorldSetup } from "../json-serializers";
 import SerializationOptions from "../serialization-options";
 import { EntitySerializer, WorldSerializer } from "../serializer";
 
-export class PackedWorldSerializer implements WorldSerializer<string> {
+export class PackedWorldSerializer implements WorldSerializer<EncoderSequence> {
 
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
     
     constructor(
-        private readonly entitySerializer: EntitySerializer<string>,
+        private readonly entitySerializer: EntitySerializer<EncoderSequence>,
         public worldSetup: WorldSetup,
     ) {
 
     }
 
-    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions): string {
+    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions): EncoderSequence {
         this.encoder.reset();
         this.encoder.appendNumber(world.entities.size);
 
@@ -27,17 +27,17 @@ export class PackedWorldSerializer implements WorldSerializer<string> {
             }
 
             const serialized = this.entitySerializer.serialize(entity, options);
-            this.encoder.appendString(serialized);
+            this.encoder.appendSequence(serialized);
         }
 
         return this.encoder.getResult();
     }
 
-    serialize(value: World, options: SerializationOptions): string {
+    serialize(value: World, options: SerializationOptions): EncoderSequence {
         return this.filterAndSerialize(value, () => true, options);
     }
 
-    deserialize(serialized: string, options: SerializationOptions): World {
+    deserialize(serialized: EncoderSequence, options: SerializationOptions): World {
         const world = new World();
         this.worldSetup(world);
 
@@ -45,7 +45,7 @@ export class PackedWorldSerializer implements WorldSerializer<string> {
 
         const entityCount = this.decoder.nextNumber();
         for (let i = 0 ; i < entityCount ; i++) {
-            const serializedEntity = this.decoder.nextString();
+            const serializedEntity = this.decoder.nextSequence();
             const entity = this.entitySerializer.deserialize(serializedEntity, options);
             world.entities.add(entity);
         }

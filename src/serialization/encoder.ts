@@ -1,16 +1,20 @@
+export type EncoderSequence = any[];
+
 export interface Encoder {
     reset(): this;
     appendString(str: string): this;
     appendNumber(num: number): this;
     appendBool(bool: boolean): this;
-    getResult(): string;
+    appendSequence(sequence: EncoderSequence): this;
+    getResult(): any[];
 }
 
 export interface Decoder {
-    setEncoded(encoded: string): void;
+    setEncoded(encoded: EncoderSequence): void;
     nextString(): string;
     nextNumber(): number;
     nextBool(): boolean;
+    nextSequence(): EncoderSequence;
 }
 
 export class ArrayEncoder implements Encoder {
@@ -22,8 +26,11 @@ export class ArrayEncoder implements Encoder {
         return this;
     }
 
-    getResult(): string {
-        return JSON.stringify(this.items);
+    getResult(): EncoderSequence {
+        return this.items;
+
+        // const fullJson = JSON.stringify(this.items);
+        // return fullJson.slice(1, fullJson.length - 1);
     }
 
     appendString(str: string): this {
@@ -40,15 +47,20 @@ export class ArrayEncoder implements Encoder {
         this.items.push(bool);
         return this;
     }
+
+    appendSequence(sequence: any[]): this {
+        this.items.push(sequence);
+        return this;
+    }
 }
 
 export class ArrayDecoder implements Decoder {
 
-    private items = [];
+    private items: EncoderSequence = [];
     private currentIndex = 0;
 
-    setEncoded(encoded: string): void {
-        this.items = JSON.parse(encoded);
+    setEncoded(encoded: EncoderSequence): void {
+        this.items = encoded;
         this.currentIndex = 0;
     }
 
@@ -61,6 +73,10 @@ export class ArrayDecoder implements Decoder {
     }
 
     nextBool(): boolean {
+        return this.items[this.currentIndex++];
+    }
+
+    nextSequence(): EncoderSequence[] {
         return this.items[this.currentIndex++];
     }
 }

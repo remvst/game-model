@@ -1,13 +1,13 @@
-import Trait from '../../trait';
 import { EntitySerializer } from '../serializer';
 import SerializationOptions, { SerializationType } from '../serialization-options';
 import Entity from '../../entity';
+import { EncoderSequence } from '../encoder';
 
 export default class DualSupportEntitySerializer implements EntitySerializer<any> {
 
     constructor(
         private readonly verbose: EntitySerializer<any>,
-        private readonly packed: EntitySerializer<string>,
+        private readonly packed: EntitySerializer<EncoderSequence>,
     ) {
         
     }

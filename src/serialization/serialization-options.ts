@@ -1,6 +1,6 @@
 export enum SerializationType {
-    VERBOSE,
-    PACKED,
+    VERBOSE = 'vb',
+    PACKED = 'pk',
 }
 
 export default class SerializationOptions {

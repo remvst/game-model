@@ -71,7 +71,6 @@ describe('JSON serializers', () => {
         serializationOptions.type = SerializationType.VERBOSE;
 
         const serialized = serializers.world.serialize(world, serializationOptions);
-        console.log('verbose', JSON.stringify(serialized).length);
         const deserialized = serializers.world.deserialize(serialized, serializationOptions);
 
         expect(deserialized.entities.size).toBe(1);
@@ -98,7 +97,6 @@ describe('JSON serializers', () => {
         serializationOptions.type = SerializationType.PACKED;
 
         const serialized = serializers.world.serialize(world, serializationOptions);
-        console.log('packed', JSON.stringify(serialized).length);
         const deserialized = serializers.world.deserialize(serialized, serializationOptions);
 
         expect(deserialized.entities.size).toBe(1);

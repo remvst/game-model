@@ -3,9 +3,9 @@ import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstrain
 import Trait from '../../trait';
 import { RegistryEntry } from '../../registry/trait-registry';
 import { TraitSerializer } from '../serializer';
-import { ArrayDecoder, ArrayEncoder } from '../encoder';
+import { ArrayDecoder, ArrayEncoder, EncoderSequence } from '../encoder';
 
-export default class PackedTraitSerializer<T extends Trait> implements TraitSerializer<T, string> {
+export default class PackedTraitSerializer<T extends Trait> implements TraitSerializer<T, EncoderSequence> {
 
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
@@ -111,7 +111,7 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         throw new Error(`Unrecognized value type: ${type}`);
     }
 
-    serialize(trait: Trait): string {
+    serialize(trait: Trait): EncoderSequence {
         // Bind to a temporary entity so we can read the properties
         const oldEntity = trait.entity;
         if (!oldEntity) {
@@ -133,14 +133,14 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         return this.encoder.getResult();
     }
 
-    deserialize(serialized: string): T {
+    deserialize(serialized: EncoderSequence): T {
         const trait = this.registryEntry.newTrait!();
 
         // Bind to a temporary entity so we can write the properties
         const entity = new Entity(undefined, [trait]);
         trait.bind(entity);
 
-        this.decoder.setEncoded(serialized as string);
+        this.decoder.setEncoded(serialized);
 
         for (const property of this.registryEntry.properties!) {
             const type = property.type;

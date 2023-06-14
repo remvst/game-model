@@ -1,21 +1,21 @@
 import Entity from "../../entity";
 import Trait from "../../trait";
-import { ArrayEncoder, ArrayDecoder } from "../encoder";
+import { ArrayEncoder, ArrayDecoder, EncoderSequence } from "../encoder";
 import SerializationOptions from "../serialization-options";
 import { EntitySerializer, TraitSerializer } from "../serializer";
 
-export default class PackedEntitySerializer implements EntitySerializer<string> {
+export default class PackedEntitySerializer implements EntitySerializer<EncoderSequence> {
 
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
 
     constructor(
-        private readonly traitsSerializer: TraitSerializer<Trait, string>
+        private readonly traitsSerializer: TraitSerializer<Trait, EncoderSequence>
     ) {
         
     }
 
-    serialize(value: Entity, options: SerializationOptions): string {
+    serialize(value: Entity, options: SerializationOptions): EncoderSequence {
         this.encoder.reset();
 
         this.encoder.appendString(value.id);
@@ -28,15 +28,16 @@ export default class PackedEntitySerializer implements EntitySerializer<string> 
         this.encoder.appendNumber(value.traits.size);
 
         for (const trait of value.traits.items()) {
-            const serializedTrait = this.traitsSerializer.serialize(trait, options);
-            this.encoder.appendString(serializedTrait);
             this.encoder.appendBool(trait.enabled);
+
+            const serializedTrait = this.traitsSerializer.serialize(trait, options);
+            this.encoder.appendSequence(serializedTrait);
         }
 
-        return this.encoder.getResult();;
+        return this.encoder.getResult();
     }
 
-    deserialize(serialized: string, options: SerializationOptions): Entity {
+    deserialize(serialized: EncoderSequence, options: SerializationOptions): Entity {
         this.decoder.setEncoded(serialized);
 
         const id = this.decoder.nextString();
@@ -50,9 +51,10 @@ export default class PackedEntitySerializer implements EntitySerializer<string> 
         const traits: Trait[] = [];
 
         for (let i = 0 ; i < traitCount ; i++) {
-            const serializedTrait = this.decoder.nextString();
+            const enabled = this.decoder.nextBool();
+            const serializedTrait = this.decoder.nextSequence();
             const deserialized = this.traitsSerializer.deserialize(serializedTrait, options);
-            deserialized.enabled = this.decoder.nextBool();
+            deserialized.enabled = enabled;
             traits.push(deserialized);
         }
 

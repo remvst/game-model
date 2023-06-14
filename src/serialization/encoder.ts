@@ -28,9 +28,6 @@ export class ArrayEncoder implements Encoder {
 
     getResult(): EncoderSequence {
         return this.items;
-
-        // const fullJson = JSON.stringify(this.items);
-        // return fullJson.slice(1, fullJson.length - 1);
     }
 
     appendString(str: string): this {

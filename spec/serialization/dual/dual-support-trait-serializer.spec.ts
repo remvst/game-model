@@ -1,9 +1,9 @@
-import { TraitSerializer } from '../../src/serialization/serializer';
-import { Trait, traitGetSet, TraitRegistry, PropertyType } from "../../src";
-import SerializationOptions, { SerializationType } from '../../src/serialization/serialization-options';
-import PackedAutomaticTraitSerializer from '../../src/serialization/packed/packed-automatic-trait-serializer';
-import VerboseAutomaticTraitSerializer from '../../src/serialization/verbose/verbose-automatic-trait-serializer';
-import DualSupportTraitSerializer from '../../src/serialization/dual/dual-support-trait-serializer';
+import { TraitSerializer } from '../../../src/serialization/serializer';
+import { Trait, traitGetSet, TraitRegistry, PropertyType } from "../../../src";
+import SerializationOptions, { SerializationType } from '../../../src/serialization/serialization-options';
+import PackedAutomaticTraitSerializer from '../../../src/serialization/packed/packed-automatic-trait-serializer';
+import VerboseAutomaticTraitSerializer from '../../../src/serialization/verbose/verbose-automatic-trait-serializer';
+import DualSupportTraitSerializer from '../../../src/serialization/dual/dual-support-trait-serializer';
 
 describe('the dual support trait serializer', () => {
     

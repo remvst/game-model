@@ -30,6 +30,7 @@ export default class PackedEntitySerializer implements EntitySerializer<string> 
         for (const trait of value.traits.items()) {
             const serializedTrait = this.traitsSerializer.serialize(trait, options);
             this.encoder.appendString(serializedTrait);
+            this.encoder.appendBool(trait.enabled);
         }
 
         return this.encoder.getResult();;
@@ -51,6 +52,7 @@ export default class PackedEntitySerializer implements EntitySerializer<string> 
         for (let i = 0 ; i < traitCount ; i++) {
             const serializedTrait = this.decoder.nextString();
             const deserialized = this.traitsSerializer.deserialize(serializedTrait, options);
+            deserialized.enabled = this.decoder.nextBool();
             traits.push(deserialized);
         }
 

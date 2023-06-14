@@ -1,5 +1,5 @@
 import GameModelApp from "../game-model-app";
-import SerializationOptions from "../serialization/serialization-options";
+import SerializationOptions, { SerializationType } from "../serialization/serialization-options";
 import World from "../world";
 import { Authority } from "./authority";
 import { RoomUpdate } from "./room-update";
@@ -41,7 +41,7 @@ export default class Room {
         private readonly authority: (room: Room, playerId: string) => Authority,
         private readonly sendUpdate: (room: Room, playerId: string, update: RoomUpdate) => void,
     ) {
-
+        this.serializationOptions.type = SerializationType.PACKED;
     }
 
     resetAllKeyFrames() {

@@ -1,13 +1,15 @@
-import { TraitSerializer } from './../../src/serialization/serializer';
-import { Trait, traitGetSet, TraitRegistry, PropertyType, AutomaticTraitSerializer, PropertyConstraints, SerializationOptions } from "../../src";
+import { TraitSerializer } from '../../../src/serialization/serializer';
+import { Trait, traitGetSet, TraitRegistry, PropertyType, PropertyConstraints } from "../../../src";
+import SerializationOptions from '../../../src/serialization/serialization-options';
+import PackedAutomaticTraitSerializer from '../../../src/serialization/packed/packed-automatic-trait-serializer';
 
-describe('the automatic trait serializer', () => {
+describe('the packed trait serializer', () => {
     
     class TestTrait extends Trait {
         static readonly key: string = 'testtrait';
         readonly key: string = TestTrait.key;
         
-        stringProp = 'hello';
+        stringProp: string | null = 'hello';
         stringArrayProp = ['hello', 'world'];
 
         entityIdProp = 'zee-id';
@@ -55,7 +57,7 @@ describe('the automatic trait serializer', () => {
         });
 
         const entry = registry.entry(TestTrait.key)!;
-        serializer = new AutomaticTraitSerializer(entry);
+        serializer = new PackedAutomaticTraitSerializer(entry);
     });
 
     it('can serialize then deserialize', () => {
@@ -94,21 +96,13 @@ describe('the automatic trait serializer', () => {
         expect(deserialized.compositeProp).toEqual(trait.compositeProp);
     });
 
-    it('will not deserialize properties that weren\'t first serialized', () => {
-        const defaultTrait = new TestTrait();
+    it('will work with nullables', () => {
+        const trait = new TestTrait();
+        trait.stringProp = null;
 
-        const deserialized = serializer.deserialize({
-            'stringProp': 'haha serialized string',
-        }, new SerializationOptions());
-        expect(deserialized.stringProp).toEqual('haha serialized string');
+        const serialized = serializer.serialize(trait, new SerializationOptions());
+        const deserialized = serializer.deserialize(serialized, new SerializationOptions());
 
-        expect(deserialized.boolProp).toEqual(defaultTrait.boolProp);
-        expect(deserialized.boolArrayProp).toEqual(defaultTrait.boolArrayProp);
-        expect(deserialized.stringArrayProp).toEqual(defaultTrait.stringArrayProp);
-        expect(deserialized.numberProp).toEqual(defaultTrait.numberProp);
-        expect(deserialized.numberArrayProp).toEqual(defaultTrait.numberArrayProp);
-        expect(deserialized.entityIdProp).toEqual(defaultTrait.entityIdProp);
-        expect(deserialized.entityIdArrayProp).toEqual(defaultTrait.entityIdArrayProp);
-        expect(deserialized.compositeProp).toEqual(defaultTrait.compositeProp);
+        expect(deserialized.stringProp).toBe(trait.stringProp);
     });
 });

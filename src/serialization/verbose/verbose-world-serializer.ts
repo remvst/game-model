@@ -16,10 +16,10 @@ export class VerboseWorldSerializer implements WorldSerializer<JsonSerializedWor
 
     }
 
-    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions): JsonSerializedWorld {
+    serialize(world: World, options: SerializationOptions): JsonSerializedWorld {
         const entities: AnySerialized[] = [];
         world.entities.forEach((entity) => {
-            if (!entityFilter(entity)) {
+            if (!options.shouldSerializeEntity(entity)) {
                 return;
             }
 
@@ -32,10 +32,6 @@ export class VerboseWorldSerializer implements WorldSerializer<JsonSerializedWor
         });
 
         return { entities };
-    }
-
-    serialize(value: World, options: SerializationOptions): JsonSerializedWorld {
-        return this.filterAndSerialize(value, () => true, options);
     }
 
     deserialize(serialized: JsonSerializedWorld, options: SerializationOptions): World {

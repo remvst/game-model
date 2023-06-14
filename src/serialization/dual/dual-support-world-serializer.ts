@@ -21,14 +21,6 @@ export default class DualSupportWorldSerializer implements WorldSerializer<any> 
         this.packed.worldSetup = worldSetup;
     }
 
-    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions) {
-        if (options.type === SerializationType.PACKED) {
-            return this.packed.filterAndSerialize(world, entityFilter, options);
-        } else {
-            return this.verbose.filterAndSerialize(world, entityFilter, options);
-        }
-    }
-
     serialize(world: World, options: SerializationOptions) {
         if (options.type === SerializationType.PACKED) {
             return this.packed.serialize(world, options);

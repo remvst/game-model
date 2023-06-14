@@ -1,4 +1,3 @@
-import Entity from "../../entity";
 import World from "../../world";
 import { ArrayEncoder, ArrayDecoder, EncoderSequence } from "../encoder";
 import { WorldSetup } from "../json-serializers";
@@ -17,12 +16,12 @@ export class PackedWorldSerializer implements WorldSerializer<EncoderSequence> {
 
     }
 
-    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions): EncoderSequence {
+    serialize(world: World, options: SerializationOptions): EncoderSequence {
         this.encoder.reset();
         this.encoder.appendNumber(world.entities.size);
 
         for (const entity of world.entities.items()) {
-            if (!entityFilter(entity)) {
+            if (!options.shouldSerializeEntity(entity)) {
                 continue;
             }
 
@@ -31,10 +30,6 @@ export class PackedWorldSerializer implements WorldSerializer<EncoderSequence> {
         }
 
         return this.encoder.getResult();
-    }
-
-    serialize(value: World, options: SerializationOptions): EncoderSequence {
-        return this.filterAndSerialize(value, () => true, options);
     }
 
     deserialize(serialized: EncoderSequence, options: SerializationOptions): World {

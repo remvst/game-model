@@ -17,7 +17,6 @@ export interface TraitSerializer<TraitType extends Trait, SerializedTrait extend
 export interface EntitySerializer<SerializedEntity extends AnySerialized> extends Serializer<Entity, SerializedEntity> {}
 export interface WorldSerializer<SerializedWorld extends AnySerialized> extends Serializer<World, SerializedWorld> {
     worldSetup: WorldSetup;
-    filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions): SerializedWorld;
 };
 export interface WorldEventSerializer<WorldEventType extends WorldEvent, SerializedWorldEvent extends AnySerialized> extends Serializer<WorldEventType, SerializedWorldEvent> {}
 

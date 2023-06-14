@@ -5,7 +5,7 @@ import { RegistryEntry } from '../../registry/trait-registry';
 import { TraitSerializer } from '../serializer';
 import { ArrayDecoder, ArrayEncoder } from '../encoder';
 
-export default class PackedAutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, string> {
+export default class PackedTraitSerializer<T extends Trait> implements TraitSerializer<T, string> {
 
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();

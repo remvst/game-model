@@ -1,4 +1,3 @@
-import Entity from "../../entity";
 import World from "../../world";
 import { WorldSetup } from "../json-serializers";
 import SerializationOptions from "../serialization-options";

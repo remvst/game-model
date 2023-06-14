@@ -1,5 +1,5 @@
 import SerializationOptions, { SerializationType } from './serialization/serialization-options';
-import { Encoder, Decoder, ArrayEncoder, ArrayDecoder } from './serialization/encoder';
+import { Encoder, Decoder, ArrayEncoder, ArrayDecoder, EncoderSequence } from './serialization/encoder';
 import { RegistryEntryProvider, WorldEventRegistryEntryProvider } from './registry/registry-entry-provider';
 import { EntityFilter, EntityFilters } from './configurable/entity-filter';
 import { AnySerialized } from './serialization/serializer';
@@ -104,6 +104,7 @@ export {
     jsonSerializers,
     Encoder,
     Decoder,
+    EncoderSequence,
     ArrayEncoder,
     ArrayDecoder,
     PackedTraitSerializer,

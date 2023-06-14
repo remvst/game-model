@@ -38,7 +38,7 @@ export default class VerboseEntitySerializer implements EntitySerializer<Seriali
         serialized.y = value.y;
         serialized.z = value.z;
         serialized.angle = value.angle;
-        serialized.age = value.age;
+        serialized.age = options.includeEntityAges ? value.age : 0;
 
         return serialized;
     }

@@ -81,7 +81,7 @@ describe('the automatic trait serializer', () => {
         trait.compositeArrayProp = [{'id': 'ha', 'delay': 1000}, {'id': 'ha', 'delay': 1000}];
 
         const serialized = serializer.serialize(trait, new SerializationOptions());
-        const deserialized = serializer.deserialize(serialized);
+        const deserialized = serializer.deserialize(serialized, new SerializationOptions());
 
         expect(deserialized.stringProp).toEqual(trait.stringProp);
         expect(deserialized.stringArrayProp).toEqual(trait.stringArrayProp);
@@ -99,7 +99,7 @@ describe('the automatic trait serializer', () => {
 
         const deserialized = serializer.deserialize({
             'stringProp': 'haha serialized string',
-        });
+        }, new SerializationOptions());
         expect(deserialized.stringProp).toEqual('haha serialized string');
 
         expect(deserialized.boolProp).toEqual(defaultTrait.boolProp);

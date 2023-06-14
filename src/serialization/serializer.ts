@@ -9,7 +9,7 @@ export interface AnySerialized {
 
 export interface Serializer<ObjectType, SerializedType> {
     serialize(value: ObjectType, options: SerializationOptions): SerializedType;
-    deserialize(serialized: SerializedType): ObjectType;
+    deserialize(serialized: SerializedType, options: SerializationOptions): ObjectType;
 }
 
 export interface TraitSerializer<TraitType extends Trait, SerializedTrait extends AnySerialized> extends Serializer<TraitType, SerializedTrait> {}
@@ -18,6 +18,10 @@ export interface WorldSerializer<SerializedWorld extends AnySerialized> extends 
     filterAndSerialize(world: World, entityFilter: (entity: Entity) => boolean, options: SerializationOptions): SerializedWorld;
 };
 export interface WorldEventSerializer<WorldEventType extends WorldEvent, SerializedWorldEvent extends AnySerialized> extends Serializer<WorldEventType, SerializedWorldEvent> {}
+
+export interface CompositeSerializer<ObjectType, SerializedType> extends Serializer<ObjectType, SerializedType> {
+    add(key: string, serializer: Serializer<ObjectType, SerializedType>): this;
+}
 
 export interface Serializers {
     trait: TraitSerializer<Trait, AnySerialized>;

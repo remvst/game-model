@@ -17,7 +17,7 @@ describe('a helper', () => {
         world = new World();
         world.authority = authority;
 
-        helper = new WorldUpdatesReceiver(app, world);
+        helper = new WorldUpdatesReceiver(app, world, new SerializationOptions());
     });
 
     it('will create remotely added entities if it has no authority over them', () => {

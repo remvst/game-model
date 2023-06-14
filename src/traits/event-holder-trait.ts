@@ -6,7 +6,6 @@ import TriggerEvent from "../events/trigger-event";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import { KeyProvider } from "../key-provider";
-import { CompositeSerializerMeta } from "../serialization/composite-serializer";
 import { AnySerialized, TraitSerializer, WorldEventSerializer } from "../serialization/serializer";
 import Trait from "../trait";
 import World from "../world";
@@ -49,7 +48,7 @@ export default class EventHolderTrait extends Trait {
     private trigger(world: World, triggererId: string) {
         const registryEntry = this.worldEventRegistry.entry(this.event.key);
         const serializer = registryEntry.serializer(registryEntry);
-        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions));
+        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions), this.serializationOptions);
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
                 if (property.type instanceof EntityIdConstraints) {
@@ -117,7 +116,7 @@ export default class EventHolderTrait extends Trait {
 }
 
 interface Serialized extends AnySerialized {
-    event: CompositeSerializerMeta;
+    event: any;
     delay: number;
     triggerCount: number;
 }
@@ -139,8 +138,8 @@ export class EventHolderSerializer implements TraitSerializer<EventHolderTrait, 
         };
     }
 
-    deserialize(serialized: Serialized): EventHolderTrait {
-        const event = this.eventSerializer.deserialize(serialized.event);
+    deserialize(serialized: Serialized, options: SerializationOptions): EventHolderTrait {
+        const event = this.eventSerializer.deserialize(serialized.event, options);
         return new EventHolderTrait(
             this.worldEventRegistry,
             event as WorldEvent & KeyProvider,

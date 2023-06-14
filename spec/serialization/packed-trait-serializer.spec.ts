@@ -82,7 +82,7 @@ describe('the packed trait serializer', () => {
         trait.compositeArrayProp = [{'id': 'ha', 'delay': 1000}, {'id': 'ha', 'delay': 1000}];
 
         const serialized = serializer.serialize(trait, new SerializationOptions());
-        const deserialized = serializer.deserialize(serialized);
+        const deserialized = serializer.deserialize(serialized, new SerializationOptions());
 
         expect(deserialized.stringProp).toEqual(trait.stringProp);
         expect(deserialized.stringArrayProp).toEqual(trait.stringArrayProp);
@@ -100,7 +100,7 @@ describe('the packed trait serializer', () => {
         trait.stringProp = null;
 
         const serialized = serializer.serialize(trait, new SerializationOptions());
-        const deserialized = serializer.deserialize(serialized);
+        const deserialized = serializer.deserialize(serialized, new SerializationOptions());
 
         expect(deserialized.stringProp).toBe(trait.stringProp);
     });

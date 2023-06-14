@@ -4,7 +4,6 @@ import Remove from "../events/remove";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import { KeyProvider } from "../key-provider";
-import { CompositeSerializerMeta } from "../serialization/composite-serializer";
 import { AnySerialized, TraitSerializer, WorldEventSerializer } from "../serialization/serializer";
 import Trait from "../trait";
 import World from "../world";
@@ -32,7 +31,7 @@ export default class EventOnRemovalTrait extends Trait {
     private trigger(world: World, triggererId: string) {
         const registryEntry = this.worldEventRegistry.entry(this.event.key);
         const serializer = registryEntry.serializer(registryEntry);
-        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions));
+        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions), this.serializationOptions);
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
                 if (property.type instanceof EntityIdConstraints) {
@@ -63,12 +62,10 @@ export default class EventOnRemovalTrait extends Trait {
 }
 
 interface Serialized extends AnySerialized {
-    event: CompositeSerializerMeta;
+    event: any;
 }
 
 export class EventOnRemovalSerializer implements TraitSerializer<EventOnRemovalTrait, Serialized> {
-
-    private readonly serializationOptions = new SerializationOptions();
 
     constructor(
         private readonly worldEventRegistry: WorldEventRegistry,
@@ -83,8 +80,8 @@ export class EventOnRemovalSerializer implements TraitSerializer<EventOnRemovalT
         };
     }
 
-    deserialize(serialized: Serialized): EventOnRemovalTrait {
-        const event = this.eventSerializer.deserialize(serialized.event);
+    deserialize(serialized: Serialized, options: SerializationOptions): EventOnRemovalTrait {
+        const event = this.eventSerializer.deserialize(serialized.event, options);
         return new EventOnRemovalTrait(
             this.worldEventRegistry,
             event as WorldEvent & KeyProvider,

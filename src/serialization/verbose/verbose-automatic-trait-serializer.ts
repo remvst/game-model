@@ -1,15 +1,15 @@
-import Entity from '../entity';
-import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, PropertyConstraints, CompositeConstraints, JsonConstraints } from '../properties/property-constraints';
-import Trait from '../trait';
-import { RegistryEntry } from '../registry/trait-registry';
-import { TraitSerializer } from './serializer';
-import PackedTraitSerializer from './packed/packed-automatic-trait-serializer';
+import { PackedTraitSerializer } from "../..";
+import Entity from "../../entity";
+import { PropertyConstraints, ListConstraints, CompositeConstraints, JsonConstraints, BooleanConstraints, NumberConstraints, StringConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../../properties/property-constraints";
+import { RegistryEntry } from "../../registry/trait-registry";
+import Trait from "../../trait";
+import { TraitSerializer } from "../serializer";
 
-export interface Serialized {
+interface Serialized {
     [key: string]: any;
 }
 
-export default class AutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, Serialized> {
+export default class VerboseAutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, Serialized> {
 
     private readonly packed = new PackedTraitSerializer(this.registryEntry);
 

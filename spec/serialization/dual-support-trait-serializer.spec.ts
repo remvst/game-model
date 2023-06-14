@@ -1,7 +1,9 @@
 import { TraitSerializer } from '../../src/serialization/serializer';
-import { Trait, traitGetSet, TraitRegistry, PropertyType, PackedTraitSerializer } from "../../src";
-import DualSupportTraitSerializer from '../../src/serialization/dual-support-trait-serializer';
+import { Trait, traitGetSet, TraitRegistry, PropertyType } from "../../src";
 import SerializationOptions, { SerializationType } from '../../src/serialization/serialization-options';
+import PackedAutomaticTraitSerializer from '../../src/serialization/packed/packed-automatic-trait-serializer';
+import VerboseAutomaticTraitSerializer from '../../src/serialization/verbose/verbose-automatic-trait-serializer';
+import DualSupportTraitSerializer from '../../src/serialization/dual/dual-support-trait-serializer';
 
 describe('the dual support trait serializer', () => {
     
@@ -14,8 +16,8 @@ describe('the dual support trait serializer', () => {
 
     let registry: TraitRegistry;
     let serializer: TraitSerializer<TestTrait, any>;
-    let packedSerializer: TraitSerializer<TestTrait, any>;
-    let jsonSerializer: TraitSerializer<TestTrait, any>;
+    let packed: TraitSerializer<TestTrait, any>;
+    let verbose: TraitSerializer<TestTrait, any>;
 
     beforeEach(() => {
         registry = new TraitRegistry();
@@ -28,9 +30,9 @@ describe('the dual support trait serializer', () => {
         });
 
         const entry = registry.entry(TestTrait.key)!;
-        serializer = new DualSupportTraitSerializer(entry);
-        packedSerializer = new PackedTraitSerializer(entry);
-        jsonSerializer = new PackedTraitSerializer(entry);
+        packed = new PackedAutomaticTraitSerializer(entry);
+        verbose = new VerboseAutomaticTraitSerializer(entry);
+        serializer = new DualSupportTraitSerializer(verbose, packed);
     });
 
     it('will serialize everything as packed', () => {
@@ -39,7 +41,7 @@ describe('the dual support trait serializer', () => {
 
         const trait = new TestTrait();
         const serialized = serializer.serialize(trait, options);
-        expect(serialized).toEqual(packedSerializer.serialize(trait, options));
+        expect(serialized).toEqual(packed.serialize(trait, options));
     });
 
     it('will serialize everything as verbose', () => {
@@ -48,15 +50,18 @@ describe('the dual support trait serializer', () => {
 
         const trait = new TestTrait();
         const serialized = serializer.serialize(trait, options);
-        expect(serialized).toEqual(jsonSerializer.serialize(trait, options));
+        expect(serialized).toEqual(verbose.serialize(trait, options));
     });
 
     it('can deserialize from the packed serializer', () => {
         const trait = new TestTrait();
         trait.stringProp = 'yoyo';
 
-        const serialized = packedSerializer.serialize(trait, new SerializationOptions());
-        const deserialized = serializer.deserialize(serialized);
+        const options = new SerializationOptions();
+        options.type = SerializationType.PACKED;
+
+        const serialized = packed.serialize(trait, options);
+        const deserialized = serializer.deserialize(serialized, options);
 
         expect(deserialized.stringProp).toEqual(trait.stringProp);
     });
@@ -65,8 +70,11 @@ describe('the dual support trait serializer', () => {
         const trait = new TestTrait();
         trait.stringProp = 'yoyo';
 
-        const serialized = jsonSerializer.serialize(trait, new SerializationOptions());
-        const deserialized = serializer.deserialize(serialized);
+        const options = new SerializationOptions();
+        options.type = SerializationType.VERBOSE;
+
+        const serialized = verbose.serialize(trait, options);
+        const deserialized = serializer.deserialize(serialized, options);
 
         expect(deserialized.stringProp).toEqual(trait.stringProp);
     });

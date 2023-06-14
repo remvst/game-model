@@ -1,4 +1,5 @@
 import GameModelApp from "../game-model-app";
+import SerializationOptions from "../serialization/serialization-options";
 import World from "../world";
 import { Authority } from "./authority";
 import { RoomUpdate } from "./room-update";
@@ -30,6 +31,8 @@ export default class Room {
 
     private updatesReceiver: WorldUpdatesReceiver;
     private updatesCollector: WorldUpdatesCollector;
+
+    readonly serializationOptions = new SerializationOptions();
 
     constructor(
         public hostId: string,
@@ -72,8 +75,8 @@ export default class Room {
 
         const authority = this.authority(this, this.selfId);
         this.world.authority = authority;
-        this.updatesCollector = new WorldUpdatesCollector(this.app, world);
-        this.updatesReceiver = new WorldUpdatesReceiver(this.app, world);
+        this.updatesCollector = new WorldUpdatesCollector(this.app, world, this.serializationOptions);
+        this.updatesReceiver = new WorldUpdatesReceiver(this.app, world, this.serializationOptions);
     }
 
     onUpdateReceived(playerId: string, update: RoomUpdate) {

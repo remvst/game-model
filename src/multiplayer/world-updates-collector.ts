@@ -2,8 +2,6 @@ import { Subscription } from "rxjs";
 import Entity from "../entity";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
-import { CompositeSerializerMeta } from "../serialization/composite-serializer";
-import { JsonSerializedEntity } from "../serialization/json-serializers";
 import World from "../world";
 import { AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
@@ -11,17 +9,16 @@ import SerializationOptions from "../serialization/serialization-options";
 
 export default class WorldUpdatesCollector {
 
-    private queuedEvents: CompositeSerializerMeta[] = [];
+    private queuedEvents: any[] = [];
     private watchedEntities = new Set<string>();
     private worldSubscriptions: Subscription[] = [];
-    private readonly entityInitializations = new Map<string, JsonSerializedEntity>();
+    private readonly entityInitializations = new Map<string, any>();
     private readonly lastGeneratedUpdates = new Map<string, number>();
-
-    readonly serializationOptions = new SerializationOptions();
 
     constructor(
         private readonly app: GameModelApp,
         private readonly world: World,
+        private readonly serializationOptions: SerializationOptions,
     ) {
         this.start();
     }
@@ -83,8 +80,8 @@ export default class WorldUpdatesCollector {
         this.lastGeneratedUpdates.clear();
     }
 
-    generateUpdate(): WorldUpdate<JsonSerializedEntity, CompositeSerializerMeta> {
-        const entities: JsonSerializedEntity[] = [];
+    generateUpdate(): WorldUpdate<any, any> {
+        const entities: any[] = [];
         const shortEntities = [];
 
         for (const entityId of this.watchedEntities) {

@@ -6,15 +6,17 @@ describe('a helper', () => {
     let app: GameModelApp;
     let helper: WorldUpdatesCollector;
     let authority: Authority;
+    let serializationOptions: SerializationOptions;
 
     beforeEach(() => {
         app = new GameModelApp();
         app.addWorldEvent(Remove.registryEntry());
 
         authority = new LocalAuthority();
+        serializationOptions = new SerializationOptions();
         world = new World();
         world.authority = authority;
-        helper = new WorldUpdatesCollector(app, world);
+        helper = new WorldUpdatesCollector(app, world, serializationOptions);
     });
 
     it('can generate an empty update', () => {
@@ -34,13 +36,10 @@ describe('a helper', () => {
         const event = new Remove('myent');
         world.addEvent(event);
 
-        const options = new SerializationOptions();
-        options.type = SerializationType.PACKED;
-
         const update = helper.generateUpdate();
         expect(update).toEqual({
             'entities': [],
-            'worldEvents': [app.serializers.worldEvent.serialize(event, options)],
+            'worldEvents': [app.serializers.worldEvent.serialize(event, serializationOptions)],
             'shortEntities': [],
         });
     });
@@ -78,12 +77,9 @@ describe('a helper', () => {
         const localEntity = new Entity('myentity', []);
         world.entities.add(localEntity);
 
-        const options = new SerializationOptions();
-        options.type = SerializationType.PACKED;
-
         const update = helper.generateUpdate();
         expect(update).toEqual({
-            'entities': [app.serializers.entity.serialize(localEntity, options)],
+            'entities': [app.serializers.entity.serialize(localEntity, serializationOptions)],
             'worldEvents': [],
             'shortEntities': [],
         });
@@ -101,5 +97,22 @@ describe('a helper', () => {
             'worldEvents': [],
             'shortEntities': [],
         });
+    });
+
+    it('will respect the serialization options', () => {
+        spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.FULL)
+
+        for (let i = 0 ; i < 20 ; i++) {
+            const localEntity = new Entity('myentity' + i, []);
+            world.entities.add(localEntity);
+        }
+
+        serializationOptions.type = SerializationType.PACKED;
+        const updatePacked = helper.generateUpdate();
+
+        serializationOptions.type = SerializationType.VERBOSE;
+        const updateVerbose = helper.generateUpdate();
+
+        expect(JSON.stringify(updatePacked).length).toBeLessThan(JSON.stringify(updateVerbose).length)
     });
 });

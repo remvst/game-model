@@ -1,11 +1,11 @@
-import Entity from '../entity';
-import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, PropertyConstraints, CompositeConstraints, JsonConstraints } from '../properties/property-constraints';
-import Trait from '../trait';
-import { RegistryEntry } from '../registry/trait-registry';
-import { TraitSerializer } from './serializer';
-import { ArrayDecoder, ArrayEncoder } from './encoder';
+import Entity from '../../entity';
+import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, PropertyConstraints, CompositeConstraints, JsonConstraints } from '../../properties/property-constraints';
+import Trait from '../../trait';
+import { RegistryEntry } from '../../registry/trait-registry';
+import { TraitSerializer } from '../serializer';
+import { ArrayDecoder, ArrayEncoder } from '../encoder';
 
-export default class PackedTraitSerializer<T extends Trait> implements TraitSerializer<T, string> {
+export default class PackedAutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, string> {
 
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();

@@ -17,7 +17,7 @@ import WatchableObjectSet from './collections/watchable-object-set';
 import EntityRemoved from './events/entity-removed';
 import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
-import { JsonSerializedEntity, JsonSerializedWorld, JsonSerializers, jsonSerializers } from './serialization/json-serializers';
+import { JsonSerializers, jsonSerializers } from './serialization/json-serializers';
 import TraitRegistry, { AutoRegistryEntry, RegistryEntry } from './registry/trait-registry';
 import WorldEventRegistry, { AutoWorldEventRegistryEntry, WorldEventRegistryEntry } from './registry/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
@@ -50,7 +50,7 @@ import Room, { Player } from './multiplayer/room';
 import { WorldUpdate } from './multiplayer/world-update';
 import { RoomUpdate } from './multiplayer/room-update';
 import EventOnRemovalTrait from './traits/event-on-removal-trait';
-import PackedTraitSerializer from './serialization/packed-trait-serializer';
+import PackedTraitSerializer from './serialization/packed/packed-automatic-trait-serializer';
 
 export {
     Trait,
@@ -99,8 +99,6 @@ export {
     WorldSerializer,
     WorldEventSerializer,
     AnySerialized,
-    JsonSerializedEntity,
-    JsonSerializedWorld,
     JsonSerializers,
     AutomaticTraitSerializer,
     jsonSerializers,

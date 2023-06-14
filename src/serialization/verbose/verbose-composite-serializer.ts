@@ -1,13 +1,13 @@
-import { KeyProvider } from "../key-provider";
-import SerializationOptions from "./serialization-options";
-import { AnySerialized, Serializer } from "./serializer";
+import { KeyProvider } from "../../key-provider";
+import SerializationOptions from "../serialization-options";
+import { AnySerialized, CompositeSerializer, Serializer } from "../serializer";
 
-export interface CompositeSerializerMeta {
+interface Serialized {
     key: string;
     data: AnySerialized;
 }
 
-export default class CompositeSerializer<ObjectType extends KeyProvider> implements Serializer<ObjectType, CompositeSerializerMeta> {
+export default class VerboseCompositeSerializer<ObjectType extends KeyProvider> implements CompositeSerializer<ObjectType, Serialized> {
     readonly serializers: Map<string, Serializer<ObjectType, AnySerialized>> = new Map();
 
     add(key: string, serializer: Serializer<ObjectType, AnySerialized>): this {
@@ -15,7 +15,7 @@ export default class CompositeSerializer<ObjectType extends KeyProvider> impleme
         return this;
     }
 
-    serialize(value: ObjectType, options: SerializationOptions): CompositeSerializerMeta {
+    serialize(value: ObjectType, options: SerializationOptions): Serialized {
         const serializer = this.serializers.get(value.key);
         if (!serializer) {
             throw new Error(`Cannot serialize item with key ${value.key}`);
@@ -27,11 +27,11 @@ export default class CompositeSerializer<ObjectType extends KeyProvider> impleme
         };
     }
 
-    deserialize(value: CompositeSerializerMeta): ObjectType {
+    deserialize(value: Serialized, options: SerializationOptions): ObjectType {
         const serializer = this.serializers.get(value.key);
         if (!serializer) {
             throw new Error(`Cannot deserialize item with key ${value.key}`);
         }
-        return serializer.deserialize(value.data);
+        return serializer.deserialize(value.data, options);
     }
 }

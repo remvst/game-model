@@ -38,7 +38,7 @@ describe('JSON serializers', () => {
     it('can serialize an empty world', () => {
         const world = new World();
         const serialized = serializers.world.serialize(world, new SerializationOptions());
-        const deserialized = serializers.world.deserialize(serialized);
+        const deserialized = serializers.world.deserialize(serialized, new SerializationOptions());
 
         expect(deserialized.entities.size).toBe(0);
     });
@@ -50,7 +50,7 @@ describe('JSON serializers', () => {
         world.entities.add(entity);
 
         const serialized = serializers.world.serialize(world, new SerializationOptions());
-        const deserialized = serializers.world.deserialize(serialized);
+        const deserialized = serializers.world.deserialize(serialized, new SerializationOptions());
 
         expect(deserialized.entities.size).toBe(1);
         expect(Array.from(deserialized.entities.items())[0].id).toBe(entity.id);
@@ -67,7 +67,7 @@ describe('JSON serializers', () => {
         world.entities.add(entity);
 
         const serialized = serializers.world.serialize(world, new SerializationOptions());
-        const deserialized = serializers.world.deserialize(serialized);
+        const deserialized = serializers.world.deserialize(serialized, new SerializationOptions());
 
         expect(deserialized.entities.size).toBe(1);
 
@@ -91,7 +91,7 @@ describe('JSON serializers', () => {
         world.entities.add(entity);
 
         const serialized = serializers.world.serialize(world, new SerializationOptions());
-        const deserialized = serializers.world.deserialize(serialized);
+        const deserialized = serializers.world.deserialize(serialized, new SerializationOptions());
 
         expect(deserialized.entities.size).toBe(0);
     });

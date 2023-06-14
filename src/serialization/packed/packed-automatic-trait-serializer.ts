@@ -58,6 +58,7 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
 
         if (type instanceof JsonConstraints) {
             this.encoder.appendString(JSON.stringify(value));
+            return;
         }
 
         throw new Error(`Unrecognized value type: ${type}`);

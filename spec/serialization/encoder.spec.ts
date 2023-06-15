@@ -30,6 +30,16 @@ describe('a string encoder/decoder', () => {
         expect(decoder.nextNumber()).toBe(123);
     });
 
+    it('can encode and decode a number with a precision', () => {
+        encoder.reset();
+        encoder.appendNumber(0.3333333, 3);
+
+        const encoded = encoder.getResult();
+        decoder.setEncoded(encoded);
+
+        expect(decoder.nextNumber()).toBe(0.333);
+    });
+
     it('can encode and decode a boolean', () => {
         encoder.reset();
         encoder.appendBool(true);

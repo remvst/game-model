@@ -4,6 +4,7 @@ import Trait from '../../trait';
 import { RegistryEntry } from '../../registry/trait-registry';
 import { TraitSerializer } from '../serializer';
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from '../encoder';
+import SerializationOptions from '../serialization-options';
 
 export default class PackedTraitSerializer<T extends Trait> implements TraitSerializer<T, EncoderSequence> {
 
@@ -17,19 +18,20 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
     private encode(
         type: PropertyConstraints<any>,
         value: any,
+        options: SerializationOptions,
     ): void {
         if (type instanceof ListConstraints) {
             const subType = type.itemType;
             this.encoder.appendNumber(value.length);
             for (const item of value) {
-                this.encode(subType, item);
+                this.encode(subType, item, options);
             }
             return;
         }
 
         if (type instanceof CompositeConstraints) {
             for (const [key, subType] of type.properties.entries()) {
-                this.encode(subType, value[key])
+                this.encode(subType, value[key], options)
             }
             return;
         }
@@ -38,7 +40,7 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
             type instanceof NumberConstraints ||
             type instanceof ColorConstraints
         ) {
-            this.encoder.appendNumber(value);
+            this.encoder.appendNumber(value, options.maxNumberDecimals);
             return;
         }
 
@@ -112,7 +114,7 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         throw new Error(`Unrecognized value type: ${type}`);
     }
 
-    serialize(trait: Trait): EncoderSequence {
+    serialize(trait: Trait, options: SerializationOptions): EncoderSequence {
         // Bind to a temporary entity so we can read the properties
         const oldEntity = trait.entity;
         if (!oldEntity) {
@@ -128,7 +130,7 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         for (const property of this.registryEntry.properties!) {
             const type = property.type;
             const value = property.get(trait.entity);
-            this.encode(type, value);
+            this.encode(type, value, options);
         }
 
         return this.encoder.getResult();

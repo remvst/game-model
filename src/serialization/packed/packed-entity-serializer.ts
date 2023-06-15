@@ -19,11 +19,11 @@ export default class PackedEntitySerializer implements EntitySerializer<EncoderS
         this.encoder.reset();
 
         this.encoder.appendString(value.id);
-        this.encoder.appendNumber(options.includeEntityAges ? value.age : 0);
-        this.encoder.appendNumber(value.x);
-        this.encoder.appendNumber(value.y);
-        this.encoder.appendNumber(value.z);
-        this.encoder.appendNumber(value.angle);
+        this.encoder.appendNumber(options.includeEntityAges ? value.age : 0, options.maxNumberDecimals);
+        this.encoder.appendNumber(value.x, options.maxNumberDecimals);
+        this.encoder.appendNumber(value.y, options.maxNumberDecimals);
+        this.encoder.appendNumber(value.z, options.maxNumberDecimals);
+        this.encoder.appendNumber(value.angle, options.maxNumberDecimals);
 
         this.encoder.appendNumber(value.traits.size);
 

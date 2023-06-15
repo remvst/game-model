@@ -3,7 +3,7 @@ export type EncoderSequence = any[];
 export interface Encoder {
     reset(): this;
     appendString(str: string): this;
-    appendNumber(num: number): this;
+    appendNumber(num: number, maxDecimals?: number): this;
     appendBool(bool: boolean): this;
     appendSequence(sequence: EncoderSequence): this;
     getResult(): any[];
@@ -35,7 +35,11 @@ export class ArrayEncoder implements Encoder {
         return this;
     }
 
-    appendNumber(num: number): this {
+    appendNumber(num: number, maxDecimals?: number): this {
+        if (maxDecimals !== undefined) {
+            const multiplier = 10 ** maxDecimals;
+            num = Math.round(num * multiplier) / multiplier;
+        }
         this.items.push(num);
         return this;
     }

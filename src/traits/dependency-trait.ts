@@ -9,6 +9,7 @@ import { traitGetSet } from "../properties/properties";
 export default class DependencyTrait extends Trait {
     static readonly key = 'dependency';
     readonly key = DependencyTrait.key;
+    readonly disableChunking = true;
 
     private readonly seenDependsOnIds = new Set<string>();
 

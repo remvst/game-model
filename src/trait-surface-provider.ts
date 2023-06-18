@@ -18,10 +18,7 @@ class SimpleTraitSurfaceProvider implements TraitSurfaceProvider {
 
     containsPoint(trait: Trait, point: Vector3) {
         this.surface(trait, REUSABLE_GEOMETRY_AREA);
-        return point.x >= REUSABLE_GEOMETRY_AREA.x &&
-            point.y >= REUSABLE_GEOMETRY_AREA.y &&
-            point.x <= REUSABLE_GEOMETRY_AREA.maxX &&
-            point.y <= REUSABLE_GEOMETRY_AREA.maxY;
+        return REUSABLE_GEOMETRY_AREA.containsPoint(point);
     }
 }
 

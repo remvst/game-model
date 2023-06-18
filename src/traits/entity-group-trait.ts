@@ -12,6 +12,7 @@ export default class EntityGroupTrait extends Trait {
 
     static readonly key = 'entity-group';
     readonly key = EntityGroupTrait.key;
+    readonly disableChunking = true;
 
     private relevant: boolean | null = null;
 

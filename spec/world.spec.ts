@@ -68,23 +68,26 @@ describe('a world', () => {
         expect(entity.postCycle).toHaveBeenCalledWith();
     });
 
-    it('will only cycle relevant entities', () => {
+    it('will only cycle entities in the current chunk', () => {
         const relevantEntity = new Entity(undefined, []);
         spyOn(relevantEntity, 'preCycle');
         spyOn(relevantEntity, 'cycle');
         spyOn(relevantEntity, 'postCycle');
 
         const irrelevantEntity = new Entity(undefined, []);
+        irrelevantEntity.position.x += 100;
         spyOn(irrelevantEntity, 'preCycle');
         spyOn(irrelevantEntity, 'cycle');
         spyOn(irrelevantEntity, 'postCycle');
 
         const world = new World();
-        world.entityRelevanceProvider = (entity) => {
-            return entity === relevantEntity;
-        };
         world.entities.add(relevantEntity);
         world.entities.add(irrelevantEntity);
+
+        world.chunked.visibleRectangleProvider = (rect) => {
+            rect.centerAround(relevantEntity.position.x, relevantEntity.position.y, 10, 10);
+        };
+
         world.cycle(123);
 
         expect(relevantEntity.preCycle).toHaveBeenCalledWith();

@@ -16,6 +16,7 @@ export default abstract class Trait implements KeyProvider {
 
     readonly queriableSectorSize: number = 1000;
     readonly surfaceProvider: TraitSurfaceProvider = entityPositionSurface;
+    readonly disableChunking: boolean = false;
 
     constructor() {
         this.enabled = true;

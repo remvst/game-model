@@ -6,6 +6,7 @@ import Trait from "../trait";
 export default class PositionBindingTrait extends Trait {
     static readonly key = 'position-binding';
     readonly key = PositionBindingTrait.key;
+    readonly disableChunking = true;
 
     constructor(
         public followedId: string = '',

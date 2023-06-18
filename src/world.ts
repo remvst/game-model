@@ -10,19 +10,19 @@ import SectorObjectSet from './collections/sector-object-set';
 import { KeyProvider  } from './key-provider';
 import { CyclePerformanceTracker } from './performance-tracker';
 import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
-
-type EntityRelevanceProvider = (entity: Entity) => boolean;
+import Chunked from './chunked';
 
 export default class World {
 
     readonly events: Subject<WorldEvent>;
     readonly entities: WatchableObjectSet<Entity>;
 
+    readonly chunked: Chunked;
+
     private readonly reusableRemoveEvent = new EntityRemoved();
     private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
 
     cyclePerformanceTracker: CyclePerformanceTracker | null = null;
-    entityRelevanceProvider: EntityRelevanceProvider = () => true;
     entityTimeFactorProvider: (entity: Entity) => number = () => 1;
 
     authority: Authority = new LocalAuthority();
@@ -48,6 +48,8 @@ export default class World {
             entity.unbind();
         });
 
+        this.chunked = new Chunked(this.entities);
+
         this.events = new Subject();
     }
 
@@ -71,18 +73,15 @@ export default class World {
 
     cycle(elapsed: number) {
         this.resetSectors();
+        this.chunked.update();
         for (const entity of this.entities.items()) {
             entity.preCycle();
         }
-        for (const entity of this.entities.items()) {
-            if (this.entityRelevanceProvider(entity)) {
-                entity.cycle(elapsed);
-            }
+        for (const entity of this.chunked.entities.items()) {
+            entity.cycle(elapsed);
         }
-        for (const entity of this.entities.items()) {
-            if (this.entityRelevanceProvider(entity)) {
-                entity.postCycle();
-            }
+        for (const entity of this.chunked.entities.items()) {
+            entity.postCycle();
         }
     }
 

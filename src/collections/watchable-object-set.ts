@@ -1,7 +1,6 @@
 'use strict';
 
 import { Subject } from 'rxjs';
-import Entity from '../entity';
 
 import { BaseObjectSet } from './base-object-set';
 

@@ -4,6 +4,7 @@ import Trait from "../trait";
 export default class InterpolatorTrait extends Trait {
     static readonly key = 'mover';
     readonly key = InterpolatorTrait.key;
+    readonly disableChunking = true;
 
     constructor(
         readonly targetEntityId: string,

@@ -36,16 +36,16 @@ describe('a chunked entity set', () => {
 
     it('will not chunk anything by default', () => {
         const entity1 = testEntity(new Rectangle(
-            Number.MIN_SAFE_INTEGER,
-            Number.MIN_SAFE_INTEGER,
+            -100000,
+            -100000,
             1,
             1,
         ));
         originalSet.add(entity1)
 
         const entity2 = testEntity(new Rectangle(
-            Number.MAX_SAFE_INTEGER,
-            Number.MAX_SAFE_INTEGER,
+            100000,
+            100000,
             1,
             1,
         ));
@@ -63,12 +63,20 @@ describe('a chunked entity set', () => {
         const entity2 = testEntity(new Rectangle(100, 0, 1, 1));
         originalSet.add(entity2);
 
-        chunked.visibleRectangleProvider = rect => rect.centerAround(
-            entity1.position.x,
-            entity1.position.y,
-            10,
-            10,
-        );
+        chunked.visibleRectangleProvider = (visible, relevant) => {
+            visible.centerAround(
+                entity1.position.x,
+                entity1.position.y,
+                10,
+                10,
+            );
+            relevant.centerAround(
+                entity1.position.x,
+                entity1.position.y,
+                10,
+                10,
+            );
+        };
         
         chunked.update();
 
@@ -77,16 +85,14 @@ describe('a chunked entity set', () => {
         expect(chunked.entities.getByKey(entity2.id)).toBeFalsy();
     });
 
-    it('will add entities if they\'re near the visible rectangle', () => {
+    it('will add entities if they\'re within the chunked rectangle', () => {
         const entity = testEntity(new Rectangle(0, 0, 0, 0));
         originalSet.add(entity);
 
-        chunked.visibleRectangleProvider = rect => rect.update(
-            entity.position.x + 5,
-            entity.position.y + 5,
-            10,
-            10,
-        );
+        chunked.visibleRectangleProvider = (visible, relevant) => {
+            visible.update(entity.position.x + 5, entity.position.y + 5, 2, 2);
+            relevant.centerAround(entity.position.x + 5, entity.position.y + 5, 10, 10);
+        };
         
         chunked.update();
 

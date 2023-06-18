@@ -113,8 +113,9 @@ describe('a world', () => {
         world.entities.add(relevantEntity);
         world.entities.add(irrelevantEntity);
 
-        world.chunked.visibleRectangleProvider = (rect) => {
-            rect.centerAround(relevantEntity.position.x, relevantEntity.position.y, 10, 10);
+        world.chunked.visibleRectangleProvider = (visible, relevant) => {
+            visible.centerAround(relevantEntity.position.x, relevantEntity.position.y, 10, 10);
+            relevant.centerAround(relevantEntity.position.x, relevantEntity.position.y, 10, 10);
         };
 
         world.cycle(123);

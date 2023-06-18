@@ -14,18 +14,25 @@ export default class ChunkedEntitySet {
     ));
 
     private readonly visible = new Rectangle();
-    private readonly chunk = new Rectangle();
-
-    onChunkUpdated: () => void;
+    private readonly relevant = new Rectangle();
 
     visibleRectangleProvider: (
         visible: Rectangle, 
-    ) => void = (rect) => rect.update(
-        Number.MIN_SAFE_INTEGER / 2, 
-        Number.MIN_SAFE_INTEGER / 2, 
-        Number.MAX_SAFE_INTEGER, 
-        Number.MAX_SAFE_INTEGER,
-    );
+        relevant: Rectangle
+    ) => void = (visible, relevant) => {
+        visible.update(
+            0, 
+            0, 
+            1, 
+            1,
+        );
+        relevant.update(
+            Number.MIN_SAFE_INTEGER / 2, 
+            Number.MIN_SAFE_INTEGER / 2, 
+            Number.MAX_SAFE_INTEGER, 
+            Number.MAX_SAFE_INTEGER,
+        );
+    };
 
     constructor(private readonly worldEntities: WatchableObjectSet<Entity>) {
         this.worldEntities.additions.subscribe((entity) => this.onEntityAdded(entity));
@@ -52,7 +59,7 @@ export default class ChunkedEntitySet {
     }
 
     private maybeAddEntity(entity: Entity) {
-        if (this.rectangleContainsEntity(this.chunk, entity)) {
+        if (this.rectangleContainsEntity(this.relevant, entity)) {
             this.entities.add(entity);
         } else {
             this.entities.remove(entity);
@@ -74,22 +81,22 @@ export default class ChunkedEntitySet {
             Number.MAX_SAFE_INTEGER, 
             Number.MAX_SAFE_INTEGER,
         )
-        this.visibleRectangleProvider(this.visible);
+        this.visibleRectangleProvider(this.visible, REUSABLE_GEOMETRY_AREA);
 
         if (
-            isBetween(this.chunk.minX, this.visible.minX, this.chunk.maxX) &&
-            isBetween(this.chunk.minX, this.visible.maxX, this.chunk.maxX) &&
-            isBetween(this.chunk.minY, this.visible.minY, this.chunk.maxY) &&
-            isBetween(this.chunk.minY, this.visible.maxY, this.chunk.maxY)
+            isBetween(this.relevant.minX, this.visible.minX, this.relevant.maxX) &&
+            isBetween(this.relevant.minX, this.visible.maxX, this.relevant.maxX) &&
+            isBetween(this.relevant.minY, this.visible.minY, this.relevant.maxY) &&
+            isBetween(this.relevant.minY, this.visible.maxY, this.relevant.maxY)
         ) {
             return;
         }
 
-        this.chunk.centerAround(
-            this.visible.midX,
-            this.visible.midY,
-            this.visible.width * 2,
-            this.visible.height * 2,
+        this.relevant.update(
+            REUSABLE_GEOMETRY_AREA.minX,
+            REUSABLE_GEOMETRY_AREA.minY,
+            REUSABLE_GEOMETRY_AREA.width,
+            REUSABLE_GEOMETRY_AREA.height,
         );
 
         for (const entity of this.worldEntities.items()) {

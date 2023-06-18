@@ -10,14 +10,14 @@ import SectorObjectSet from './collections/sector-object-set';
 import { KeyProvider  } from './key-provider';
 import { CyclePerformanceTracker } from './performance-tracker';
 import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
-import Chunked from './chunked';
+import ChunkedEntitySet from './chunked-entity-set';
 
 export default class World {
 
     readonly events: Subject<WorldEvent>;
     readonly entities: WatchableObjectSet<Entity>;
 
-    readonly chunked: Chunked;
+    readonly chunked: ChunkedEntitySet;
 
     private readonly reusableRemoveEvent = new EntityRemoved();
     private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
@@ -48,7 +48,7 @@ export default class World {
             entity.unbind();
         });
 
-        this.chunked = new Chunked(this.entities);
+        this.chunked = new ChunkedEntitySet(this.entities);
 
         this.events = new Subject();
     }

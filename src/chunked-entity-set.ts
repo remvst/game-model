@@ -6,7 +6,7 @@ import WatchableObjectSet from "./collections/watchable-object-set";
 
 const REUSABLE_GEOMETRY_AREA = new Rectangle();
 
-export default class Chunked {
+export default class ChunkedEntitySet {
 
     readonly entities = new WatchableObjectSet(new ObjectSet<Entity>(
         entity => entity.id,

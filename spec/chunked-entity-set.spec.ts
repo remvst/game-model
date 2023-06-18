@@ -1,17 +1,17 @@
 import { Rectangle } from "@remvst/geometry";
 import { Entity, ObjectSet, Trait, TraitSurfaceProvider, WatchableObjectSet, rectangleSurface } from "../src";
-import Chunked from "../src/chunked";
+import ChunkedEntitySet from "../src/chunked-entity-set";
 
 describe('a chunked entity set', () => {
     let originalSet: WatchableObjectSet<Entity>;
-    let chunked: Chunked;
+    let chunked: ChunkedEntitySet;
 
     beforeEach(() => {
         originalSet = new WatchableObjectSet(new ObjectSet(
             entity => entity.id,
             entity => entity.traits.map(trait => trait.key),
         ));
-        chunked = new Chunked(originalSet);
+        chunked = new ChunkedEntitySet(originalSet);
     });
 
     class TestTrait extends Trait {

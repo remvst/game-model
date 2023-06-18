@@ -68,6 +68,12 @@ export default class Chunked {
     }
 
     update() {
+        this.visible.update(
+            Number.MIN_SAFE_INTEGER / 2, 
+            Number.MIN_SAFE_INTEGER / 2, 
+            Number.MAX_SAFE_INTEGER, 
+            Number.MAX_SAFE_INTEGER,
+        )
         this.visibleRectangleProvider(this.visible);
 
         if (

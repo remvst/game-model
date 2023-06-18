@@ -30,7 +30,7 @@ export default class World {
     constructor() {
         this.entities = new WatchableObjectSet(new ObjectSet(
             entity => entity.id,
-            entity => entity.traits.map(trait => trait.key)
+            entity => entity.traits.map(trait => trait.key),
         ));
         this.entities.allowAddition = (entity) => {
             switch (this.authority.entityAuthority(entity)) {

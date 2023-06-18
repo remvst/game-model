@@ -23,6 +23,7 @@ export default class World {
     private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
 
     cyclePerformanceTracker: CyclePerformanceTracker | null = null;
+    isEntityEnabled = (entity: Entity) => true;
     entityTimeFactorProvider: (entity: Entity) => number = () => 1;
 
     authority: Authority = new LocalAuthority();
@@ -78,9 +79,11 @@ export default class World {
             entity.preCycle();
         }
         for (const entity of this.chunked.entities.items()) {
+            if (!this.isEntityEnabled(entity)) continue;
             entity.cycle(elapsed);
         }
         for (const entity of this.chunked.entities.items()) {
+            if (!this.isEntityEnabled(entity)) continue;
             entity.postCycle();
         }
     }

@@ -68,6 +68,35 @@ describe('a world', () => {
         expect(entity.postCycle).toHaveBeenCalledWith();
     });
 
+    it('will only cycle entities that aren\'t disabled', () => {
+        const relevantEntity = new Entity(undefined, []);
+        spyOn(relevantEntity, 'preCycle');
+        spyOn(relevantEntity, 'cycle');
+        spyOn(relevantEntity, 'postCycle');
+
+        const irrelevantEntity = new Entity(undefined, []);
+        irrelevantEntity.position.x += 100;
+        spyOn(irrelevantEntity, 'preCycle');
+        spyOn(irrelevantEntity, 'cycle');
+        spyOn(irrelevantEntity, 'postCycle');
+
+        const world = new World();
+        world.entities.add(relevantEntity);
+        world.entities.add(irrelevantEntity);
+
+        world.isEntityEnabled = (entity) => entity === relevantEntity;
+
+        world.cycle(123);
+
+        expect(relevantEntity.preCycle).toHaveBeenCalledWith();
+        expect(relevantEntity.cycle).toHaveBeenCalledWith(123);
+        expect(relevantEntity.postCycle).toHaveBeenCalledWith();
+
+        expect(irrelevantEntity.preCycle).toHaveBeenCalledWith();
+        expect(irrelevantEntity.cycle).not.toHaveBeenCalled();
+        expect(irrelevantEntity.postCycle).not.toHaveBeenCalled();
+    });
+
     it('will only cycle entities in the current chunk', () => {
         const relevantEntity = new Entity(undefined, []);
         spyOn(relevantEntity, 'preCycle');

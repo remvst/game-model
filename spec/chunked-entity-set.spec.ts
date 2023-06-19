@@ -18,6 +18,8 @@ describe('a chunked entity set', () => {
         static readonly key = 'test';
         readonly key = TestTrait.key;
 
+        disableChunking: boolean = false;
+
         constructor(readonly rectangle: Rectangle) {
             super();
         }
@@ -92,6 +94,22 @@ describe('a chunked entity set', () => {
         chunked.visibleRectangleProvider = (visible, relevant) => {
             visible.update(entity.position.x + 5, entity.position.y + 5, 2, 2);
             relevant.centerAround(entity.position.x + 5, entity.position.y + 5, 10, 10);
+        };
+        
+        chunked.update();
+
+        expect(chunked.entities.size).toBe(1);
+        expect(chunked.entities.getByKey(entity.id)).toBeTruthy();
+    });
+
+    it('will add entities if they\'re outside the chunked rectangle if they have a trait that ', () => {
+        const entity = testEntity(new Rectangle(0, 0, 0, 0));
+        entity.traitOfType(TestTrait)!.disableChunking = true;
+        originalSet.add(entity);
+
+        chunked.visibleRectangleProvider = (visible, relevant) => {
+            visible.update(entity.position.x + 50000, entity.position.y + 50000, 2, 2);
+            relevant.update(entity.position.x + 50000, entity.position.y + 50000, 2, 2);
         };
         
         chunked.update();

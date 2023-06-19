@@ -7,6 +7,7 @@ export default class DisappearingTrait extends Trait {
 
     static readonly key = 'disappearing';
     readonly key = DisappearingTrait.key;
+    readonly disableChunking: boolean = true;
 
     constructor(
         public maxAge: number = 0,

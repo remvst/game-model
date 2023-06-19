@@ -1,6 +1,3 @@
-import { CompositeConfigurable } from "@remvst/configurable";
-import { Rectangle } from "@remvst/geometry";
-import EntityIdConfigurable from "../configurable/entity-id-configurable";
 import { EntityEvent } from "../events/entity-event";
 import TriggerEvent from "../events/trigger-event";
 import { traitGetSet } from "../properties/properties";

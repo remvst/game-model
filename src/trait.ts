@@ -17,6 +17,7 @@ export default abstract class Trait implements KeyProvider {
     readonly queriableSectorSize: number = 1000;
     readonly surfaceProvider: TraitSurfaceProvider = entityPositionSurface;
     readonly disableChunking: boolean = false;
+    readonly queriable: boolean = false;
 
     constructor() {
         this.enabled = true;
@@ -36,7 +37,9 @@ export default abstract class Trait implements KeyProvider {
         this.lastEntityPosition.y = entity.position.y;
         this.lastEntityPosition.z = entity.position.z;
 
-        entity.world?.defineSectorSet(this.key, this.queriableSectorSize);
+        if (this.queriable) {
+            entity.world?.defineSectorSet(this.key, this.queriableSectorSize);
+        }
     }
 
     postBind() {
@@ -79,6 +82,7 @@ export default abstract class Trait implements KeyProvider {
     }
 
     private makeQueriable() {
+        if (!this.queriable) return;
         this.surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
         this.entity?.world?.sectorSet(this.key)?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
     }

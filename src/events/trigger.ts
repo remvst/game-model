@@ -22,14 +22,7 @@ export default class Trigger implements WorldEvent {
 
     apply(world: World) {
         for (const entity of resolveIds(this.entityId, null, world)) {
-            this.applyToEntity(entity)
-            
-            const entityGroupTrait = entity.traitOfType(EntityGroupTrait);
-            if (entityGroupTrait) {
-                for (const entity of entityGroupTrait.entities(world)) {
-                    this.applyToEntity(entity);
-                }
-            }
+            this.applyToEntity(entity);
         }
     }
 

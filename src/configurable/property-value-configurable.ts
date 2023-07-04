@@ -19,7 +19,7 @@ export function propertyValueConfigurable<T>(
                 type.itemType,
                 () => items[i] || type.defaultValue(),
                 (value) => {
-                    const copy = items.slice(0);
+                    const copy = (read() as any[]).slice(0);
                     copy[i] = value;
                     write(copy as T, configurable);
                     configurable.invalidate();
@@ -29,7 +29,7 @@ export function propertyValueConfigurable<T>(
             const deleteButton = new ButtonConfigurable({
                 'label': 'del',
                 'onClick': () => {
-                    const copy = items.slice(0);
+                    const copy = (read() as any[]).slice(0);
                     copy.splice(i, 1);
                     write(copy as T, configurable);
                     configurable.invalidate();

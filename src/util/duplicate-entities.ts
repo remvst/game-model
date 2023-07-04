@@ -26,6 +26,7 @@ export default function duplicateEntities(
         const duplicatedEntity = entitySerializer.deserialize(serialized, serializationOptions);
 
         (duplicatedEntity as any).id = mapping.destinationId(sourceEntity.id);
+        duplicatedEntity.bind(targetWorld);
 
         for (const trait of duplicatedEntity.traits.items()) {
             const registryEntry = traitRegistry.entry(trait.key);

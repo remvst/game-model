@@ -51,6 +51,7 @@ import { WorldUpdate } from './multiplayer/world-update';
 import { RoomUpdate } from './multiplayer/room-update';
 import EventOnRemovalTrait from './traits/event-on-removal-trait';
 import PackedTraitSerializer from './serialization/packed/packed-automatic-trait-serializer';
+import firstAvailableId from './util/first-available-id';
 
 export {
     Trait,
@@ -166,6 +167,7 @@ export {
     // Utils
     adaptId,
     resolveIds,
+    firstAvailableId,
 
     // Geometry
     rectangleSurface,

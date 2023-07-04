@@ -52,6 +52,8 @@ import { RoomUpdate } from './multiplayer/room-update';
 import EventOnRemovalTrait from './traits/event-on-removal-trait';
 import PackedTraitSerializer from './serialization/packed/packed-automatic-trait-serializer';
 import firstAvailableId from './util/first-available-id';
+import duplicateEntities from './util/duplicate-entities';
+import EntityIdMapping from './util/entity-id-mapping';
 
 export {
     Trait,
@@ -168,6 +170,8 @@ export {
     adaptId,
     resolveIds,
     firstAvailableId,
+    EntityIdMapping,
+    duplicateEntities,
 
     // Geometry
     rectangleSurface,

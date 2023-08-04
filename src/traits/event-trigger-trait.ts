@@ -13,6 +13,8 @@ export default class EventTriggerTrait extends Trait {
 
     private readonly containedEntityIds = new Set<string>();
 
+    readonly disableChunking: boolean = true;
+
     constructor(
         public onEnterIds: string[] = [],
         public onExitIds: string[] = [],

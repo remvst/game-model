@@ -1,3 +1,4 @@
+import PrefabHelper, { SerializedPrefab } from './util/prefab-helper';
 import SerializationOptions, { SerializationType } from './serialization/serialization-options';
 import { Encoder, Decoder, ArrayEncoder, ArrayDecoder, EncoderSequence } from './serialization/encoder';
 import { RegistryEntryProvider, WorldEventRegistryEntryProvider } from './registry/registry-entry-provider';
@@ -175,6 +176,8 @@ export {
     EntityIdMapping,
     duplicateEntities,
     repositionEntities,
+    SerializedPrefab,
+    PrefabHelper,
 
     // Geometry
     rectangleSurface,

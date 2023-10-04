@@ -54,6 +54,8 @@ import PackedTraitSerializer from './serialization/packed/packed-automatic-trait
 import firstAvailableId from './util/first-available-id';
 import duplicateEntities from './util/duplicate-entities';
 import EntityIdMapping from './util/entity-id-mapping';
+import { repositionEntities } from './util/reposition-entities';
+import Vector2, { copyVec2 } from './vector2';
 
 export {
     Trait,
@@ -172,8 +174,11 @@ export {
     firstAvailableId,
     EntityIdMapping,
     duplicateEntities,
+    repositionEntities,
 
     // Geometry
     rectangleSurface,
     vector3,
+    Vector2,
+    copyVec2,
 };

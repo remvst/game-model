@@ -58,6 +58,7 @@ import EntityIdMapping from './util/entity-id-mapping';
 import { repositionEntities } from './util/reposition-entities';
 import Vector2, { copyVec2 } from './vector2';
 import entityConfigurable from './configurable/entity-configurable';
+import { between, ceilToNearest, distance, floorToNearest, isBetween, modulo, normalizeAngle, notBetween, pointDistance, roundFloat, roundToNearest } from './util/math';
 
 export {
     Trait,
@@ -180,6 +181,19 @@ export {
     repositionEntities,
     SerializedPrefab,
     PrefabHelper,
+
+    // Math
+    between,
+    notBetween,
+    isBetween,
+    distance,
+    pointDistance,
+    roundToNearest,
+    floorToNearest,
+    ceilToNearest,
+    roundFloat,
+    normalizeAngle,
+    modulo,
 
     // Geometry
     rectangleSurface,

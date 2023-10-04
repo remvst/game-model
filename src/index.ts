@@ -57,6 +57,7 @@ import duplicateEntities from './util/duplicate-entities';
 import EntityIdMapping from './util/entity-id-mapping';
 import { repositionEntities } from './util/reposition-entities';
 import Vector2, { copyVec2 } from './vector2';
+import entityConfigurable from './configurable/entity-configurable';
 
 export {
     Trait,
@@ -168,6 +169,7 @@ export {
 
     // Configurables
     EntityIdConfigurable,
+    entityConfigurable,
     
     // Utils
     adaptId,

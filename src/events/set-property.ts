@@ -90,8 +90,8 @@ export default class SetProperty implements WorldEvent {
                     }))
                     .add('value', propertyValueConfigurable(
                         world,
-                        event.property.type, 
-                        () => event.value, 
+                        event.property.type,
+                        () => event.value,
                         (value) => event.value = value
                     ));
             },
@@ -111,7 +111,7 @@ interface Serialized {
 class Serializer implements WorldEventSerializer<SetProperty, Serialized> {
 
     constructor(private readonly propertyRegistry: PropertyRegistry<Property<any>>) {
-        
+
     }
 
     serialize(event: SetProperty): Serialized {

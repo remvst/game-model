@@ -28,7 +28,7 @@ export default class InterpolateProperty implements WorldEvent {
 
     apply(world: World) {
         for (const entity of resolveIds(this.entityId, null, world)) {
-            // Remove any existing movers. 
+            // Remove any existing movers.
             // This might be limiting but helps prevent flickering when multiple movers are applied.
             for (const existingMover of world.entities.bucket(InterpolatorTrait.key)) {
                 const existingMoverTrait = existingMover.traitOfType(InterpolatorTrait);
@@ -114,7 +114,7 @@ interface Serialized {
 export class Serializer implements WorldEventSerializer<InterpolateProperty, Serialized> {
 
     constructor(private readonly propertyRegistry: PropertyRegistry<Property<any>>) {
-        
+
     }
 
     serialize(event: InterpolateProperty): Serialized {
@@ -128,9 +128,9 @@ export class Serializer implements WorldEventSerializer<InterpolateProperty, Ser
 
     deserialize(serialized: Serialized): InterpolateProperty {
         return new InterpolateProperty(
-            serialized.entityId, 
-            this.propertyRegistry.property(serialized.propertyIdentifier)!, 
-            serialized.value, 
+            serialized.entityId,
+            this.propertyRegistry.property(serialized.propertyIdentifier)!,
+            serialized.value,
             serialized.duration,
         );
     }

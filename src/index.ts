@@ -32,7 +32,6 @@ import InterpolateProperty from './events/interpolate-property';
 import adaptId, { resolveIds } from './adapt-id';
 import { Property, GenericProperty, getSet, traitGetSet, worldEventGetSet } from './properties/properties';
 import { PropertyType, PropertyConstraints, NumberConstraints, StringConstraints, EntityIdConstraints, ColorConstraints, BooleanConstraints, ListConstraints, EnumConstraints, CompositeConstraints, JsonConstraints } from './properties/property-constraints';
-import AutomaticTraitSerializer from './serialization/automatic-trait-serializer';
 import DelayedActionTrait from './traits/delayed-action-trait';
 import DisappearingTrait from './traits/disappearing-trait';
 import EventHolderTrait from './traits/event-holder-trait';
@@ -69,7 +68,7 @@ export {
     // Collections
     ObjectSet,
     WatchableObjectSet,
-    
+
     // Surfaces
     TraitSurfaceProvider,
 
@@ -99,7 +98,7 @@ export {
     InterpolateProperty,
     TriggerEvent,
     Trigger,
-    
+
     // Serializers
     Serializer,
     TraitSerializer,
@@ -108,7 +107,6 @@ export {
     WorldEventSerializer,
     AnySerialized,
     JsonSerializers,
-    AutomaticTraitSerializer,
     jsonSerializers,
     Encoder,
     Decoder,
@@ -171,7 +169,7 @@ export {
     // Configurables
     EntityIdConfigurable,
     entityConfigurable,
-    
+
     // Utils
     adaptId,
     resolveIds,

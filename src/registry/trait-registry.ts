@@ -21,7 +21,7 @@ export interface RegistryEntry<TraitType extends Trait> {
 
 export interface AutoRegistryEntry<TraitType extends Trait> {
     readonly traitType: (new () => TraitType) & KeyProvider,
-    readonly properties: Property<any>[],
+    readonly properties?: Property<any>[],
     readonly category?: string,
 }
 

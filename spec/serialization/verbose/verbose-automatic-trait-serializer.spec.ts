@@ -3,11 +3,11 @@ import { Trait, traitGetSet, TraitRegistry, PropertyType, PropertyConstraints, S
 import VerboseAutomaticTraitSerializer from '../../../src/serialization/verbose/verbose-automatic-trait-serializer';
 
 describe('the automatic trait serializer', () => {
-    
+
     class TestTrait extends Trait {
         static readonly key: string = 'testtrait';
         readonly key: string = TestTrait.key;
-        
+
         stringProp = 'hello';
         stringArrayProp = ['hello', 'world'];
 
@@ -111,5 +111,13 @@ describe('the automatic trait serializer', () => {
         expect(deserialized.entityIdProp).toEqual(defaultTrait.entityIdProp);
         expect(deserialized.entityIdArrayProp).toEqual(defaultTrait.entityIdArrayProp);
         expect(deserialized.compositeProp).toEqual(defaultTrait.compositeProp);
+    });
+
+    it('will default to 0 for invalid number properties', () => {
+        const deserialized = serializer.deserialize({
+            'numberProp': null,
+        }, new SerializationOptions());
+
+        expect(deserialized.numberProp).toEqual(0);
     });
 });

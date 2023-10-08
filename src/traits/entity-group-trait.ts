@@ -1,7 +1,7 @@
 import { traitGetSet } from "../properties/properties";
 import { EntityEvent } from "../events/entity-event";
 import Trigger from "../events/trigger";
-import { isBetween } from "../math";
+import { isBetween } from "../util/math";
 import { AutoRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import World from "../world";

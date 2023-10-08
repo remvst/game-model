@@ -55,7 +55,7 @@ import firstAvailableId from './util/first-available-id';
 import duplicateEntities from './util/duplicate-entities';
 import EntityIdMapping from './util/entity-id-mapping';
 import { repositionEntities } from './util/reposition-entities';
-import Vector2, { copyVec2 } from './vector2';
+import Vector2, { Vector2Like, copyVec2 } from './vector2';
 import entityConfigurable from './configurable/entity-configurable';
 import { between, ceilToNearest, distance, floorToNearest, isBetween, modulo, normalizeAngle, notBetween, pointDistance, roundFloat, roundToNearest } from './util/math';
 
@@ -196,6 +196,7 @@ export {
     // Geometry
     rectangleSurface,
     vector3,
+    Vector2Like,
     Vector2,
     copyVec2,
 };

@@ -51,7 +51,7 @@ export default class TraitRegistry {
                     new VerboseAutomaticTraitSerializer(entry),
                     new PackedAutomaticTraitSerializer(entry),
                 ),
-                properties: autoEntry.properties,
+                properties: autoEntry.properties || [],
             });
         }
 

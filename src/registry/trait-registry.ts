@@ -25,7 +25,7 @@ export type RegistryEntry<TraitType extends Trait> = TraitRegistryEntry<TraitTyp
 
 export interface AutoRegistryEntry<TraitType extends Trait> {
     readonly traitType: (new () => TraitType) & KeyProvider,
-    readonly properties: Property<any>[],
+    readonly properties?: Property<any>[],
     readonly category?: string,
 }
 
@@ -144,7 +144,7 @@ export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any
                     new VerboseAutomaticTraitSerializer(entry),
                     new PackedAutomaticTraitSerializer(entry),
                 ),
-                properties: autoEntry.properties,
+                properties: autoEntry.properties || [],
             });
         }
 

@@ -32,7 +32,6 @@ import InterpolateProperty from './events/interpolate-property';
 import adaptId, { resolveIds } from './adapt-id';
 import { Property, GenericProperty, getSet, traitGetSet, worldEventGetSet } from './properties/properties';
 import { PropertyType, PropertyConstraints, NumberConstraints, StringConstraints, EntityIdConstraints, ColorConstraints, BooleanConstraints, ListConstraints, EnumConstraints, CompositeConstraints, JsonConstraints } from './properties/property-constraints';
-import AutomaticTraitSerializer from './serialization/automatic-trait-serializer';
 import DelayedActionTrait from './traits/delayed-action-trait';
 import DisappearingTrait from './traits/disappearing-trait';
 import EventHolderTrait from './traits/event-holder-trait';
@@ -56,7 +55,7 @@ import firstAvailableId from './util/first-available-id';
 import duplicateEntities from './util/duplicate-entities';
 import EntityIdMapping from './util/entity-id-mapping';
 import { repositionEntities } from './util/reposition-entities';
-import Vector2, { copyVec2 } from './vector2';
+import Vector2, { Vector2Like, copyVec2 } from './vector2';
 import entityConfigurable from './configurable/entity-configurable';
 import { between, ceilToNearest, distance, floorToNearest, isBetween, modulo, normalizeAngle, notBetween, pointDistance, roundFloat, roundToNearest } from './util/math';
 import { Registry } from './registry/registry';
@@ -70,7 +69,7 @@ export {
     // Collections
     ObjectSet,
     WatchableObjectSet,
-    
+
     // Surfaces
     TraitSurfaceProvider,
 
@@ -100,7 +99,7 @@ export {
     InterpolateProperty,
     TriggerEvent,
     Trigger,
-    
+
     // Serializers
     Serializer,
     TraitSerializer,
@@ -109,7 +108,6 @@ export {
     WorldEventSerializer,
     AnySerialized,
     JsonSerializers,
-    AutomaticTraitSerializer,
     jsonSerializers,
     Encoder,
     Decoder,
@@ -174,7 +172,7 @@ export {
     // Configurables
     EntityIdConfigurable,
     entityConfigurable,
-    
+
     // Utils
     adaptId,
     resolveIds,
@@ -201,6 +199,7 @@ export {
     // Geometry
     rectangleSurface,
     vector3,
+    Vector2Like,
     Vector2,
     copyVec2,
 };

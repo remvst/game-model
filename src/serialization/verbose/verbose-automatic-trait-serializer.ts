@@ -82,8 +82,11 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
             return value ? 1 : 0;
         }
 
+        if (type instanceof NumberConstraints) {
+            return value || 0;
+        }
+
         if (
-            type instanceof NumberConstraints ||
             type instanceof StringConstraints ||
             type instanceof BooleanConstraints ||
             type instanceof ColorConstraints ||
@@ -95,7 +98,7 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
 
         throw new Error(`Unknown property type: ${type}`);
     }
-    
+
     private deserializePropertyValue(
         type: PropertyConstraints<any>,
         serializedProperty: any,
@@ -120,8 +123,11 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
             return !!serializedProperty;
         }
 
+        if (type instanceof NumberConstraints) {
+            return serializedProperty || 0;
+        }
+
         if (
-            type instanceof NumberConstraints ||
             type instanceof StringConstraints ||
             type instanceof BooleanConstraints ||
             type instanceof ColorConstraints ||

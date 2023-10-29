@@ -15,7 +15,7 @@ import adaptId from "../adapt-id";
 export default class EventHolderTrait extends Trait {
     static readonly key = 'event-holder';
     readonly key = EventHolderTrait.key;
-    
+
     private readonly serializationOptions = new SerializationOptions();
 
     constructor(
@@ -67,8 +67,8 @@ export default class EventHolderTrait extends Trait {
     }
 
     static registryEntry(app: GameModelApp): RegistryEntry<EventHolderTrait> {
-        const { worldEventRegistry } = app; 
-        const { worldEvent } = app.serializers; 
+        const { worldEventRegistry } = app;
+        const { worldEvent } = app.serializers;
         return {
             key: EventHolderTrait.key,
             category: 'scripting',
@@ -109,8 +109,8 @@ export default class EventHolderTrait extends Trait {
                 'read': () => this.triggerCount,
                 'write': triggerCount => this.triggerCount = triggerCount,
             }))
-            .add('event', registryEntry?.configurable 
-                ? registryEntry.configurable(this.event, this.entity?.world) 
+            .add('event', registryEntry?.configurable
+                ? registryEntry.configurable(this.event, this.entity?.world)
                 : new CompositeConfigurable());
     }
 }
@@ -127,7 +127,7 @@ export class EventHolderSerializer implements TraitSerializer<EventHolderTrait, 
         private readonly worldEventRegistry: WorldEventRegistry,
         private readonly eventSerializer: WorldEventSerializer<any, any>,
     ) {
-        
+
     }
 
     serialize(trait: EventHolderTrait, options: SerializationOptions): Serialized {

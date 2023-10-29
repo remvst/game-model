@@ -1,10 +1,10 @@
 import { EntityEvent } from "../events/entity-event";
 import Trigger from "../events/trigger";
-import { isBetween } from "../math";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import World from "../world";
-import { Entity } from "..";
+import Entity from "../entity";
+import { isBetween } from "../util/math";
 import { PropertyType } from "../properties/property-constraints";
 
 export default class EntityGroupTrait extends Trait {

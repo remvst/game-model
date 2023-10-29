@@ -1,7 +1,7 @@
 import { Rectangle } from "@remvst/geometry";
 import ObjectSet from "./collections/object-set";
 import Entity from "./entity";
-import { isBetween } from "./math";
+import { isBetween } from "./util/math";
 import WatchableObjectSet from "./collections/watchable-object-set";
 
 const REUSABLE_GEOMETRY_AREA = new Rectangle();
@@ -17,19 +17,19 @@ export default class ChunkedEntitySet {
     private readonly relevant = new Rectangle();
 
     visibleRectangleProvider: (
-        visible: Rectangle, 
+        visible: Rectangle,
         relevant: Rectangle
     ) => void = (visible, relevant) => {
         visible.update(
-            0, 
-            0, 
-            1, 
+            0,
+            0,
+            1,
             1,
         );
         relevant.update(
-            Number.MIN_SAFE_INTEGER / 2, 
-            Number.MIN_SAFE_INTEGER / 2, 
-            Number.MAX_SAFE_INTEGER, 
+            Number.MIN_SAFE_INTEGER / 2,
+            Number.MIN_SAFE_INTEGER / 2,
+            Number.MAX_SAFE_INTEGER,
             Number.MAX_SAFE_INTEGER,
         );
     };
@@ -76,9 +76,9 @@ export default class ChunkedEntitySet {
 
     update() {
         this.visible.update(
-            Number.MIN_SAFE_INTEGER / 2, 
-            Number.MIN_SAFE_INTEGER / 2, 
-            Number.MAX_SAFE_INTEGER, 
+            Number.MIN_SAFE_INTEGER / 2,
+            Number.MIN_SAFE_INTEGER / 2,
+            Number.MAX_SAFE_INTEGER,
             Number.MAX_SAFE_INTEGER,
         )
         this.visibleRectangleProvider(this.visible, REUSABLE_GEOMETRY_AREA);

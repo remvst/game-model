@@ -1,5 +1,5 @@
-import TraitRegistry, { AnyTraitRegistryEntry, RegistryEntry } from "./registry/trait-registry";
-import WorldEventRegistry, { AnyWorldEventRegistryEntry } from "./registry/world-event-registry";
+import TraitRegistry from "./registry/trait-registry";
+import WorldEventRegistry from "./registry/world-event-registry";
 import { jsonSerializers } from "./serialization/json-serializers";
 
 export default class GameModelApp {
@@ -7,18 +7,18 @@ export default class GameModelApp {
     readonly worldEventRegistry = new WorldEventRegistry();
     readonly serializers = jsonSerializers();
 
-    addTrait(entry: AnyTraitRegistryEntry<any>) {
-        const actualEntry = this.traitRegistry.add(entry) as RegistryEntry<any>;
-        if (actualEntry.serializer) {
-            this.serializers.trait.add(actualEntry.key, actualEntry.serializer(actualEntry));
+    finalize() {
+        for (const key of this.traitRegistry.keys()) {
+            const entry = this.traitRegistry.entry(key);
+            if (entry.serializer) {
+                this.serializers.trait.add(entry.key, entry.serializer(entry));
+            }
         }
-    }
-
-    addWorldEvent(entry: AnyWorldEventRegistryEntry<any>) {
-        const actualEntry = this.worldEventRegistry.add(entry);
-
-        if (actualEntry.serializer) {
-            this.serializers.worldEvent.add(actualEntry.key, actualEntry.serializer(actualEntry));
+        for (const key of this.worldEventRegistry.keys()) {
+            const entry = this.worldEventRegistry.entry(key);
+            if (entry.serializer) {
+                this.serializers.worldEvent.add(entry.key, entry.serializer(entry));
+            }
         }
     }
 }

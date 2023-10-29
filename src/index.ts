@@ -19,7 +19,7 @@ import EntityRemoved from './events/entity-removed';
 import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
 import { JsonSerializers, jsonSerializers } from './serialization/json-serializers';
-import TraitRegistry, { AutoRegistryEntry, RegistryEntry } from './registry/trait-registry';
+import TraitRegistry, { AutoRegistryEntry, RegistryEntry, traitRegistryEntry } from './registry/trait-registry';
 import WorldEventRegistry, { AutoWorldEventRegistryEntry, WorldEventRegistryEntry } from './registry/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
 import PropertyRegistry from './registry/property-registry';
@@ -128,6 +128,7 @@ export {
     AutoWorldEventRegistryEntry,
     RegistryEntryProvider,
     WorldEventRegistryEntryProvider,
+    traitRegistryEntry,
 
     // App
     GameModelApp,

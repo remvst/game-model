@@ -10,7 +10,8 @@ describe('a helper', () => {
 
     beforeEach(() => {
         app = new GameModelApp();
-        app.addWorldEvent(Remove.registryEntry());
+        app.worldEventRegistry.add(Remove.registryEntry());
+        app.finalize();
 
         authority = new LocalAuthority();
         remoteAuthority = new LocalAuthority();

@@ -1,4 +1,4 @@
-import { Entity, GameModelApp, PropertyType, Trait, TraitRegistry, World, duplicateEntities, traitGetSet } from '../../src';
+import { Entity, GameModelApp, PropertyType, Trait, TraitRegistry, World, duplicateEntities, traitGetSet, traitRegistryEntry } from '../../src';
 
 describe('duplicateEntities', () => {
     let world: World;
@@ -15,18 +15,16 @@ describe('duplicateEntities', () => {
         world = new World();
 
         app = new GameModelApp();
-        app.addTrait({
-            traitType: TestTrait,
-            properties: [
-                traitGetSet(
-                    TestTrait, 
-                    'referencedId', 
-                    PropertyType.id(), 
-                    (trait) => trait.referencedId, 
-                    (trait, referencedId) => trait.referencedId = referencedId,
-                ),
-            ],
-        })
+        app.traitRegistry.add(traitRegistryEntry<TestTrait>(builder => {
+            builder.traitClass(TestTrait);
+            builder.property(
+                'referencedId', 
+                PropertyType.id(), 
+                (trait) => trait.referencedId, 
+                (trait, referencedId) => trait.referencedId = referencedId,
+            );
+        }));
+        app.finalize();
     });
 
     it('will duplicate a lonely entity', () => {

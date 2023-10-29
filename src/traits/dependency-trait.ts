@@ -1,10 +1,9 @@
 import { CompositeConfigurable } from "@remvst/configurable";
 import EntityIdConfigurable from "../configurable/entity-id-configurable";
 import TriggerEvent from "../events/trigger-event";
-import { AutoRegistryEntry } from "../registry/trait-registry";
+import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import { PropertyType } from '../properties/property-constraints';
-import { traitGetSet } from "../properties/properties";
 
 export default class DependencyTrait extends Trait {
     static readonly key = 'dependency';
@@ -77,14 +76,12 @@ export default class DependencyTrait extends Trait {
         return configurable;
     }
 
-    static registryEntry(): AutoRegistryEntry<DependencyTrait> {
-        return {
-            traitType: DependencyTrait,
-            category: 'scripting',
-            properties: [
-                traitGetSet(DependencyTrait, 'dependerIds', PropertyType.list(PropertyType.id()), (trait) => trait.dependerIds, (trait, dependerIds) => trait.dependerIds = dependerIds),
-                traitGetSet(DependencyTrait, 'dependsOnIds', PropertyType.list(PropertyType.id()), (trait) => trait.dependsOnIds, (trait, dependsOnIds) => trait.dependsOnIds = dependsOnIds),
-            ],
-        };
+    static registryEntry(): RegistryEntry<DependencyTrait> {
+        return traitRegistryEntry(builder => {
+            builder.traitClass(DependencyTrait);
+            builder.category('scripting');
+            builder.property('dependerIds', PropertyType.list(PropertyType.id()), (trait) => trait.dependerIds, (trait, dependerIds) => trait.dependerIds = dependerIds);
+            builder.property('dependsOnIds', PropertyType.list(PropertyType.id()), (trait) => trait.dependerIds, (trait, dependerIds) => trait.dependerIds = dependerIds);
+        });
     }
 }

@@ -34,7 +34,7 @@ export default class WorldEventRegistry implements Registry<WorldEventRegistryEn
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();
     readonly properties = new PropertyRegistry<WorldEventProperty<any>>();
 
-    add<T extends WorldEvent>(entry: AnyWorldEventRegistryEntry<T>): WorldEventRegistryEntry<T> {
+    add<T extends WorldEvent>(entry: AnyWorldEventRegistryEntry<T>) {
         const autoEntry = entry as AutoWorldEventRegistryEntry<T>;
         const manualEntry = entry as WorldEventRegistryEntry<T>;
 

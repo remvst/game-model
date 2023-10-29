@@ -1,6 +1,5 @@
-import { traitGetSet } from "../properties/properties";
 import { PropertyType } from "../properties/property-constraints";
-import { AutoRegistryEntry } from "../registry/trait-registry";
+import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 
 export default class PositionBindingTrait extends Trait {
@@ -50,16 +49,14 @@ export default class PositionBindingTrait extends Trait {
         }
     }
 
-    static registryEntry(): AutoRegistryEntry<PositionBindingTrait> {
-        return {
-            traitType: PositionBindingTrait,
-            category: 'movement',
-            properties: [
-                traitGetSet(PositionBindingTrait, 'followedId', PropertyType.id(), (trait) => trait.followedId, (trait, followedId) => trait.followedId = followedId),
-                traitGetSet(PositionBindingTrait, 'followerIds', PropertyType.list(PropertyType.id()), (trait) => trait.followerIds, (trait, followerIds) => trait.followerIds = followerIds),
-                traitGetSet(PositionBindingTrait, 'absolute', PropertyType.bool(), (trait) => trait.absolute, (trait, absolute) => trait.absolute = absolute),
-                traitGetSet(PositionBindingTrait, 'removeWhenIrrelevant', PropertyType.bool(), (trait) => trait.removeWhenIrrelevant, (trait, removeWhenIrrelevant) => trait.removeWhenIrrelevant = removeWhenIrrelevant),
-            ],
-        };
+    static registryEntry(): RegistryEntry<PositionBindingTrait> {
+        return traitRegistryEntry(builder => {
+            builder.traitClass(PositionBindingTrait);
+            builder.category('movement');
+            builder.property('followedId', PropertyType.id(), (trait) => trait.followedId, (trait, followedId) => trait.followedId = followedId);
+            builder.property('followerIds', PropertyType.list(PropertyType.id()), (trait) => trait.followerIds, (trait, followerIds) => trait.followerIds = followerIds);
+            builder.property('absolute', PropertyType.bool(), (trait) => trait.absolute, (trait, absolute) => trait.absolute = absolute);
+            builder.property('removeWhenIrrelevant', PropertyType.bool(), (trait) => trait.removeWhenIrrelevant, (trait, removeWhenIrrelevant) => trait.removeWhenIrrelevant = removeWhenIrrelevant);
+        });
     }
 };

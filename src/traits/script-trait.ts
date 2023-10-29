@@ -2,9 +2,8 @@ import { Entity } from "..";
 import { EntityEvent } from "../events/entity-event";
 import Trigger from "../events/trigger";
 import TriggerEvent from "../events/trigger-event";
-import { traitGetSet } from "../properties/properties";
 import { PropertyType, PropertyConstraints } from "../properties/property-constraints";
-import { AutoRegistryEntry } from "../registry/trait-registry";
+import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import World from "../world";
 import DelayedActionTrait from './delayed-action-trait';
@@ -39,19 +38,17 @@ export default class ScriptTrait extends Trait {
         }
     }
 
-    static registryEntry(): AutoRegistryEntry<ScriptTrait> {
+    static registryEntry(): RegistryEntry<ScriptTrait> {
         const stepType = PropertyType.composite(new Map<string, PropertyConstraints<any>>([
             ['triggerEntityId', PropertyType.id()],
             ['delay', PropertyType.num()],
         ]));
 
-        return {
-            traitType: ScriptTrait,
-            category: 'scripting',
-            properties: [
-                traitGetSet(ScriptTrait, 'triggerCount', PropertyType.num(-1, 100, 1), trait => trait.triggerCount, (trait, triggerCount) => trait.triggerCount = triggerCount),
-                traitGetSet(ScriptTrait, 'steps', PropertyType.list(stepType), trait => trait.steps, (trait, steps) => trait.steps = steps),
-            ],
-        }
+        return traitRegistryEntry(builder => {
+            builder.traitClass(ScriptTrait);
+            builder.category('scripting');
+            builder.property('triggerCount', PropertyType.num(-1, 100, 1), trait => trait.triggerCount, (trait, triggerCount) => trait.triggerCount = triggerCount);
+            builder.property('steps', PropertyType.list(stepType), trait => trait.steps, (trait, steps) => trait.steps = steps);
+        });
     }
 }

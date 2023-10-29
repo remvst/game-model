@@ -1,6 +1,5 @@
-import { traitGetSet } from "../properties/properties";
 import { PropertyType } from "../properties/property-constraints";
-import { AutoRegistryEntry } from "../registry/trait-registry";
+import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 
 export default class DisappearingTrait extends Trait {
@@ -24,12 +23,10 @@ export default class DisappearingTrait extends Trait {
         }
     }
 
-    static registryEntry(): AutoRegistryEntry<DisappearingTrait> {
-        return {
-            traitType: DisappearingTrait,
-            properties: [
-                traitGetSet(DisappearingTrait, 'maxAge', PropertyType.num(), (trait) => trait.maxAge, (trait, maxAge) => trait.maxAge = maxAge),
-            ],
-        };
+    static registryEntry(): RegistryEntry<DisappearingTrait> {
+        return traitRegistryEntry(builder => {
+            builder.traitClass(DisappearingTrait);
+            builder.property('maxAge', PropertyType.num(), (trait) => trait.maxAge, (trait, maxAge) => trait.maxAge = maxAge);
+        });
     }
 }

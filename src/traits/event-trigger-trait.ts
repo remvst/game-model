@@ -1,8 +1,7 @@
 import { EntityEvent } from "../events/entity-event";
 import TriggerEvent from "../events/trigger-event";
-import { traitGetSet } from "../properties/properties";
 import { PropertyType } from "../properties/property-constraints";
-import { AutoRegistryEntry } from "../registry/trait-registry";
+import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import { rectangleSurface } from "../trait-surface-provider";
 import World from "../world";
@@ -84,18 +83,16 @@ export default class EventTriggerTrait extends Trait {
     });
     readonly surfaceProvider = EventTriggerTrait.surfaceProvider;
 
-    static registryEntry(): AutoRegistryEntry<EventTriggerTrait> {
-        return {
-            traitType: EventTriggerTrait,
-            category: 'scripting',
-            properties: [
-                traitGetSet(EventTriggerTrait, 'onEnterIds', PropertyType.list(PropertyType.id()), (trait) => trait.onEnterIds, (trait, onEnterIds) => trait.onEnterIds = onEnterIds),
-                traitGetSet(EventTriggerTrait, 'onExitIds', PropertyType.list(PropertyType.id()), (trait) => trait.onExitIds, (trait, onExitIds) => trait.onExitIds = onExitIds),
-                traitGetSet(EventTriggerTrait, 'radiusX', PropertyType.num(0, 100, 5), (trait) => trait.radiusX, (trait, radiusX) => trait.radiusX = radiusX),
-                traitGetSet(EventTriggerTrait, 'radiusY', PropertyType.num(0, 100, 5), (trait) => trait.radiusY, (trait, radiusY) => trait.radiusY = radiusY),
-                traitGetSet(EventTriggerTrait, 'triggerCount', PropertyType.num(-1, 50, 1), (trait) => trait.triggerCount, (trait, triggerCount) => trait.triggerCount = triggerCount),
-                traitGetSet(EventTriggerTrait, 'triggerTrait', PropertyType.str(), (trait) => trait.triggerTrait, (trait, triggerTrait) => trait.triggerTrait = triggerTrait),
-            ],
-        };
+    static registryEntry(): RegistryEntry<EventTriggerTrait> {
+        return traitRegistryEntry(builder => {
+            builder.traitClass(EventTriggerTrait);
+            builder.category('scripting');
+            builder.property('onEnterIds', PropertyType.list(PropertyType.id()), (trait) => trait.onEnterIds, (trait, onEnterIds) => trait.onEnterIds = onEnterIds);
+            builder.property('onExitIds', PropertyType.list(PropertyType.id()), (trait) => trait.onExitIds, (trait, onExitIds) => trait.onExitIds = onExitIds);
+            builder.property('radiusX', PropertyType.num(0, 100, 5), (trait) => trait.radiusX, (trait, radiusX) => trait.radiusX = radiusX);
+            builder.property('radiusY', PropertyType.num(0, 100, 5), (trait) => trait.radiusY, (trait, radiusY) => trait.radiusY = radiusY);
+            builder.property('triggerCount', PropertyType.num(-1, 50, 1), (trait) => trait.triggerCount, (trait, triggerCount) => trait.triggerCount = triggerCount);
+            builder.property('triggerTrait', PropertyType.str(), (trait) => trait.triggerTrait, (trait, triggerTrait) => trait.triggerTrait = triggerTrait);
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { Property, traitEnabledProperty } from '../properties/properties';
+import { EntityPropertyType, Property, traitEnabledProperty } from '../properties/properties';
 import { Configurable, CompositeConfigurable } from '@remvst/configurable';
 import { TraitSerializer, AnySerialized } from '../serialization/serializer';
 import Trait from "../trait";
@@ -10,6 +10,7 @@ import VerboseAutomaticTraitSerializer from '../serialization/verbose/verbose-au
 import PackedAutomaticTraitSerializer from '../serialization/packed/packed-automatic-trait-serializer';
 import DualSupportTraitSerializer from '../serialization/dual/dual-support-trait-serializer';
 import { Registry } from './registry';
+import { PropertyConstraints } from '../properties/property-constraints';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
@@ -29,6 +30,93 @@ export interface AutoRegistryEntry<TraitType extends Trait> {
 export type AnyTraitRegistryEntry<TraitType extends Trait> = 
     RegistryEntry<TraitType> |
     AutoRegistryEntry<TraitType>;
+
+interface TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
+    newTrait(newTrait: () => TraitType): void;
+    traitClass(traitClass: (new () => TraitType) & KeyProvider): void;
+    key(key: string): void;
+    category(category: string): void;
+    property<PropertyType>(
+        identifier: string,
+        type: PropertyConstraints<PropertyType>,
+        read: (trait: TraitType) => PropertyType,
+        write: (trait: TraitType, value: PropertyType) => void,
+    ): void;
+    serializer(serializer: (entry: RegistryEntry<TraitType>) => TraitSerializer<TraitType, AnySerialized>): void;
+    build(): RegistryEntry<TraitType>;
+}
+
+class TraitRegistryEntryBuilderImpl<TraitType extends Trait & KeyProvider> implements TraitRegistryEntryBuilder<TraitType> {
+
+    private _key: string = null;
+    private _newTrait: () => TraitType = null;
+    private _category: string = null;
+    private _serializer: (entry: RegistryEntry<TraitType>) => TraitSerializer<TraitType, AnySerialized> = null;
+    private readonly _properties: any[] = [];
+
+    constructor() {
+        this.serializer((entry: RegistryEntry<TraitType>) => new DualSupportTraitSerializer<TraitType>(
+            new VerboseAutomaticTraitSerializer(entry),
+            new PackedAutomaticTraitSerializer(entry),
+        ));
+    }
+
+    traitClass(traitClass: (new () => TraitType) & KeyProvider): void {
+        this.key(traitClass.key);
+        this.newTrait(() => new traitClass());
+    }
+
+    key(key: string) {
+        this._key = key;
+    }
+
+    newTrait(newTrait: () => TraitType) {
+        this._newTrait = newTrait;
+    }
+
+    category(category: string): void {
+        this._category = category;
+    }
+
+    property<PropertyType>(
+        identifier: string, 
+        type: PropertyConstraints<PropertyType>,
+        get: (trait: TraitType) => PropertyType, 
+        set: (trait: TraitType, value: PropertyType) => void,
+    ): void {
+        const traitKey = this._key;
+        this._properties.push({
+            identifier: traitKey + '.' + identifier,
+            localIdentifier: identifier,
+            entityPropertyType: EntityPropertyType.SPECIFIC_TRAIT,
+            type,
+            get: (entity) => get(entity.trait(traitKey) as TraitType),
+            set: (entity, value) => set(entity.trait(traitKey) as TraitType, value),
+        });
+    }
+
+    serializer(serializer: (entry: RegistryEntry<TraitType>) => TraitSerializer<TraitType, AnySerialized>) {
+        this._serializer = serializer;
+    }
+
+    build(): RegistryEntry<TraitType> {
+        return {
+            key: this._key,
+            category: this._category,
+            newTrait: this._newTrait,
+            serializer: this._serializer,
+            properties: this._properties,
+        };
+    }
+}
+
+export function traitRegistryEntry<TraitType extends Trait>(
+    makeEntry: (builder: TraitRegistryEntryBuilder<TraitType>) => void,
+): RegistryEntry<TraitType> {
+    const builder = new TraitRegistryEntryBuilderImpl<TraitType>();
+    makeEntry(builder);
+    return builder.build();
+}
 
 export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
     private readonly entries = new Map<string, RegistryEntry<any>>();

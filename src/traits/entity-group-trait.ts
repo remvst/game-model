@@ -1,8 +1,7 @@
-import { traitGetSet } from "../properties/properties";
 import { EntityEvent } from "../events/entity-event";
 import Trigger from "../events/trigger";
 import { isBetween } from "../math";
-import { AutoRegistryEntry } from "../registry/trait-registry";
+import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import World from "../world";
 import { Entity } from "..";
@@ -72,17 +71,15 @@ export default class EntityGroupTrait extends Trait {
         }
     }
 
-    static registryEntry(): AutoRegistryEntry<EntityGroupTrait> {
-        return {
-            traitType: EntityGroupTrait,
-            category: 'scripting',
-            properties: [
-                traitGetSet(EntityGroupTrait, 'traits', PropertyType.list(PropertyType.str()), (trait) => trait.traits, (trait, traits) => trait.traits = traits),
-                traitGetSet(EntityGroupTrait, 'radiusX', PropertyType.num(0, 400, 5), (trait) => trait.radiusX, (trait, radiusX) => trait.radiusX = radiusX),
-                traitGetSet(EntityGroupTrait, 'radiusY', PropertyType.num(0, 400, 5), (trait) => trait.radiusY, (trait, radiusY) => trait.radiusY = radiusY),
-                traitGetSet(EntityGroupTrait, 'onRelevantTriggerEntityId', PropertyType.id(), (trait) => trait.onRelevantTriggerEntityId, (trait, onRelevantTriggerEntityId) => trait.onRelevantTriggerEntityId = onRelevantTriggerEntityId),
-                traitGetSet(EntityGroupTrait, 'onIrrelevantTriggerEntityId', PropertyType.id(), (trait) => trait.onIrrelevantTriggerEntityId, (trait, onIrrelevantTriggerEntityId) => trait.onIrrelevantTriggerEntityId = onIrrelevantTriggerEntityId),
-            ],
-        };
+    static registryEntry(): RegistryEntry<EntityGroupTrait> {
+        return traitRegistryEntry(builder => {
+            builder.traitClass(EntityGroupTrait);
+            builder.category('scripting');
+            builder.property('traits', PropertyType.list(PropertyType.str()), (trait) => trait.traits, (trait, traits) => trait.traits = traits);
+            builder.property('radiusX', PropertyType.num(0, 400, 5), (trait) => trait.radiusX, (trait, radiusX) => trait.radiusX = radiusX);
+            builder.property('radiusY', PropertyType.num(0, 400, 5), (trait) => trait.radiusY, (trait, radiusY) => trait.radiusY = radiusY);
+            builder.property('onRelevantTriggerEntityId', PropertyType.id(), (trait) => trait.onRelevantTriggerEntityId, (trait, onRelevantTriggerEntityId) => trait.onRelevantTriggerEntityId = onRelevantTriggerEntityId);
+            builder.property('onIrrelevantTriggerEntityId', PropertyType.id(), (trait) => trait.onIrrelevantTriggerEntityId, (trait, onIrrelevantTriggerEntityId) => trait.onIrrelevantTriggerEntityId = onIrrelevantTriggerEntityId);
+        });
     }
 }

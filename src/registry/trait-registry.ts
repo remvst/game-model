@@ -9,6 +9,7 @@ import { KeyProvider } from '../key-provider';
 import VerboseAutomaticTraitSerializer from '../serialization/verbose/verbose-automatic-trait-serializer';
 import PackedAutomaticTraitSerializer from '../serialization/packed/packed-automatic-trait-serializer';
 import DualSupportTraitSerializer from '../serialization/dual/dual-support-trait-serializer';
+import { Registry } from './registry';
 
 export interface RegistryEntry<TraitType extends Trait> {
     readonly key: string;
@@ -25,9 +26,11 @@ export interface AutoRegistryEntry<TraitType extends Trait> {
     readonly category?: string,
 }
 
-export type AnyRegistryEntry<TraitType extends Trait> = RegistryEntry<TraitType> | AutoRegistryEntry<TraitType>;
+export type AnyTraitRegistryEntry<TraitType extends Trait> = 
+    RegistryEntry<TraitType> |
+    AutoRegistryEntry<TraitType>;
 
-export default class TraitRegistry {
+export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
     private readonly entries = new Map<string, RegistryEntry<any>>();
     readonly properties = new PropertyRegistry<Property<any>>();
 
@@ -38,7 +41,7 @@ export default class TraitRegistry {
         this.properties.add(EntityProperties.angle);
     }
 
-    add<T extends Trait>(entry: AnyRegistryEntry<T>): RegistryEntry<T> {
+    add<T extends Trait>(entry: AnyTraitRegistryEntry<T>): AnyTraitRegistryEntry<T> {
         const autoEntry = entry as AutoRegistryEntry<T>;
         const manualEntry = entry as RegistryEntry<T>;
 
@@ -82,8 +85,6 @@ export default class TraitRegistry {
         for (const property of properties) {
             this.properties.add(property);
         }
-
-        return manualEntry;
     }
 
     entry(key: string): RegistryEntry<any> | null {

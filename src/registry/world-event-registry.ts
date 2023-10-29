@@ -7,6 +7,7 @@ import { AnySerialized } from '../serialization/serializer';
 import { WorldEventProperty } from '../properties/properties';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import AutomaticWorldEventSerializer from '../serialization/automatic-world-event-serializer';
+import { Registry } from './registry';
 
 export interface AutoWorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly eventType: (new () => EventType) & KeyProvider;
@@ -25,9 +26,11 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     properties?: WorldEventProperty<any>[];
 }
 
-export type AnyWorldEventRegistryEntry<EventType extends WorldEvent> = WorldEventRegistryEntry<EventType> | AutoWorldEventRegistryEntry<EventType>;
+export type AnyWorldEventRegistryEntry<EventType extends WorldEvent> = 
+    WorldEventRegistryEntry<EventType> | 
+    AutoWorldEventRegistryEntry<EventType>;
 
-export default class WorldEventRegistry {
+export default class WorldEventRegistry implements Registry<WorldEventRegistryEntry<any>> {
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();
     readonly properties = new PropertyRegistry<WorldEventProperty<any>>();
 

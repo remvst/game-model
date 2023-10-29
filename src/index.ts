@@ -1,7 +1,7 @@
 import PrefabHelper, { SerializedPrefab } from './util/prefab-helper';
 import SerializationOptions, { SerializationType } from './serialization/serialization-options';
 import { Encoder, Decoder, ArrayEncoder, ArrayDecoder, EncoderSequence } from './serialization/encoder';
-import { RegistryEntryProvider, WorldEventRegistryEntryProvider } from './registry/registry-entry-provider';
+import { TraitRegistryEntryProvider, WorldEventRegistryEntryProvider } from './registry/registry-entry-provider';
 import { EntityFilter, EntityFilters } from './configurable/entity-filter';
 import { AnySerialized } from './serialization/serializer';
 import { Serializer, TraitSerializer, EntitySerializer, WorldSerializer, WorldEventSerializer } from './serialization/serializer';
@@ -59,6 +59,7 @@ import { repositionEntities } from './util/reposition-entities';
 import Vector2, { copyVec2 } from './vector2';
 import entityConfigurable from './configurable/entity-configurable';
 import { between, ceilToNearest, distance, floorToNearest, isBetween, modulo, normalizeAngle, notBetween, pointDistance, roundFloat, roundToNearest } from './util/math';
+import { Registry } from './registry/registry';
 
 export {
     Trait,
@@ -126,9 +127,10 @@ export {
     WorldEventRegistryEntry,
     AutoRegistryEntry,
     AutoWorldEventRegistryEntry,
-    RegistryEntryProvider,
+    TraitRegistryEntryProvider,
     WorldEventRegistryEntryProvider,
     traitRegistryEntry,
+    Registry,
 
     // App
     GameModelApp,
@@ -202,3 +204,17 @@ export {
     Vector2,
     copyVec2,
 };
+
+export const STANDARD_TRAITS: TraitRegistryEntryProvider<Trait>[] = [
+    // DelayedActionTrait, 
+    DependencyTrait,
+    DisappearingTrait,
+    EntityGroupTrait,
+    EntitySelectorTrait,
+    EventHolderTrait,
+    EventOnRemovalTrait,
+    EventTriggerTrait,
+    InterpolatorTrait,
+    PositionBindingTrait,
+    ScriptTrait,
+];

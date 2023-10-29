@@ -203,17 +203,3 @@ export {
     Vector2,
     copyVec2,
 };
-
-export const STANDARD_TRAITS: TraitRegistryEntryProvider<Trait>[] = [
-    // DelayedActionTrait, 
-    DependencyTrait,
-    DisappearingTrait,
-    EntityGroupTrait,
-    EntitySelectorTrait,
-    EventHolderTrait,
-    EventOnRemovalTrait,
-    EventTriggerTrait,
-    InterpolatorTrait,
-    PositionBindingTrait,
-    ScriptTrait,
-];

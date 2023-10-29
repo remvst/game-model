@@ -1,5 +1,5 @@
 import { TraitSerializer } from '../../../src/serialization/serializer';
-import { Trait, traitGetSet, TraitRegistry, PropertyType, PropertyConstraints, SerializationOptions } from "../../../src";
+import { Trait, TraitRegistry, PropertyType, PropertyConstraints, SerializationOptions, traitRegistryEntry } from "../../../src";
 import VerboseAutomaticTraitSerializer from '../../../src/serialization/verbose/verbose-automatic-trait-serializer';
 
 describe('the automatic trait serializer', () => {
@@ -35,25 +35,24 @@ describe('the automatic trait serializer', () => {
             ['delay', PropertyType.num()],
         ]));
 
-        registry.add({
-            traitType: TestTrait,
-            properties: [
-                traitGetSet(TestTrait, 'stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp),
-                traitGetSet(TestTrait, 'stringArrayProp', PropertyType.list(PropertyType.str()), (trait) => trait.stringArrayProp, (trait, stringArrayProp) => trait.stringArrayProp = stringArrayProp),
+        registry.add(traitRegistryEntry<TestTrait>(builder => {
+            builder.traitClass(TestTrait);
 
-                traitGetSet(TestTrait, 'entityIdProp', PropertyType.str(), (trait) => trait.entityIdProp, (trait, entityIdProp) => trait.entityIdProp = entityIdProp),
-                traitGetSet(TestTrait, 'entityIdArrayProp', PropertyType.list(PropertyType.id()), (trait) => trait.entityIdArrayProp, (trait, entityIdArrayProp) => trait.entityIdArrayProp = entityIdArrayProp),
+            builder.property('stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp);
+            builder.property('stringArrayProp', PropertyType.list(PropertyType.str()), (trait) => trait.stringArrayProp, (trait, stringArrayProp) => trait.stringArrayProp = stringArrayProp);
 
-                traitGetSet(TestTrait, 'boolProp', PropertyType.bool(), (trait) => trait.boolProp, (trait, boolProp) => trait.boolProp = boolProp),
-                traitGetSet(TestTrait, 'boolArrayProp', PropertyType.list(PropertyType.bool()), (trait) => trait.boolArrayProp, (trait, boolArrayProp) => trait.boolArrayProp = boolArrayProp),
+            builder.property('entityIdProp', PropertyType.str(), (trait) => trait.entityIdProp, (trait, entityIdProp) => trait.entityIdProp = entityIdProp);
+            builder.property('entityIdArrayProp', PropertyType.list(PropertyType.id()), (trait) => trait.entityIdArrayProp, (trait, entityIdArrayProp) => trait.entityIdArrayProp = entityIdArrayProp);
 
-                traitGetSet(TestTrait, 'numberProp', PropertyType.num(), (trait) => trait.numberProp, (trait, numberProp) => trait.numberProp = numberProp),
-                traitGetSet(TestTrait, 'numberArrayProp', PropertyType.list(PropertyType.num()), (trait) => trait.numberArrayProp, (trait, numberArrayProp) => trait.numberArrayProp = numberArrayProp),
+            builder.property('boolProp', PropertyType.bool(), (trait) => trait.boolProp, (trait, boolProp) => trait.boolProp = boolProp);
+            builder.property('boolArrayProp', PropertyType.list(PropertyType.bool()), (trait) => trait.boolArrayProp, (trait, boolArrayProp) => trait.boolArrayProp = boolArrayProp);
 
-                traitGetSet(TestTrait, 'compositeProp', compositeType, (trait) => trait.compositeProp, (trait, compositeProp) => trait.compositeProp = compositeProp),
-                traitGetSet(TestTrait, 'compositeArrayProp', PropertyType.list(compositeType), (trait) => trait.compositeArrayProp, (trait, compositeArrayProp) => trait.compositeArrayProp = compositeArrayProp),
-            ],
-        });
+            builder.property('numberProp', PropertyType.num(), (trait) => trait.numberProp, (trait, numberProp) => trait.numberProp = numberProp);
+            builder.property('numberArrayProp', PropertyType.list(PropertyType.num()), (trait) => trait.numberArrayProp, (trait, numberArrayProp) => trait.numberArrayProp = numberArrayProp);
+
+            builder.property('compositeProp', compositeType, (trait) => trait.compositeProp, (trait, compositeProp) => trait.compositeProp = compositeProp);
+            builder.property('compositeArrayProp', PropertyType.list(compositeType), (trait) => trait.compositeArrayProp, (trait, compositeArrayProp) => trait.compositeArrayProp = compositeArrayProp);
+        }));
 
         const entry = registry.entry(TestTrait.key)!;
         serializer = new VerboseAutomaticTraitSerializer(entry);

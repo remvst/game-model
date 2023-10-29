@@ -1,4 +1,4 @@
-import { Entity, GameModelApp, PropertyType, Trait, TraitRegistry, World, duplicateEntities, traitGetSet, traitRegistryEntry } from '../../src';
+import { Entity, GameModelApp, PropertyType, Trait, World, duplicateEntities, traitRegistryEntry } from '../../src';
 
 describe('duplicateEntities', () => {
     let world: World;

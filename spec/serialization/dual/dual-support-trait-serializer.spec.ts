@@ -1,5 +1,5 @@
 import { TraitSerializer } from '../../../src/serialization/serializer';
-import { Trait, traitGetSet, TraitRegistry, PropertyType } from "../../../src";
+import { Trait, TraitRegistry, PropertyType, traitRegistryEntry } from "../../../src";
 import SerializationOptions, { SerializationType } from '../../../src/serialization/serialization-options';
 import PackedAutomaticTraitSerializer from '../../../src/serialization/packed/packed-automatic-trait-serializer';
 import VerboseAutomaticTraitSerializer from '../../../src/serialization/verbose/verbose-automatic-trait-serializer';
@@ -22,12 +22,10 @@ describe('the dual support trait serializer', () => {
     beforeEach(() => {
         registry = new TraitRegistry();
 
-        registry.add({
-            traitType: TestTrait,
-            properties: [
-                traitGetSet(TestTrait, 'stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp),
-            ],
-        });
+        registry.add(traitRegistryEntry<TestTrait>(builder => {
+            builder.traitClass(TestTrait);
+            builder.property('stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp);
+        }));
 
         const entry = registry.entry(TestTrait.key)!;
         packed = new PackedAutomaticTraitSerializer(entry);

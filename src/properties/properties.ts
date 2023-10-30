@@ -30,12 +30,12 @@ export function getSet<ValueType>(
     get: (entity: Entity) => ValueType,
     set: (entity: Entity, value: ValueType) => void,
 ): Property<ValueType> {
-    return { 
-        identifier, 
+    return {
+        identifier,
         entityPropertyType: EntityPropertyType.GENERAL_ENTITY,
-        type, 
-        get, 
-        set, 
+        type,
+        get,
+        set,
     };
 }
 
@@ -63,16 +63,16 @@ export function worldEventGetSet<T extends WorldEvent, ValueType>(
     get: (event: T) => ValueType,
     set: (event: T, value: ValueType) => void,
 ): WorldEventProperty<ValueType> {
-    return { 
+    return {
         identifier: eventType.key + '.' + identifier,
         localIdentifier: identifier,
-        type, 
-        get, 
-        set, 
+        type,
+        get,
+        set,
     };
 }
 
-export function traitEnabledProperty(key: string) : Property<boolean> {
+export function traitEnabledProperty(key: string): Property<boolean> {
     return {
         identifier: key + '.enabled',
         localIdentifier: 'enabled',

@@ -60,7 +60,7 @@ export default class InterpolateProperty implements WorldEvent {
             category: 'movement',
             newEvent: () => new InterpolateProperty('', EntityProperties.x, 0, 1),
             serializer: () => new Serializer(propertyRegistry),
-            configurable: (event, world) => {
+            configurable: (app, event, world) => {
                 return new CompositeConfigurable()
                     .add('entityId', new EntityIdConfigurable({
                         world,

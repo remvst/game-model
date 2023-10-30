@@ -20,7 +20,7 @@ import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
 import { JsonSerializers, jsonSerializers } from './serialization/json-serializers';
 import TraitRegistry, { AutoRegistryEntry, RegistryEntry, traitRegistryEntry } from './registry/trait-registry';
-import WorldEventRegistry, { AutoWorldEventRegistryEntry, WorldEventRegistryEntry } from './registry/world-event-registry';
+import WorldEventRegistry, { AutoWorldEventRegistryEntry, WorldEventRegistryEntry, worldEventRegistryEntry } from './registry/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
 import PropertyRegistry from './registry/property-registry';
 import EntitySelectionRequested from './events/entity-selection-requested';
@@ -128,6 +128,7 @@ export {
     TraitRegistryEntryProvider,
     WorldEventRegistryEntryProvider,
     traitRegistryEntry,
+    worldEventRegistryEntry,
     Registry,
 
     // App

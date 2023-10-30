@@ -16,7 +16,7 @@ export default class EventOnRemovalTrait extends Trait {
     private readonly serializationOptions = new SerializationOptions();
 
     constructor(
-        private readonly worldEventRegistry: WorldEventRegistry,
+        private readonly app: GameModelApp,
         public event: WorldEvent & KeyProvider,
     ) {
         super();
@@ -29,8 +29,8 @@ export default class EventOnRemovalTrait extends Trait {
     }
 
     private trigger(world: World, triggererId: string) {
-        const registryEntry = this.worldEventRegistry.entry(this.event.key);
-        const serializer = registryEntry.serializer(registryEntry);
+        const registryEntry = this.app.worldEventRegistry.entry(this.event.key);
+        const serializer = registryEntry.serializer(this.app);
         const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions), this.serializationOptions);
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
@@ -50,13 +50,12 @@ export default class EventOnRemovalTrait extends Trait {
     }
 
     static registryEntry(app: GameModelApp): RegistryEntry<EventOnRemovalTrait> {
-        const { worldEventRegistry } = app; 
-        const { worldEvent } = app.serializers; 
+        const { worldEvent } = app.serializers;
         return {
             key: EventOnRemovalTrait.key,
             category: 'scripting',
-            newTrait: () => new EventOnRemovalTrait(worldEventRegistry, new Remove()),
-            serializer: () => new EventOnRemovalSerializer(worldEventRegistry, worldEvent),
+            newTrait: () => new EventOnRemovalTrait(app, new Remove()),
+            serializer: () => new EventOnRemovalSerializer(app, worldEvent),
         };
     }
 }
@@ -68,10 +67,10 @@ interface Serialized extends AnySerialized {
 export class EventOnRemovalSerializer implements TraitSerializer<EventOnRemovalTrait, Serialized> {
 
     constructor(
-        private readonly worldEventRegistry: WorldEventRegistry,
+        private readonly app: GameModelApp,
         private readonly eventSerializer: WorldEventSerializer<any, any>,
     ) {
-        
+
     }
 
     serialize(trait: EventOnRemovalTrait, options: SerializationOptions): Serialized {
@@ -83,7 +82,7 @@ export class EventOnRemovalSerializer implements TraitSerializer<EventOnRemovalT
     deserialize(serialized: Serialized, options: SerializationOptions): EventOnRemovalTrait {
         const event = this.eventSerializer.deserialize(serialized.event, options);
         return new EventOnRemovalTrait(
-            this.worldEventRegistry,
+            this.app,
             event as WorldEvent & KeyProvider,
         );
     }

@@ -19,7 +19,7 @@ export default class EventHolderTrait extends Trait {
     private readonly serializationOptions = new SerializationOptions();
 
     constructor(
-        private readonly worldEventRegistry: WorldEventRegistry,
+        private readonly app: GameModelApp,
         public event: WorldEvent & KeyProvider,
         public delay: number,
         public triggerCount: number = 1,
@@ -46,8 +46,8 @@ export default class EventHolderTrait extends Trait {
     }
 
     private trigger(world: World, triggererId: string) {
-        const registryEntry = this.worldEventRegistry.entry(this.event.key);
-        const serializer = registryEntry.serializer(registryEntry);
+        const registryEntry = this.app.worldEventRegistry.entry(this.event.key);
+        const serializer = registryEntry.serializer(this.app);
         const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions), this.serializationOptions);
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
@@ -67,33 +67,31 @@ export default class EventHolderTrait extends Trait {
     }
 
     static registryEntry(app: GameModelApp): RegistryEntry<EventHolderTrait> {
-        const { worldEventRegistry } = app;
-        const { worldEvent } = app.serializers;
         return {
             key: EventHolderTrait.key,
             category: 'scripting',
-            newTrait: () => new EventHolderTrait(worldEventRegistry, new Remove(), 0, 1),
-            serializer: () => new EventHolderSerializer(worldEventRegistry, worldEvent),
-            configurable: (trait: EventHolderTrait) => trait.configurable,
+            newTrait: () => new EventHolderTrait(app, new Remove(), 0, 1),
+            serializer: () => new EventHolderSerializer(app),
+            configurable: (trait: EventHolderTrait) => trait.configurable(app),
         };
     }
 
-    get configurable(): CompositeConfigurable {
+    private configurable(app: GameModelApp): CompositeConfigurable {
         const eventClass = (this.event as any).constructor;
 
-        const registryEntry = this.worldEventRegistry.entry(this.event.key);
+        const registryEntry = app.worldEventRegistry.entry(this.event.key);
 
         return new CompositeConfigurable()
             .add('eventType', new EnumConfigurable<string>({
                 'read': () => eventClass.key,
                 'write': (key, configurable) => {
-                    this.event = this.worldEventRegistry.entry(key).newEvent();
+                    this.event = app.worldEventRegistry.entry(key).newEvent();
                     configurable.invalidate();
                 }
             }).addItems(
-                this.worldEventRegistry.keys(),
+                app.worldEventRegistry.keys(),
                 key => key,
-                key => this.worldEventRegistry.entry(key).category,
+                key => app.worldEventRegistry.entry(key).category,
             ))
             .add('delay', new NumberConfigurable({
                 'min': 0,
@@ -110,7 +108,7 @@ export default class EventHolderTrait extends Trait {
                 'write': triggerCount => this.triggerCount = triggerCount,
             }))
             .add('event', registryEntry?.configurable
-                ? registryEntry.configurable(this.event, this.entity?.world)
+                ? registryEntry.configurable(app, this.event, this.entity?.world)
                 : new CompositeConfigurable());
     }
 }
@@ -124,24 +122,23 @@ interface Serialized extends AnySerialized {
 export class EventHolderSerializer implements TraitSerializer<EventHolderTrait, Serialized> {
 
     constructor(
-        private readonly worldEventRegistry: WorldEventRegistry,
-        private readonly eventSerializer: WorldEventSerializer<any, any>,
+        private readonly app: GameModelApp,
     ) {
 
     }
 
     serialize(trait: EventHolderTrait, options: SerializationOptions): Serialized {
         return {
-            'event': this.eventSerializer.serialize(trait.event, options),
+            'event': this.app.serializers.worldEvent.serialize(trait.event, options),
             'delay': trait.delay,
             'triggerCount': trait.triggerCount,
         };
     }
 
     deserialize(serialized: Serialized, options: SerializationOptions): EventHolderTrait {
-        const event = this.eventSerializer.deserialize(serialized.event, options);
+        const event = this.app.serializers.worldEvent.deserialize(serialized.event, options);
         return new EventHolderTrait(
-            this.worldEventRegistry,
+            this.app,
             event as WorldEvent & KeyProvider,
             serialized.delay || 0,
             isNaN(serialized.triggerCount) ? 1 : serialized.triggerCount,

@@ -49,7 +49,7 @@ export default class SetProperty implements WorldEvent {
                     event.value = adaptId(event.value, triggererId, world);
                 }
             },
-            configurable: (event: SetProperty, world: World) => {
+            configurable: (app: GameModelApp, event: SetProperty, world: World) => {
                 const property = new EnumConfigurable<Property<any>>({
                     'read': () => event.property,
                     'write': (property, configurable) => {

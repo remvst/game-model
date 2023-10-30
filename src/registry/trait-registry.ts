@@ -2,8 +2,6 @@ import { EntityPropertyType, Property, traitEnabledProperty } from '../propertie
 import { Configurable, CompositeConfigurable } from '@remvst/configurable';
 import { TraitSerializer, AnySerialized } from '../serialization/serializer';
 import Trait from "../trait";
-import PropertyRegistry from './property-registry';
-import { EntityProperties } from '../entity';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
 import { KeyProvider } from '../key-provider';
 import VerboseAutomaticTraitSerializer from '../serialization/verbose/verbose-automatic-trait-serializer';

@@ -29,7 +29,7 @@ export default class GameModelApp {
         for (const key of this.worldEventRegistry.keys()) {
             const entry = this.worldEventRegistry.entry(key);
             if (entry.serializer) {
-                this.serializers.worldEvent.add(entry.key, entry.serializer(entry));
+                this.serializers.worldEvent.add(entry.key, entry.serializer(this));
             }
         }
     }

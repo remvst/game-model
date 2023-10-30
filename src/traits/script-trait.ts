@@ -47,8 +47,8 @@ export default class ScriptTrait extends Trait {
         return traitRegistryEntry(builder => {
             builder.traitClass(ScriptTrait);
             builder.category('scripting');
-            builder.property('triggerCount', PropertyType.num(-1, 100, 1), trait => trait.triggerCount, (trait, triggerCount) => trait.triggerCount = triggerCount);
-            builder.property('steps', PropertyType.list(stepType), trait => trait.steps, (trait, steps) => trait.steps = steps);
+            builder.simpleProp('triggerCount', PropertyType.num(-1, 100, 1));
+            builder.simpleProp('steps', PropertyType.list(stepType));
         });
     }
 }

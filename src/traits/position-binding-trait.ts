@@ -53,10 +53,10 @@ export default class PositionBindingTrait extends Trait {
         return traitRegistryEntry(builder => {
             builder.traitClass(PositionBindingTrait);
             builder.category('movement');
-            builder.property('followedId', PropertyType.id(), (trait) => trait.followedId, (trait, followedId) => trait.followedId = followedId);
-            builder.property('followerIds', PropertyType.list(PropertyType.id()), (trait) => trait.followerIds, (trait, followerIds) => trait.followerIds = followerIds);
-            builder.property('absolute', PropertyType.bool(), (trait) => trait.absolute, (trait, absolute) => trait.absolute = absolute);
-            builder.property('removeWhenIrrelevant', PropertyType.bool(), (trait) => trait.removeWhenIrrelevant, (trait, removeWhenIrrelevant) => trait.removeWhenIrrelevant = removeWhenIrrelevant);
+            builder.simpleProp('followedId', PropertyType.id());
+            builder.simpleProp('followerIds', PropertyType.list(PropertyType.id()));
+            builder.simpleProp('absolute', PropertyType.bool());
+            builder.simpleProp('removeWhenIrrelevant', PropertyType.bool());
         });
     }
 };

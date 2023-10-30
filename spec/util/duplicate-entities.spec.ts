@@ -17,11 +17,9 @@ describe('duplicateEntities', () => {
         app = new GameModelApp();
         app.traitRegistry.add(traitRegistryEntry<TestTrait>(builder => {
             builder.traitClass(TestTrait);
-            builder.property(
-                'referencedId', 
-                PropertyType.id(), 
-                (trait) => trait.referencedId, 
-                (trait, referencedId) => trait.referencedId = referencedId,
+            builder.simpleProp(
+                'referencedId',
+                PropertyType.id(),
             );
         }));
         app.finalize();

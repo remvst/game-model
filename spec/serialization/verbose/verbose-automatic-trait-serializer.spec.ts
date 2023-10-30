@@ -38,20 +38,20 @@ describe('the automatic trait serializer', () => {
         registry.add(traitRegistryEntry<TestTrait>(builder => {
             builder.traitClass(TestTrait);
 
-            builder.property('stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp);
-            builder.property('stringArrayProp', PropertyType.list(PropertyType.str()), (trait) => trait.stringArrayProp, (trait, stringArrayProp) => trait.stringArrayProp = stringArrayProp);
+            builder.simpleProp('stringProp', PropertyType.str());
+            builder.simpleProp('stringArrayProp', PropertyType.list(PropertyType.str()));
 
-            builder.property('entityIdProp', PropertyType.str(), (trait) => trait.entityIdProp, (trait, entityIdProp) => trait.entityIdProp = entityIdProp);
-            builder.property('entityIdArrayProp', PropertyType.list(PropertyType.id()), (trait) => trait.entityIdArrayProp, (trait, entityIdArrayProp) => trait.entityIdArrayProp = entityIdArrayProp);
+            builder.simpleProp('entityIdProp', PropertyType.str());
+            builder.simpleProp('entityIdArrayProp', PropertyType.list(PropertyType.id()));
 
-            builder.property('boolProp', PropertyType.bool(), (trait) => trait.boolProp, (trait, boolProp) => trait.boolProp = boolProp);
-            builder.property('boolArrayProp', PropertyType.list(PropertyType.bool()), (trait) => trait.boolArrayProp, (trait, boolArrayProp) => trait.boolArrayProp = boolArrayProp);
+            builder.simpleProp('boolProp', PropertyType.bool());
+            builder.simpleProp('boolArrayProp', PropertyType.list(PropertyType.bool()));
 
-            builder.property('numberProp', PropertyType.num(), (trait) => trait.numberProp, (trait, numberProp) => trait.numberProp = numberProp);
-            builder.property('numberArrayProp', PropertyType.list(PropertyType.num()), (trait) => trait.numberArrayProp, (trait, numberArrayProp) => trait.numberArrayProp = numberArrayProp);
+            builder.simpleProp('numberProp', PropertyType.num());
+            builder.simpleProp('numberArrayProp', PropertyType.list(PropertyType.num()));
 
-            builder.property('compositeProp', compositeType, (trait) => trait.compositeProp, (trait, compositeProp) => trait.compositeProp = compositeProp);
-            builder.property('compositeArrayProp', PropertyType.list(compositeType), (trait) => trait.compositeArrayProp, (trait, compositeArrayProp) => trait.compositeArrayProp = compositeArrayProp);
+            builder.simpleProp('compositeProp', compositeType);
+            builder.simpleProp('compositeArrayProp', PropertyType.list(compositeType));
         }));
 
         const entry = registry.entry(TestTrait.key)!;

@@ -26,7 +26,7 @@ export default class DisappearingTrait extends Trait {
     static registryEntry(): RegistryEntry<DisappearingTrait> {
         return traitRegistryEntry(builder => {
             builder.traitClass(DisappearingTrait);
-            builder.property('maxAge', PropertyType.num(), (trait) => trait.maxAge, (trait, maxAge) => trait.maxAge = maxAge);
+            builder.simpleProp('maxAge', PropertyType.num());
         });
     }
 }

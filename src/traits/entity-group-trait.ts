@@ -75,11 +75,11 @@ export default class EntityGroupTrait extends Trait {
         return traitRegistryEntry(builder => {
             builder.traitClass(EntityGroupTrait);
             builder.category('scripting');
-            builder.property('traits', PropertyType.list(PropertyType.str()), (trait) => trait.traits, (trait, traits) => trait.traits = traits);
-            builder.property('radiusX', PropertyType.num(0, 400, 5), (trait) => trait.radiusX, (trait, radiusX) => trait.radiusX = radiusX);
-            builder.property('radiusY', PropertyType.num(0, 400, 5), (trait) => trait.radiusY, (trait, radiusY) => trait.radiusY = radiusY);
-            builder.property('onRelevantTriggerEntityId', PropertyType.id(), (trait) => trait.onRelevantTriggerEntityId, (trait, onRelevantTriggerEntityId) => trait.onRelevantTriggerEntityId = onRelevantTriggerEntityId);
-            builder.property('onIrrelevantTriggerEntityId', PropertyType.id(), (trait) => trait.onIrrelevantTriggerEntityId, (trait, onIrrelevantTriggerEntityId) => trait.onIrrelevantTriggerEntityId = onIrrelevantTriggerEntityId);
+            builder.simpleProp('traits', PropertyType.list(PropertyType.str()));
+            builder.simpleProp('radiusX', PropertyType.num(0, 400, 5));
+            builder.simpleProp('radiusY', PropertyType.num(0, 400, 5));
+            builder.simpleProp('onRelevantTriggerEntityId', PropertyType.id());
+            builder.simpleProp('onIrrelevantTriggerEntityId', PropertyType.id());
         });
     }
 }

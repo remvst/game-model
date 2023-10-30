@@ -34,7 +34,7 @@ export default class EventTriggerTrait extends Trait {
                 Math.abs(entity.y - this.entity.y) <= this.radiusY;
 
             const previousContained = this.containedEntityIds.has(entity.id);
-            
+
             if (previousContained === newContained) {
                 continue;
             }
@@ -87,12 +87,12 @@ export default class EventTriggerTrait extends Trait {
         return traitRegistryEntry(builder => {
             builder.traitClass(EventTriggerTrait);
             builder.category('scripting');
-            builder.property('onEnterIds', PropertyType.list(PropertyType.id()), (trait) => trait.onEnterIds, (trait, onEnterIds) => trait.onEnterIds = onEnterIds);
-            builder.property('onExitIds', PropertyType.list(PropertyType.id()), (trait) => trait.onExitIds, (trait, onExitIds) => trait.onExitIds = onExitIds);
-            builder.property('radiusX', PropertyType.num(0, 100, 5), (trait) => trait.radiusX, (trait, radiusX) => trait.radiusX = radiusX);
-            builder.property('radiusY', PropertyType.num(0, 100, 5), (trait) => trait.radiusY, (trait, radiusY) => trait.radiusY = radiusY);
-            builder.property('triggerCount', PropertyType.num(-1, 50, 1), (trait) => trait.triggerCount, (trait, triggerCount) => trait.triggerCount = triggerCount);
-            builder.property('triggerTrait', PropertyType.str(), (trait) => trait.triggerTrait, (trait, triggerTrait) => trait.triggerTrait = triggerTrait);
+            builder.simpleProp('onEnterIds', PropertyType.list(PropertyType.id()));
+            builder.simpleProp('onExitIds', PropertyType.list(PropertyType.id()));
+            builder.simpleProp('radiusX', PropertyType.num(0, 100, 5));
+            builder.simpleProp('radiusY', PropertyType.num(0, 100, 5));
+            builder.simpleProp('triggerCount', PropertyType.num(-1, 50, 1));
+            builder.simpleProp('triggerTrait', PropertyType.str());
         });
     }
 }

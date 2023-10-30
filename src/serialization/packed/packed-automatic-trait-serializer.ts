@@ -45,8 +45,8 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         }
 
         if (
-            type instanceof StringConstraints || 
-            type instanceof EnumConstraints || 
+            type instanceof StringConstraints ||
+            type instanceof EnumConstraints ||
             type instanceof EntityIdConstraints
         ) {
             this.encoder.appendString(value);
@@ -72,7 +72,7 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         if (type instanceof ListConstraints) {
             const subType = type.itemType;
             const listLength = this.decoder.nextNumber();
-            
+
             const res = [];
             for (let i = 0 ; i < listLength ; i++) {
                 res.push(this.decode(subType));
@@ -96,8 +96,8 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         }
 
         if (
-            type instanceof StringConstraints || 
-            type instanceof EnumConstraints || 
+            type instanceof StringConstraints ||
+            type instanceof EnumConstraints ||
             type instanceof EntityIdConstraints
         ) {
             return this.decoder.nextString();

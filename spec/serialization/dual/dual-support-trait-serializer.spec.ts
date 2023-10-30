@@ -6,11 +6,11 @@ import VerboseAutomaticTraitSerializer from '../../../src/serialization/verbose/
 import DualSupportTraitSerializer from '../../../src/serialization/dual/dual-support-trait-serializer';
 
 describe('the dual support trait serializer', () => {
-    
+
     class TestTrait extends Trait {
         static readonly key: string = 'testtrait';
         readonly key: string = TestTrait.key;
-        
+
         stringProp: string | null = 'hello';
     }
 
@@ -24,7 +24,7 @@ describe('the dual support trait serializer', () => {
 
         registry.add(traitRegistryEntry<TestTrait>(builder => {
             builder.traitClass(TestTrait);
-            builder.property('stringProp', PropertyType.str(), (trait) => trait.stringProp, (trait, stringProp) => trait.stringProp = stringProp);
+            builder.simpleProp('stringProp', PropertyType.str())
         }));
 
         const entry = registry.entry(TestTrait.key)!;

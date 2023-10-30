@@ -11,7 +11,7 @@ export default class GameModelApp {
         for (const key of this.traitRegistry.keys()) {
             const entry = this.traitRegistry.entry(key);
             if (entry.serializer) {
-                this.serializers.trait.add(entry.key, entry.serializer(entry));
+                this.serializers.trait.add(entry.key, entry.serializer(this));
             }
         }
         for (const key of this.worldEventRegistry.keys()) {

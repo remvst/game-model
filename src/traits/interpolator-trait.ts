@@ -42,11 +42,11 @@ export default class InterpolatorTrait extends Trait {
     static registryEntry(app: GameModelApp): RegistryEntry<InterpolatorTrait> {
         return traitRegistryEntry(builder => {
             builder.traitClass(InterpolatorTrait);
-            builder.property('targetEntityId', PropertyType.id(), (trait) => trait.targetEntityId, (trait, targetEntityId) => trait.targetEntityId = targetEntityId);
+            builder.simpleProp('targetEntityId', PropertyType.id());
             builder.property('property', PropertyType.str(), (trait) => trait.property.identifier, (trait, property) => app.traitRegistry.properties.property(property));
-            builder.property('fromValue', PropertyType.num(), (trait) => trait.fromValue, (trait, fromValue) => trait.fromValue = fromValue);
-            builder.property('toValue', PropertyType.num(), (trait) => trait.toValue, (trait, toValue) => trait.toValue = toValue);
-            builder.property('duration', PropertyType.num(), (trait) => trait.duration, (trait, duration) => trait.duration = duration);
+            builder.simpleProp('fromValue', PropertyType.num());
+            builder.simpleProp('toValue', PropertyType.num());
+            builder.simpleProp('duration', PropertyType.num());
         });
     }
 }

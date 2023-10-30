@@ -11,12 +11,13 @@ import PackedAutomaticTraitSerializer from '../serialization/packed/packed-autom
 import DualSupportTraitSerializer from '../serialization/dual/dual-support-trait-serializer';
 import { Registry } from './registry';
 import { PropertyConstraints } from '../properties/property-constraints';
+import GameModelApp from '../game-model-app';
 
 export interface TraitRegistryEntry<TraitType extends Trait> {
     readonly key: string;
     readonly category?: string;
     newTrait?(): TraitType;
-    serializer?(entry: TraitRegistryEntry<TraitType>): TraitSerializer<TraitType, AnySerialized>;
+    serializer?(app: GameModelApp): TraitSerializer<TraitType, AnySerialized>;
     configurable?: (trait: TraitType) => Configurable;
     properties?: Property<any>[];
 }
@@ -29,38 +30,26 @@ export interface AutoRegistryEntry<TraitType extends Trait> {
     readonly category?: string,
 }
 
-export type AnyTraitRegistryEntry<TraitType extends Trait> = 
+export type AnyTraitRegistryEntry<TraitType extends Trait> =
     TraitRegistryEntry<TraitType> |
     AutoRegistryEntry<TraitType>;
 
-interface TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
-    newTrait(newTrait: () => TraitType): void;
-    traitClass(traitClass: (new () => TraitType) & KeyProvider): void;
-    key(key: string): void;
-    category(category: string): void;
-    property<PropertyType>(
-        identifier: string,
-        type: PropertyConstraints<PropertyType>,
-        read: (trait: TraitType) => PropertyType,
-        write: (trait: TraitType, value: PropertyType) => void,
-    ): void;
-    serializer(serializer: (entry: TraitRegistryEntry<TraitType>) => TraitSerializer<TraitType, AnySerialized>): void;
-    build(): TraitRegistryEntry<TraitType>;
-}
-
-class TraitRegistryEntryBuilderImpl<TraitType extends Trait & KeyProvider> implements TraitRegistryEntryBuilder<TraitType> {
+class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
 
     private _key: string = null;
     private _newTrait: () => TraitType = null;
     private _category: string = null;
-    private _serializer: (entry: TraitRegistryEntry<TraitType>) => TraitSerializer<TraitType, AnySerialized> = null;
+    private _serializer: (app: GameModelApp) => TraitSerializer<TraitType, AnySerialized> = null;
     private readonly _properties: any[] = [];
 
     constructor() {
-        this.serializer((entry: TraitRegistryEntry<TraitType>) => new DualSupportTraitSerializer<TraitType>(
-            new VerboseAutomaticTraitSerializer(entry),
-            new PackedAutomaticTraitSerializer(entry),
-        ));
+        this.serializer((app: GameModelApp) => {
+            const entry = app.traitRegistry.entry(this._key);
+            return new DualSupportTraitSerializer<TraitType>(
+                new VerboseAutomaticTraitSerializer(entry),
+                new PackedAutomaticTraitSerializer(entry),
+            )
+        });
     }
 
     traitClass(traitClass: (new () => TraitType) & KeyProvider): void {
@@ -81,9 +70,9 @@ class TraitRegistryEntryBuilderImpl<TraitType extends Trait & KeyProvider> imple
     }
 
     property<PropertyType>(
-        identifier: string, 
+        identifier: string,
         type: PropertyConstraints<PropertyType>,
-        get: (trait: TraitType) => PropertyType, 
+        get: (trait: TraitType) => PropertyType,
         set: (trait: TraitType, value: PropertyType) => void,
     ): void {
         const traitKey = this._key;
@@ -97,7 +86,19 @@ class TraitRegistryEntryBuilderImpl<TraitType extends Trait & KeyProvider> imple
         });
     }
 
-    serializer(serializer: (entry: TraitRegistryEntry<TraitType>) => TraitSerializer<TraitType, AnySerialized>) {
+    simpleProp<Key extends string & keyof TraitType, PropertyType extends TraitType[Key]>(
+        identifier: Key,
+        type: PropertyConstraints<PropertyType>,
+    ) {
+        this.property(
+            identifier,
+            type,
+            (trait) => trait[identifier],
+            (trait, value) => trait[identifier] = value,
+        );
+    }
+
+    serializer(serializer: (app: GameModelApp) => TraitSerializer<TraitType, AnySerialized>) {
         this._serializer = serializer;
     }
 
@@ -115,7 +116,7 @@ class TraitRegistryEntryBuilderImpl<TraitType extends Trait & KeyProvider> imple
 export function traitRegistryEntry<TraitType extends Trait>(
     makeEntry: (builder: TraitRegistryEntryBuilder<TraitType>) => void,
 ): TraitRegistryEntry<TraitType> {
-    const builder = new TraitRegistryEntryBuilderImpl<TraitType>();
+    const builder = new TraitRegistryEntryBuilder<TraitType>();
     makeEntry(builder);
     return builder.build();
 }
@@ -136,16 +137,19 @@ export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any
         const manualEntry = entry as TraitRegistryEntry<T>;
 
         if (autoEntry.traitType) {
-            return this.add({
-                key: autoEntry.traitType.key,
-                category: autoEntry.category,
-                newTrait: () => new autoEntry.traitType(),
-                serializer: (entry) => new DualSupportTraitSerializer<T>(
-                    new VerboseAutomaticTraitSerializer(entry),
-                    new PackedAutomaticTraitSerializer(entry),
-                ),
-                properties: autoEntry.properties || [],
-            });
+            return this.add(traitRegistryEntry<T>(builder => {
+                builder.traitClass(autoEntry.traitType);
+                builder.category(autoEntry.category);
+
+                for (const property of autoEntry.properties) {
+                    builder.property(
+                        property.identifier,
+                        property.type,
+                        (trait) => property.get(trait.entity),
+                        (trait, value) => property.set(trait.entity, value),
+                    );
+                }
+            }));
         }
 
         if (this.entries.has(manualEntry.key)) {

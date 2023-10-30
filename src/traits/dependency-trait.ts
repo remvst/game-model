@@ -80,8 +80,8 @@ export default class DependencyTrait extends Trait {
         return traitRegistryEntry(builder => {
             builder.traitClass(DependencyTrait);
             builder.category('scripting');
-            builder.property('dependerIds', PropertyType.list(PropertyType.id()), (trait) => trait.dependerIds, (trait, dependerIds) => trait.dependerIds = dependerIds);
-            builder.property('dependsOnIds', PropertyType.list(PropertyType.id()), (trait) => trait.dependerIds, (trait, dependerIds) => trait.dependerIds = dependerIds);
+            builder.simpleProp('dependerIds', PropertyType.list(PropertyType.id()));
+            builder.simpleProp('dependsOnIds', PropertyType.list(PropertyType.id()));
         });
     }
 }

@@ -1,8 +1,7 @@
 import { resolveIds } from '../adapt-id';
 import Entity from '../entity';
-import { worldEventGetSet } from '../properties/properties';
 import { PropertyType } from '../properties/property-constraints';
-import { AutoWorldEventRegistryEntry } from '../registry/world-event-registry';
+import { WorldEventRegistryEntry, worldEventRegistryEntry } from '../registry/world-event-registry';
 import World from '../world';
 import TriggerEvent from './trigger-event';
 import { WorldEvent } from './world-event';
@@ -29,14 +28,12 @@ export default class Trigger implements WorldEvent {
         entity.addEvent(new TriggerEvent(this.triggererId));
     }
 
-    static registryEntry(): AutoWorldEventRegistryEntry<Trigger> {
-        return {
-            eventType: Trigger,
-            category: 'scripting',
-            properties: [
-                worldEventGetSet(Trigger, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
-                worldEventGetSet(Trigger, 'triggererId', PropertyType.id(), event => event.triggererId, (event, triggererId) => event.triggererId = triggererId),
-            ],
-        };
+    static registryEntry(): WorldEventRegistryEntry<Trigger> {
+        return worldEventRegistryEntry(builder => {
+            builder.eventClass(Trigger);
+            builder.category('scripting');
+            builder.simpleProp('entityId', PropertyType.id());
+            builder.simpleProp('triggererId', PropertyType.id());
+        });
     }
 }

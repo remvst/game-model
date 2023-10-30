@@ -40,7 +40,8 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
     private _newTrait: () => TraitType = null;
     private _category: string = null;
     private _serializer: (app: GameModelApp) => TraitSerializer<TraitType, AnySerialized> = null;
-    private readonly _properties: any[] = [];
+    private _configurable: (trait: TraitType) => Configurable;
+    private readonly _properties: Property<any>[] = [];
 
     constructor() {
         this.serializer((app: GameModelApp) => {
@@ -49,6 +50,19 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
                 new VerboseAutomaticTraitSerializer(entry),
                 new PackedAutomaticTraitSerializer(entry),
             )
+        });
+
+        this.configurable((trait: TraitType) => {
+            const autoConfigurable = new CompositeConfigurable();
+            for (const property of this._properties) {
+                autoConfigurable.add(property.identifier, propertyValueConfigurable(
+                    trait.entity!.world,
+                    property.type,
+                    () => property.get(trait.entity!),
+                    (value) => property.set(trait.entity!, value),
+                ));
+            }
+            return autoConfigurable;
         });
     }
 
@@ -102,6 +116,10 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
         this._serializer = serializer;
     }
 
+    configurable(configurable: (trait: TraitType) => Configurable) {
+        this._configurable = configurable;
+    }
+
     build(): TraitRegistryEntry<TraitType> {
         return {
             key: this._key,
@@ -109,6 +127,7 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
             newTrait: this._newTrait,
             serializer: this._serializer,
             properties: this._properties,
+            configurable: this._configurable,
         };
     }
 }
@@ -123,14 +142,6 @@ export function traitRegistryEntry<TraitType extends Trait>(
 
 export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
     private readonly entries = new Map<string, TraitRegistryEntry<any>>();
-    readonly properties = new PropertyRegistry<Property<any>>();
-
-    constructor() {
-        this.properties.add(EntityProperties.x);
-        this.properties.add(EntityProperties.y);
-        this.properties.add(EntityProperties.z);
-        this.properties.add(EntityProperties.angle);
-    }
 
     add<T extends Trait>(entry: AnyTraitRegistryEntry<T>): AnyTraitRegistryEntry<T> {
         const autoEntry = entry as AutoRegistryEntry<T>;
@@ -174,10 +185,6 @@ export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any
                 }
                 return autoConfigurable;
             };
-        }
-
-        for (const property of properties) {
-            this.properties.add(property);
         }
     }
 

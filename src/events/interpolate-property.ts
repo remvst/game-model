@@ -53,14 +53,13 @@ export default class InterpolateProperty implements WorldEvent {
     }
 
     static registryEntry(app: GameModelApp): WorldEventRegistryEntry<InterpolateProperty> {
-        const { traitRegistry } = app;
-        const { properties } = traitRegistry;
+        const { traitRegistry, propertyRegistry } = app;
 
         return {
             key: InterpolateProperty.key,
             category: 'movement',
             newEvent: () => new InterpolateProperty('', EntityProperties.x, 0, 1),
-            serializer: () => new Serializer(properties),
+            serializer: () => new Serializer(propertyRegistry),
             configurable: (event, world) => {
                 return new CompositeConfigurable()
                     .add('entityId', new EntityIdConfigurable({
@@ -69,7 +68,7 @@ export default class InterpolateProperty implements WorldEvent {
                         'write': (entityId) => event.entityId = entityId,
                     }))
                     .add('property', anyProperty({
-                        'propertyRegistry': properties,
+                        'propertyRegistry': propertyRegistry,
                         'filter': (prop) => prop.type instanceof NumberConstraints && onlyRelevantProperties(traitRegistry, world, () => event.entityId)(prop),
                         'read': () => event.property,
                         'write': (property) => event.property = property,

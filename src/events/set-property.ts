@@ -37,14 +37,13 @@ export default class SetProperty implements WorldEvent {
     }
 
     static registryEntry(app: GameModelApp): WorldEventRegistryEntry<SetProperty> {
-        const { traitRegistry } = app;
-        const { properties } = traitRegistry;
+        const { traitRegistry, propertyRegistry } = app;
 
         return {
             key: SetProperty.key,
             category: 'scripting',
             newEvent: () => new SetProperty('', EntityProperties.x, 0),
-            serializer: () => new Serializer(properties),
+            serializer: () => new Serializer(propertyRegistry),
             readjust: (event, world, _, triggererId) => {
                 if (event.property.type instanceof EntityIdConstraints) {
                     event.value = adaptId(event.value, triggererId, world);
@@ -59,11 +58,11 @@ export default class SetProperty implements WorldEvent {
                     },
                 });
 
-                for (const identifier of properties.keys()) {
+                for (const identifier of propertyRegistry.keys()) {
                     const split = identifier.split('.');
                     const category = split.length > 0 ? split[0] : '';
 
-                    property.category(category).add(identifier, properties.property(identifier)!);
+                    property.category(category).add(identifier, propertyRegistry.property(identifier)!);
                 }
 
                 return new CompositeConfigurable()
@@ -76,7 +75,7 @@ export default class SetProperty implements WorldEvent {
                         },
                     }))
                     .add('property', anyProperty({
-                        'propertyRegistry': properties,
+                        'propertyRegistry': propertyRegistry,
                         'filter': onlyRelevantProperties(traitRegistry, world, () => event.entityId),
                         'read': () => event.property,
                         'write': (property, configurable) => {

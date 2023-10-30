@@ -43,7 +43,7 @@ export default class InterpolatorTrait extends Trait {
         return traitRegistryEntry(builder => {
             builder.traitClass(InterpolatorTrait);
             builder.simpleProp('targetEntityId', PropertyType.id());
-            builder.property('property', PropertyType.str(), (trait) => trait.property.identifier, (trait, property) => app.traitRegistry.properties.property(property));
+            builder.property('property', PropertyType.str(), (trait) => trait.property.identifier, (trait, property) => trait.property = app.propertyRegistry.property(property));
             builder.simpleProp('fromValue', PropertyType.num());
             builder.simpleProp('toValue', PropertyType.num());
             builder.simpleProp('duration', PropertyType.num());

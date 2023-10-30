@@ -24,6 +24,15 @@ export class EntityProperties {
     static readonly y: Property<number> = getSet('position.y', PropertyType.num(), entity => entity.y, (entity, y) => entity.y = y);
     static readonly z: Property<number> = getSet('position.z', PropertyType.num(), entity => entity.z, (entity, z) => entity.z = z);
     static readonly angle: Property<number> = getSet('angle', PropertyType.num(), entity => entity.angle, (entity, angle) => entity.angle = angle);
+
+    static all() {
+        return [
+            this.x,
+            this.y,
+            this.z,
+            this.angle,
+        ];
+    }
 }
 
 export default class Entity {
@@ -74,7 +83,7 @@ export default class Entity {
         for (const trait of this.traits.items()) {
             trait.postBind();
         }
-        
+
         this.cycleStartPosition.x = this.position.x;
         this.cycleStartPosition.y = this.position.y;
         this.cycleStartPosition.z = this.position.z;

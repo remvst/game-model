@@ -1,18 +1,21 @@
-import { DependencyTrait, Entity, GameModelApp, SerializationOptions } from "../../src";
+import { DependencyTrait, Entity, GameModelApp, ScriptTrait, SerializationOptions } from "../../src";
 
-describe('dependency trait', () => {
+describe('script trait', () => {
     let app: GameModelApp;
 
     beforeEach(() => {
         app = new GameModelApp();
-        app.traitRegistry.add(DependencyTrait.registryEntry());
+        app.traitRegistry.add(ScriptTrait.registryEntry());
         app.finalize();
     });
 
     it('can be serialized', () => {
-        const trait = new DependencyTrait();
-        trait.dependerIds = ['depender1', 'depender2'];
-        trait.dependsOnIds = ['dependsOn1', 'dependsOn2'];
+        const trait = new ScriptTrait();
+        trait.triggerCount = 99;
+        trait.steps = [
+            { delay: 123, triggerEntityId: 'entity123' },
+            { delay: 456, triggerEntityId: 'entity456' },
+        ];
 
         const entity = new Entity(undefined, [trait]);
 
@@ -25,8 +28,8 @@ describe('dependency trait', () => {
         expect(deserialized.position.x).toBe(entity.position.x);
         expect(deserialized.position.y).toBe(entity.position.y);
 
-        const traitCopy = deserialized.traitOfType(DependencyTrait);
-        expect(traitCopy?.dependerIds).toEqual(trait.dependerIds);
-        expect(traitCopy?.dependsOnIds).toEqual(trait.dependsOnIds);
+        const traitCopy = deserialized.traitOfType(ScriptTrait);
+        expect(traitCopy?.steps).toEqual(trait.steps);
+        expect(traitCopy?.triggerCount).toEqual(trait.triggerCount);
     });
 });

@@ -152,7 +152,7 @@ export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any
 
                 for (const property of autoEntry.properties || []) {
                     builder.property(
-                        property.identifier,
+                        property.localIdentifier,
                         property.type,
                         (trait) => property.get(trait.entity),
                         (trait, value) => property.set(trait.entity, value),

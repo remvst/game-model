@@ -1,14 +1,14 @@
 import { GenericProperty } from '../properties/properties';
+import { Registry } from './registry';
 
-export default class PropertyRegistry<PropertyType extends GenericProperty<any, any>> {
+export default class PropertyRegistry<PropertyType extends GenericProperty<any, any>> implements Registry<PropertyType> {
     private readonly properties = new Map<string, PropertyType>();
 
-    add(property: PropertyType): this {
+    add(property: PropertyType) {
         this.properties.set(property.identifier, property);
-        return this;
     }
 
-    property(identifier: string): PropertyType | null {
+    entry(identifier: string): PropertyType | null {
         return this.properties.get(identifier) || null;
     }
 

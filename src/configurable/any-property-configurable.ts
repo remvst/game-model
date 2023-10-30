@@ -8,7 +8,7 @@ export function anyProperty(opts: {
     read: () => Property<any>,
     write: (value: Property<any>, configurable: Configurable) => void,
 }): Configurable {
-    const configurable = new EnumConfigurable<Property<any>>({ 
+    const configurable = new EnumConfigurable<Property<any>>({
         'read': opts.read,
         'write': opts.write,
      });
@@ -17,7 +17,7 @@ export function anyProperty(opts: {
         const split = identifier.split('.');
         const category = split.length > 0 ? split[0] : '';
 
-        const property = opts.propertyRegistry.property(identifier)!;
+        const property = opts.propertyRegistry.entry(identifier)!;
         if (!opts.filter(property)) {
             continue;
         }

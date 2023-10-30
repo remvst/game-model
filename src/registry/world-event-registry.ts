@@ -26,13 +26,12 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     properties?: WorldEventProperty<any>[];
 }
 
-export type AnyWorldEventRegistryEntry<EventType extends WorldEvent> = 
-    WorldEventRegistryEntry<EventType> | 
+export type AnyWorldEventRegistryEntry<EventType extends WorldEvent> =
+    WorldEventRegistryEntry<EventType> |
     AutoWorldEventRegistryEntry<EventType>;
 
 export default class WorldEventRegistry implements Registry<WorldEventRegistryEntry<any>> {
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();
-    readonly properties = new PropertyRegistry<WorldEventProperty<any>>();
 
     add<T extends WorldEvent>(entry: AnyWorldEventRegistryEntry<T>) {
         const autoEntry = entry as AutoWorldEventRegistryEntry<T>;

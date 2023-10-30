@@ -119,7 +119,7 @@ export class Serializer implements WorldEventSerializer<InterpolateProperty, Ser
     deserialize(serialized: Serialized): InterpolateProperty {
         return new InterpolateProperty(
             serialized.entityId,
-            this.propertyRegistry.property(serialized.propertyIdentifier)!,
+            this.propertyRegistry.entry(serialized.propertyIdentifier)!,
             serialized.value,
             serialized.duration,
         );

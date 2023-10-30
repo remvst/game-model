@@ -62,7 +62,7 @@ export default class SetProperty implements WorldEvent {
                     const split = identifier.split('.');
                     const category = split.length > 0 ? split[0] : '';
 
-                    property.category(category).add(identifier, propertyRegistry.property(identifier)!);
+                    property.category(category).add(identifier, propertyRegistry.entry(identifier)!);
                 }
 
                 return new CompositeConfigurable()
@@ -124,7 +124,7 @@ class Serializer implements WorldEventSerializer<SetProperty, Serialized> {
     deserialize(serialized: Serialized): SetProperty {
         return new SetProperty(
             serialized.entityId,
-            this.propertyRegistry.property(serialized.propertyIdentifier)!,
+            this.propertyRegistry.entry(serialized.propertyIdentifier)!,
             serialized.value,
         );
     }

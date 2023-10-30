@@ -1,4 +1,4 @@
-import { EntityIdConstraints, EntityRemoved, RegistryEntry, SerializationOptions, WorldEventRegistry } from "..";
+import { EntityIdConstraints, EntityRemoved, RegistryEntry, SerializationOptions } from "..";
 import { EntityEvent } from "../events/entity-event";
 import Remove from "../events/remove";
 import { WorldEvent } from "../events/world-event";

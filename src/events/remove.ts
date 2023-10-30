@@ -1,7 +1,6 @@
 import { resolveIds } from '../adapt-id';
-import { worldEventGetSet } from '../properties/properties';
 import { PropertyType } from '../properties/property-constraints';
-import { AutoWorldEventRegistryEntry } from '../registry/world-event-registry';
+import { WorldEventRegistryEntry, worldEventRegistryEntry } from '../registry/world-event-registry';
 import World from '../world';
 import { WorldEvent } from './world-event';
 
@@ -10,7 +9,7 @@ export default class Remove implements WorldEvent {
     readonly key = Remove.key;
 
     constructor(public entityId: string = '') {
-        
+
     }
 
     apply(world: World) {
@@ -19,13 +18,11 @@ export default class Remove implements WorldEvent {
         }
     }
 
-    static registryEntry(): AutoWorldEventRegistryEntry<Remove> {
-        return {
-            eventType: Remove,
-            category: 'scripting',
-            properties: [
-                worldEventGetSet(Remove, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
-            ],
-        };
+    static registryEntry(): WorldEventRegistryEntry<Remove> {
+        return worldEventRegistryEntry(builder => {
+            builder.eventClass(Remove);
+            builder.category('scripting');
+            builder.simpleProp('entityId', PropertyType.id());
+        });
     }
 }

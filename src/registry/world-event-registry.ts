@@ -38,6 +38,7 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
     private _category: string = null;
     private _serializer: (app: GameModelApp) => WorldEventSerializer<EventType, AnySerialized> = null;
     private _configurable: (app: GameModelApp, trait: EventType, world: World) => Configurable;
+    private _readjust: (event: EventType, world: World, entity: Entity, triggererId: string) => void;
     private readonly _properties: WorldEventProperty<any>[] = [];
 
     constructor() {
@@ -114,6 +115,10 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
         this._configurable = configurable;
     }
 
+    readjust(readjust: (event: EventType, world: World, entity: Entity, triggererId: string) => void) {
+        this._readjust = readjust;
+    }
+
     build(): WorldEventRegistryEntry<EventType> {
         return {
             key: this._key,
@@ -122,6 +127,7 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
             serializer: this._serializer,
             properties: this._properties,
             configurable: this._configurable,
+            readjust: this._readjust,
         };
     }
 }

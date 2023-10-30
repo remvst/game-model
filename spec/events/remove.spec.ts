@@ -1,4 +1,4 @@
-import { GameModelApp, Remove, SerializationOptions } from "../../src";
+import { Entity, GameModelApp, Remove, SerializationOptions, World } from "../../src";
 
 describe('remove event', () => {
     let app: GameModelApp;
@@ -7,6 +7,17 @@ describe('remove event', () => {
         app = new GameModelApp();
         app.worldEventRegistry.add(Remove.registryEntry());
         app.finalize();
+    });
+
+    it('can be applied', () => {
+        const event = new Remove('entityId');
+        const world = new World();
+        const entity = new Entity('entityId', []);
+        world.entities.add(entity);
+
+        world.addEvent(event);
+
+        expect(entity.world).toBe(null);
     });
 
     it('can be serialized', () => {

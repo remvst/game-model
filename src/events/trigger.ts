@@ -3,7 +3,6 @@ import Entity from '../entity';
 import { worldEventGetSet } from '../properties/properties';
 import { PropertyType } from '../properties/property-constraints';
 import { AutoWorldEventRegistryEntry } from '../registry/world-event-registry';
-import EntityGroupTrait from '../traits/entity-group-trait';
 import World from '../world';
 import TriggerEvent from './trigger-event';
 import { WorldEvent } from './world-event';

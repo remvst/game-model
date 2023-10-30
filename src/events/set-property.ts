@@ -1,11 +1,11 @@
-import { EntityIdConstraints, PropertyType } from './../properties/property-constraints';
-import adaptId, { resolveIds } from '../adapt-id';
+import { PropertyType } from './../properties/property-constraints';
+import { resolveIds } from '../adapt-id';
 import { EntityIdConfigurable, PropertyRegistry } from '..';
-import { Property, worldEventGetSet } from '../properties/properties';
+import { Property } from '../properties/properties';
 import World from '../world';
 import { WorldEvent } from './world-event';
 import { WorldEventSerializer } from '../serialization/serializer';
-import { WorldEventRegistryEntry } from '../registry/world-event-registry';
+import { WorldEventRegistryEntry, worldEventRegistryEntry } from '../registry/world-event-registry';
 import { EntityProperties } from '../entity';
 import { CompositeConfigurable, EnumConfigurable } from '@remvst/configurable';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
@@ -39,17 +39,12 @@ export default class SetProperty implements WorldEvent {
     static registryEntry(app: GameModelApp): WorldEventRegistryEntry<SetProperty> {
         const { traitRegistry, propertyRegistry } = app;
 
-        return {
-            key: SetProperty.key,
-            category: 'scripting',
-            newEvent: () => new SetProperty('', EntityProperties.x, 0),
-            serializer: () => new Serializer(propertyRegistry),
-            readjust: (event, world, _, triggererId) => {
-                if (event.property.type instanceof EntityIdConstraints) {
-                    event.value = adaptId(event.value, triggererId, world);
-                }
-            },
-            configurable: (app: GameModelApp, event: SetProperty, world: World) => {
+        return worldEventRegistryEntry(builder => {
+            builder.key(SetProperty.key);
+            builder.newEvent(() =>  new SetProperty('', EntityProperties.x, 0));
+            builder.serializer(() => new Serializer(app.propertyRegistry));
+            builder.simpleProp('entityId', PropertyType.id());
+            builder.configurable((app: GameModelApp, event: SetProperty, world: World) => {
                 const property = new EnumConfigurable<Property<any>>({
                     'read': () => event.property,
                     'write': (property, configurable) => {
@@ -93,11 +88,8 @@ export default class SetProperty implements WorldEvent {
                         () => event.value,
                         (value) => event.value = value
                     ));
-            },
-            properties: [
-                worldEventGetSet(SetProperty, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
-            ],
-        };
+            });
+        });
     }
 }
 

@@ -35,11 +35,11 @@ export default class World {
         ));
         this.entities.allowAddition = (entity) => {
             switch (this.authority.entityAuthority(entity)) {
-            case AuthorityType.NONE: 
-            case AuthorityType.FORWARD: 
+            case AuthorityType.NONE:
+            case AuthorityType.FORWARD:
                 return false;
-            case AuthorityType.FULL: 
-            case AuthorityType.LOCAL: 
+            case AuthorityType.FULL:
+            case AuthorityType.LOCAL:
                 return true;
             }
         };
@@ -75,10 +75,11 @@ export default class World {
     cycle(elapsed: number) {
         this.resetSectors();
         this.chunked.update();
+
         for (const entity of this.entities.items()) {
             entity.preCycle();
         }
-        for (const entity of this.chunked.entities.items()) {
+        for (const entity of Array.from(this.chunked.entities.items())) {
             if (!this.isEntityEnabled(entity)) continue;
             entity.cycle(elapsed);
         }
@@ -91,9 +92,9 @@ export default class World {
     addEvent(event: WorldEvent, authority: Authority = this.authority) {
         switch (authority.worldEventAuthority(event)) {
         case AuthorityType.NONE: return;
-        case AuthorityType.FULL: 
-        case AuthorityType.LOCAL: 
-        case AuthorityType.FORWARD: 
+        case AuthorityType.FULL:
+        case AuthorityType.LOCAL:
+        case AuthorityType.FORWARD:
             break;
         }
 

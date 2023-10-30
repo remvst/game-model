@@ -1,8 +1,7 @@
 import { EntityProperties } from './../entity';
 import { Entity, InterpolatorTrait, vector3 } from "..";
-import { worldEventGetSet } from "../properties/properties";
 import { PropertyType } from "../properties/property-constraints";
-import { AutoWorldEventRegistryEntry } from "../registry/world-event-registry";
+import { WorldEventRegistryEntry, worldEventRegistryEntry } from "../registry/world-event-registry";
 import World from "../world";
 import { WorldEvent } from "./world-event";
 import { Vector3 } from '../vector3';
@@ -22,7 +21,7 @@ export default class Shift implements WorldEvent {
     apply(world: World) {
         for (const entity of resolveIds(this.entityId, null, world)) {
             if (this.translation.x) {
-                world.entities.add(new Entity(undefined, [
+                world.entities.add(new Entity('movx', [
                     new InterpolatorTrait(
                         this.entityId,
                         EntityProperties.x,
@@ -34,7 +33,7 @@ export default class Shift implements WorldEvent {
             }
 
             if (this.translation.y) {
-                world.entities.add(new Entity(undefined, [
+                world.entities.add(new Entity('movy', [
                     new InterpolatorTrait(
                         this.entityId,
                         EntityProperties.y,
@@ -47,15 +46,13 @@ export default class Shift implements WorldEvent {
         }
     }
 
-    static registryEntry(): AutoWorldEventRegistryEntry<Shift> {
-        return {
-            eventType: Shift,
-            category: 'movement',
-            properties: [
-                worldEventGetSet(Shift, 'entityId', PropertyType.id(), event => event.entityId, (event, entityId) => event.entityId = entityId),
-                worldEventGetSet(Shift, 'duration', PropertyType.num(0, 120, 0.1), event => event.duration, (event, duration) => event.duration = duration),
-                worldEventGetSet(Shift, 'translation', PropertyType.vec2(), event => event.translation, (event, translation) => event.translation = translation),
-            ],
-        };
+    static registryEntry(): WorldEventRegistryEntry<Shift> {
+        return worldEventRegistryEntry(builder => {
+            builder.eventClass(Shift);
+            builder.category('movement');
+            builder.simpleProp('entityId', PropertyType.id());
+            builder.simpleProp('duration', PropertyType.num(0, 120, 0.1));
+            builder.simpleProp('translation', PropertyType.vec2());
+        });
     }
 }

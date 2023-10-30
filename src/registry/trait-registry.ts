@@ -150,7 +150,7 @@ export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any
                 builder.traitClass(autoEntry.traitType);
                 builder.category(autoEntry.category);
 
-                for (const property of autoEntry.properties) {
+                for (const property of autoEntry.properties || []) {
                     builder.property(
                         property.identifier,
                         property.type,

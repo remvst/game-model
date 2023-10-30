@@ -1,4 +1,4 @@
-import { GameModelApp, MoveTo, SerializationOptions } from "../../src";
+import { Entity, GameModelApp, MoveTo, SerializationOptions, World } from "../../src";
 
 describe('move to event', () => {
     let app: GameModelApp;
@@ -7,6 +7,40 @@ describe('move to event', () => {
         app = new GameModelApp();
         app.worldEventRegistry.add(MoveTo.registryEntry());
         app.finalize();
+    });
+
+    it('can be applied', () => {
+        const event = new MoveTo();
+        event.entityId = 'entityId';
+        event.duration = 10;
+        event.targetEntityId = 'target';
+
+        const world = new World();
+
+        const entity = new Entity('entityId', []);
+        entity.position.x = 123;
+        entity.position.y = 456;
+        world.entities.add(entity);
+
+        const target = new Entity('target', []);
+        target.position.x = 789;
+        target.position.y = 1337;
+        world.entities.add(target);
+
+        world.addEvent(event);
+
+        expect(entity.position.x).toBe(123);
+        expect(entity.position.y).toBe(456);
+
+        world.cycle(5);
+
+        expect(entity.position.x).toBe((123 + 789) / 2);
+        expect(entity.position.y).toBe((456 + 1337) / 2);
+
+        world.cycle(5);
+
+        expect(entity.position.x).toBe(789);
+        expect(entity.position.y).toBe(1337);
     });
 
     it('can be serialized', () => {

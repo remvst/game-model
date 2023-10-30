@@ -4,7 +4,7 @@ A minimalistic game engine built for TypeScript.
 
 The engine provides ways to manage a world, entities, and events. It also provides utilities to serialize worlds so it can be used for saving levels and synchronizing multiplayer gameplay.
 
-It also does not provide any rendering, sound, physics, controls... **It is up to the developer to build them**
+It does NOT provide any rendering, sound, physics, controls... **It is up to the developer to build them.**
 
 ## Simplistic Example
 

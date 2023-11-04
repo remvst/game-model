@@ -8,7 +8,7 @@ export class PackedWorldSerializer implements WorldSerializer<EncoderSequence> {
 
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
-    
+
     constructor(
         private readonly entitySerializer: EntitySerializer<EncoderSequence>,
         public worldSetup: WorldSetup,
@@ -18,14 +18,19 @@ export class PackedWorldSerializer implements WorldSerializer<EncoderSequence> {
 
     serialize(world: World, options: SerializationOptions): EncoderSequence {
         this.encoder.reset();
-        this.encoder.appendNumber(world.entities.size);
+
+        const ids = new Set<string>();
 
         for (const entity of world.entities.items()) {
-            if (!options.shouldSerializeEntity(entity)) {
-                continue;
+            if (options.shouldSerializeEntity(entity)) {
+                ids.add(entity.id);
             }
+        }
 
-            const serialized = this.entitySerializer.serialize(entity, options);
+        this.encoder.appendNumber(ids.size);
+
+        for (const id of ids) {
+            const serialized = this.entitySerializer.serialize(world.entity(id), options);
             this.encoder.appendSequence(serialized);
         }
 

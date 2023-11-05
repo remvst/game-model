@@ -59,6 +59,8 @@ import Vector2, { Vector2Like, copyVec2 } from './vector2';
 import entityConfigurable from './configurable/entity-configurable';
 import { between, ceilToNearest, distance, floorToNearest, isBetween, modulo, normalizeAngle, notBetween, pointDistance, roundFloat, roundToNearest } from './util/math';
 import { Registry } from './registry/registry';
+import WorldUpdatesCollector from './multiplayer/world-updates-collector';
+import WorldUpdatesReceiver from './multiplayer/world-updates-receiver';
 
 export {
     Trait,
@@ -142,6 +144,8 @@ export {
     RoomUpdate,
     WorldUpdate,
     Player,
+    WorldUpdatesCollector,
+    WorldUpdatesReceiver,
 
     // Perf
     CyclePerformanceTracker,

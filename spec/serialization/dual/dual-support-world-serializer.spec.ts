@@ -2,12 +2,12 @@ import { Entity, EntitySerializer, SerializationOptions, SerializationType, Worl
 import DualSupportWorldSerializer from "../../../src/serialization/dual/dual-support-world-serializer";
 import { EncoderSequence } from "../../../src/serialization/encoder";
 import { PackedWorldSerializer } from "../../../src/serialization/packed/packed-world-serializer";
-import { VerboseWorldSerializer } from "../../../src/serialization/verbose/verbose-world-serializer";
+import { VerboseSerializedWorld, VerboseWorldSerializer } from "../../../src/serialization/verbose/verbose-world-serializer";
 
 describe('the dual support world serializer', () => {
-    let entitySerializer: EntitySerializer<EncoderSequence>;
+    let entitySerializer: EntitySerializer<any>;
     let worldSetup: (world: World) => void;
-    
+
     let serializationOptions: SerializationOptions;
     let packed: PackedWorldSerializer;
     let verbose: VerboseWorldSerializer;
@@ -22,8 +22,12 @@ describe('the dual support world serializer', () => {
         worldSetup = jasmine.createSpy();
 
         serializationOptions = new SerializationOptions();
-        verbose = new VerboseWorldSerializer(entitySerializer, worldSetup);
-        packed = new PackedWorldSerializer(entitySerializer, worldSetup);
+        verbose = new VerboseWorldSerializer(entitySerializer);
+        packed = new PackedWorldSerializer(entitySerializer);
+
+        verbose.worldSetup = worldSetup;
+        packed.worldSetup = worldSetup;
+
         serializer = new DualSupportWorldSerializer(verbose, packed);
     });
 
@@ -33,7 +37,7 @@ describe('the dual support world serializer', () => {
         world.entities.add(entity);
 
         serializationOptions.type = SerializationType.PACKED;
-        const serialized = serializer.serialize(world, serializationOptions);
+        const serialized = serializer.serialize(world, serializationOptions) as EncoderSequence;
 
         expect(serialized).toEqual(packed.serialize(world, serializationOptions));
     });
@@ -44,7 +48,7 @@ describe('the dual support world serializer', () => {
         world.entities.add(entity);
 
         serializationOptions.type = SerializationType.VERBOSE;
-        const serialized = serializer.serialize(world, serializationOptions);
+        const serialized = serializer.serialize(world, serializationOptions) as VerboseSerializedWorld;
 
         expect(serialized).toEqual(verbose.serialize(world, serializationOptions));
     });

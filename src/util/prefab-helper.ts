@@ -13,7 +13,7 @@ export interface SerializedPrefab {
 export default class PrefabHelper {
 
     constructor(private readonly app: GameModelApp) {
-        
+
     }
 
     makePrefab(world: World, entities: Entity[]): SerializedPrefab {
@@ -23,21 +23,21 @@ export default class PrefabHelper {
         options.includeEntityAges = false;
         options.shouldSerializeEntity = (entity) => ids.has(entity.id);
 
-        return this.app.serializers.world.serialize(world, options);
+        return this.app.serializers.verbose.world.serialize(world, options);
     }
 
     instantiatePrefab(
-        prefab: SerializedPrefab, 
+        prefab: SerializedPrefab,
         world: World,
         atPosition: Vector2 | null,
         precision: number,
     ): Entity[] {
-        const prefabWorld = this.app.serializers.world.deserialize(prefab, new SerializationOptions());
+        const prefabWorld = this.app.serializers.verbose.world.deserialize(prefab, new SerializationOptions());
 
         const entities = duplicateEntities(
             prefabWorld.entities.items(),
             world,
-            this.app.serializers.entity,
+            this.app.serializers.verbose.entity,
             this.app.traitRegistry,
         );
 

@@ -1,54 +1,57 @@
 import Entity from "../../entity";
 import Trait from "../../trait";
 import SerializationOptions from "../serialization-options";
-import { EntitySerializer, TraitSerializer, AnySerialized } from "../serializer";
+import { CompositeSerializer, EntitySerializer, TraitSerializer } from "../serializer";
+import VerboseCompositeSerializer from "./verbose-composite-serializer";
 
-interface Serialized {
-    id?: string;
-    age?: number;
-    x?: number;
-    y?: number;
-    z?: number;
-    angle?: number;
-    traits: any[];
+export interface VerboseSerializedEntity {
+    id: string;
+    age: number;
+    x: number;
+    y: number;
+    z: number;
+    angle: number;
+    traits: VerboseSerializedEntityTraitItem[];
 }
 
-export default class VerboseEntitySerializer implements EntitySerializer<Serialized> {
+interface VerboseSerializedEntityTraitItem {
+    data: any;
+    enabled: boolean;
+}
+
+export default class VerboseEntitySerializer<VerboseSerializedTrait> implements EntitySerializer<VerboseSerializedEntity> {
     constructor(
-        private readonly traitsSerializer: TraitSerializer<Trait, AnySerialized>
+        private readonly traitsSerializer: VerboseCompositeSerializer<Trait, VerboseSerializedTrait>
     ) {
-        
+
     }
 
-    serialize(value: Entity, options: SerializationOptions): Serialized {
+    serialize(value: Entity, options: SerializationOptions): VerboseSerializedEntity {
         const serializedTraits = value.traits
-            .map(trait => {       
+            .map(trait => {
                 return {
                     'data': this.traitsSerializer.serialize(trait, options),
                     'enabled': trait.enabled,
                 };
             });
 
-        const serialized: Serialized = {
+        return {
             'id': value.id,
             'traits': serializedTraits,
+            'x': value.x,
+            'y': value.y,
+            'z': value.z,
+            'angle': value.angle,
+            'age': options.includeEntityAges ? value.age : 0,
         };
-
-        serialized.x = value.x;
-        serialized.y = value.y;
-        serialized.z = value.z;
-        serialized.angle = value.angle;
-        serialized.age = options.includeEntityAges ? value.age : 0;
-
-        return serialized;
     }
 
-    deserialize(serialized: Serialized, options: SerializationOptions): Entity {
+    deserialize(serialized: VerboseSerializedEntity, options: SerializationOptions): Entity {
         const entity = new Entity(serialized.id, serialized.traits.map((serializedTrait) => {
             // If the trait is serialized using the old serialization format, convert it
             const isOldFormat = serializedTrait.hasOwnProperty('key');
             if (isOldFormat) {
-                serializedTrait = {'data': serializedTrait};
+                serializedTrait = {'data': serializedTrait} as any;
             }
 
             const deserialized = this.traitsSerializer.deserialize(serializedTrait.data, options);

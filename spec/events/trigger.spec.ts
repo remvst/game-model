@@ -38,8 +38,8 @@ describe('move to event', () => {
         event.triggererId = 'triggererid'
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.worldEvent.deserialize(serialized, options) as unknown as Trigger;
+        const serialized = app.serializers.packed.worldEvent.serialize(event, options);
+        const deserialized = app.serializers.packed.worldEvent.deserialize(serialized, options) as unknown as Trigger;
 
         expect(deserialized.entityId).toBe(event.entityId);
         expect(deserialized.triggererId).toBe(event.triggererId);

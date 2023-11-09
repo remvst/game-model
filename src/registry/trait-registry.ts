@@ -47,7 +47,7 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
             return new DualSupportTraitSerializer<TraitType>(
                 new VerboseAutomaticTraitSerializer(entry),
                 new PackedAutomaticTraitSerializer(entry),
-            )
+            );
         });
 
         this.configurable((trait: TraitType) => {

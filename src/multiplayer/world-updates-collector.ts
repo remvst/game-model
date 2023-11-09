@@ -47,27 +47,27 @@ export default class WorldUpdatesCollector {
     }
 
     private onWorldEvent(event: WorldEvent) {
-        switch (this.world.authority.worldEventAuthority(event)) {    
+        switch (this.world.authority.worldEventAuthority(event)) {
         case AuthorityType.NONE:
         case AuthorityType.LOCAL:
             return;
         case AuthorityType.FULL:
         case AuthorityType.FORWARD:
-            const serialized = this.app.serializers.worldEvent.serialize(event as any, this.serializationOptions);
+            const serialized = this.app.serializers.packed.worldEvent.serialize(event as any, this.serializationOptions);
             this.queuedEvents.push(serialized);
             break;
         }
     }
 
     private onEntityAdded(entity: Entity) {
-        switch (this.world.authority.entityAuthority(entity)) {    
+        switch (this.world.authority.entityAuthority(entity)) {
         case AuthorityType.NONE:
         case AuthorityType.LOCAL:
             return;
         case AuthorityType.FULL:
         case AuthorityType.FORWARD:
             this.watchedEntities.add(entity.id);
-            this.entityInitializations.set(entity.id, this.app.serializers.entity.serialize(entity, this.serializationOptions));
+            this.entityInitializations.set(entity.id, this.app.serializers.packed.entity.serialize(entity, this.serializationOptions));
             break;
         }
     }
@@ -102,9 +102,9 @@ export default class WorldUpdatesCollector {
             }
 
             this.entityInitializations.delete(entityId);
-            
+
             try {
-                const serialized = this.app.serializers.entity.serialize(entity, this.serializationOptions)
+                const serialized = this.app.serializers.packed.entity.serialize(entity, this.serializationOptions)
                 entities.push(serialized);
                 this.lastGeneratedUpdates.set(entityId, entity.age);
             } catch (e) {

@@ -50,7 +50,7 @@ export default class EventOnRemovalTrait extends Trait {
     }
 
     static registryEntry(app: GameModelApp): RegistryEntry<EventOnRemovalTrait> {
-        const { worldEvent } = app.serializers;
+        const { worldEvent } = app.serializers.verbose;
         return {
             key: EventOnRemovalTrait.key,
             category: 'scripting',

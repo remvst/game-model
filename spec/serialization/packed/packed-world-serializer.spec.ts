@@ -14,10 +14,7 @@ describe('packed world serializer', () => {
             deserialize: jasmine.createSpy().and.callFake(() => new Entity(undefined, [])),
         };
 
-        serializer = new PackedWorldSerializer(
-            entitySerializer,
-            () => {},
-        );
+        serializer = new PackedWorldSerializer(entitySerializer);
 
         options = new SerializationOptions();
         options.type = SerializationType.PACKED;

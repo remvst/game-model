@@ -1,6 +1,6 @@
 import World from "../../world";
 import { ArrayEncoder, ArrayDecoder, EncoderSequence } from "../encoder";
-import { WorldSetup } from "../json-serializers";
+import { WorldSetup } from "../all-serializers";
 import SerializationOptions from "../serialization-options";
 import { EntitySerializer, WorldSerializer } from "../serializer";
 
@@ -9,10 +9,9 @@ export class PackedWorldSerializer implements WorldSerializer<EncoderSequence> {
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
 
-    constructor(
-        private readonly entitySerializer: EntitySerializer<EncoderSequence>,
-        public worldSetup: WorldSetup,
-    ) {
+    worldSetup: WorldSetup = () => {};
+
+    constructor(private readonly entitySerializer: EntitySerializer<EncoderSequence>) {
 
     }
 

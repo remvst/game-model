@@ -1,12 +1,16 @@
 import World from "../../world";
-import { WorldSetup } from "../json-serializers";
+import { EncoderSequence } from "../encoder";
+import { WorldSetup } from "../all-serializers";
 import SerializationOptions, { SerializationType } from "../serialization-options";
 import { WorldSerializer } from "../serializer";
+import { VerboseSerializedWorld } from "../verbose/verbose-world-serializer";
 
-export default class DualSupportWorldSerializer implements WorldSerializer<any> {
+type AnySerializedWorld = VerboseSerializedWorld | EncoderSequence;
+
+export default class DualSupportWorldSerializer implements WorldSerializer<AnySerializedWorld> {
     constructor(
-        private readonly verbose: WorldSerializer<any>,
-        private readonly packed: WorldSerializer<any>,
+        private readonly verbose: WorldSerializer<VerboseSerializedWorld>,
+        private readonly packed: WorldSerializer<EncoderSequence>,
     ) {
 
     }
@@ -20,7 +24,7 @@ export default class DualSupportWorldSerializer implements WorldSerializer<any> 
         this.packed.worldSetup = worldSetup;
     }
 
-    serialize(world: World, options: SerializationOptions) {
+    serialize(world: World, options: SerializationOptions): AnySerializedWorld {
         if (options.type === SerializationType.PACKED) {
             return this.packed.serialize(world, options);
         } else {
@@ -28,11 +32,11 @@ export default class DualSupportWorldSerializer implements WorldSerializer<any> 
         }
     }
 
-    deserialize(serialized: any, options: SerializationOptions): World {
+    deserialize(serialized: AnySerializedWorld, options: SerializationOptions): World {
         if (options.type === SerializationType.PACKED) {
-            return this.packed.deserialize(serialized, options);
+            return this.packed.deserialize(serialized as EncoderSequence, options);
         } else {
-            return this.verbose.deserialize(serialized, options);
+            return this.verbose.deserialize(serialized as VerboseSerializedWorld, options);
         }
     }
 }

@@ -1,8 +1,8 @@
-import { WorldSetup } from './../../src/serialization/json-serializers';
-import { Trait, JsonSerializers, jsonSerializers, TraitSerializer, Entity, World, SerializationOptions, SerializationType } from '../../src';
+import { Trait, allSerializers, AllSerializers, TraitSerializer, Entity, World, SerializationOptions, SerializationType } from '../../src';
+import { WorldSetup } from '../../src/serialization/all-serializers';
 
-describe('JSON serializers', () => {
-    
+describe('allSerializers', () => {
+
     class TestTrait1 extends Trait {
         static readonly key: string = 'testtrait1';
         readonly key: string = TestTrait1.key;
@@ -25,34 +25,37 @@ describe('JSON serializers', () => {
     }
 
     let serializationOptions: SerializationOptions;
-    let serializers: JsonSerializers;
+    let serializers: AllSerializers;
     let worldSetup: WorldSetup;
 
     beforeEach(() => {
         worldSetup = jasmine.createSpy();
-        serializers = jsonSerializers({ worldSetup });
+        serializers = allSerializers();
         serializationOptions = new SerializationOptions();
 
-        serializers.trait
+        serializers.packed.world.worldSetup = worldSetup;
+        serializers.verbose.world.worldSetup = worldSetup;
+
+        serializers.verbose.trait
             .add(TestTrait1.key, new TestTrait1Serializer());
     });
 
     it('can serialize an empty world', () => {
         const world = new World();
-        const serialized = serializers.world.serialize(world, serializationOptions);
-        const deserialized = serializers.world.deserialize(serialized, serializationOptions);
+        const serialized = serializers.verbose.world.serialize(world, serializationOptions);
+        const deserialized = serializers.verbose.world.deserialize(serialized, serializationOptions);
 
         expect(deserialized.entities.size).toBe(0);
     });
 
     it('can serialize a world with an entity', () => {
         const entity = new Entity('ent', []);
-        
+
         const world = new World();
         world.entities.add(entity);
 
-        const serialized = serializers.world.serialize(world, serializationOptions);
-        const deserialized = serializers.world.deserialize(serialized, serializationOptions);
+        const serialized = serializers.verbose.world.serialize(world, serializationOptions);
+        const deserialized = serializers.verbose.world.deserialize(serialized, serializationOptions);
 
         expect(deserialized.entities.size).toBe(1);
         expect(Array.from(deserialized.entities.items())[0].id).toBe(entity.id);
@@ -64,14 +67,14 @@ describe('JSON serializers', () => {
             new TestTrait1('myprop'),
         ]);
         entity.traitOfType(TestTrait1)!.enabled = false;
-        
+
         const world = new World();
         world.entities.add(entity);
 
         serializationOptions.type = SerializationType.VERBOSE;
 
-        const serialized = serializers.world.serialize(world, serializationOptions);
-        const deserialized = serializers.world.deserialize(serialized, serializationOptions);
+        const serialized = serializers.verbose.world.serialize(world, serializationOptions);
+        const deserialized = serializers.verbose.world.deserialize(serialized, serializationOptions);
 
         expect(deserialized.entities.size).toBe(1);
 
@@ -90,14 +93,14 @@ describe('JSON serializers', () => {
             new TestTrait1('myprop'),
         ]);
         entity.traitOfType(TestTrait1)!.enabled = false;
-        
+
         const world = new World();
         world.entities.add(entity);
 
         serializationOptions.type = SerializationType.PACKED;
 
-        const serialized = serializers.world.serialize(world, serializationOptions);
-        const deserialized = serializers.world.deserialize(serialized, serializationOptions);
+        const serialized = serializers.verbose.world.serialize(world, serializationOptions);
+        const deserialized = serializers.verbose.world.deserialize(serialized, serializationOptions);
 
         expect(deserialized.entities.size).toBe(1);
 
@@ -116,12 +119,12 @@ describe('JSON serializers', () => {
             new TestTrait1('myprop'),
             new TestTrait2(),
         ]);
-        
+
         const world = new World();
         world.entities.add(entity);
 
-        const serialized = serializers.world.serialize(world, serializationOptions);
-        const deserialized = serializers.world.deserialize(serialized, serializationOptions);
+        const serialized = serializers.verbose.world.serialize(world, serializationOptions);
+        const deserialized = serializers.verbose.world.deserialize(serialized, serializationOptions);
 
         expect(deserialized.entities.size).toBe(0);
     });

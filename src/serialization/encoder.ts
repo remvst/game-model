@@ -1,4 +1,5 @@
-export type EncoderSequence = any[];
+export type EncoderSequenceItem = string | number | EncoderSequence;
+export type EncoderSequence = EncoderSequenceItem[];
 
 export interface Encoder {
     reset(): this;
@@ -66,18 +67,18 @@ export class ArrayDecoder implements Decoder {
     }
 
     nextString(): string {
-        return this.items[this.currentIndex++];
+        return this.items[this.currentIndex++] as string;
     }
 
     nextNumber(): number {
-        return this.items[this.currentIndex++];
+        return this.items[this.currentIndex++] as number;
     }
 
     nextBool(): boolean {
         return !!this.items[this.currentIndex++];
     }
 
-    nextSequence(): EncoderSequence[] {
-        return this.items[this.currentIndex++];
+    nextSequence(): EncoderSequence {
+        return this.items[this.currentIndex++] as EncoderSequence;
     }
 }

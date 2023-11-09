@@ -39,7 +39,7 @@ export default class ScriptTrait extends Trait {
     }
 
     static registryEntry(): RegistryEntry<ScriptTrait> {
-        const stepType = PropertyType.composite(new Map<string, PropertyConstraints<any>>([
+        const stepType = PropertyType.composite(new Map<string, PropertyConstraints<string | number>>([
             ['triggerEntityId', PropertyType.id()],
             ['delay', PropertyType.num()],
         ]));

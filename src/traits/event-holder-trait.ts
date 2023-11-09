@@ -129,14 +129,14 @@ export class EventHolderSerializer implements TraitSerializer<EventHolderTrait, 
 
     serialize(trait: EventHolderTrait, options: SerializationOptions): Serialized {
         return {
-            'event': this.app.serializers.worldEvent.serialize(trait.event, options),
+            'event': this.app.serializers.verbose.worldEvent.serialize(trait.event, options),
             'delay': trait.delay,
             'triggerCount': trait.triggerCount,
         };
     }
 
     deserialize(serialized: Serialized, options: SerializationOptions): EventHolderTrait {
-        const event = this.app.serializers.worldEvent.deserialize(serialized.event, options);
+        const event = this.app.serializers.verbose.worldEvent.deserialize(serialized.event, options);
         return new EventHolderTrait(
             this.app,
             event as WorldEvent & KeyProvider,

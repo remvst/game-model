@@ -1,12 +1,13 @@
-import { Entity, EntitySerializer, SerializationOptions, TraitSerializer } from "../../../src";
+import { Entity, EntitySerializer, SerializationOptions } from "../../../src";
+import VerboseCompositeSerializer from "../../../src/serialization/verbose/verbose-composite-serializer";
 import VerboseEntitySerializer from "../../../src/serialization/verbose/verbose-entity-serializer";
 
 describe('the verbose entity serializer', () => {
-    let traitSerializer: TraitSerializer<any, any>;
+    let traitSerializer: VerboseCompositeSerializer<any, any>;
     let serializer: EntitySerializer<any>;
 
     beforeEach(() => {
-        traitSerializer = {} as TraitSerializer<any, any>;
+        traitSerializer = {} as VerboseCompositeSerializer<any, any>;
 
         serializer = new VerboseEntitySerializer(traitSerializer);
     });

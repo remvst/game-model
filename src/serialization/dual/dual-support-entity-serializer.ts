@@ -1,28 +1,31 @@
-import { EntitySerializer } from '../serializer';
+import { AnySerialized, EntitySerializer } from '../serializer';
 import SerializationOptions, { SerializationType } from '../serialization-options';
 import Entity from '../../entity';
 import { EncoderSequence } from '../encoder';
+import { VerboseSerializedEntity } from '../verbose/verbose-entity-serializer';
 
-export default class DualSupportEntitySerializer implements EntitySerializer<any> {
+export type AnySerializedEntity = VerboseSerializedEntity | EncoderSequence;
+
+export default class DualSupportEntitySerializer implements EntitySerializer<AnySerializedEntity> {
 
     constructor(
-        private readonly verbose: EntitySerializer<any>,
-        private readonly packed: EntitySerializer<EncoderSequence>,
+        readonly verbose: EntitySerializer<AnySerialized>,
+        readonly packed: EntitySerializer<EncoderSequence>,
     ) {
-        
+
     }
 
-    serialize(entity: Entity, options: SerializationOptions): any {
+    serialize(entity: Entity, options: SerializationOptions): AnySerializedEntity {
         if (options.type === SerializationType.PACKED) {
             return this.packed.serialize(entity, options);
         } else {
-            return this.verbose.serialize(entity, options);
+            return this.verbose.serialize(entity, options) as VerboseSerializedEntity;
         }
     }
 
-    deserialize(serialized: any, options: SerializationOptions): Entity {
+    deserialize(serialized: AnySerializedEntity, options: SerializationOptions): Entity {
         if (options.type === SerializationType.PACKED) {
-            return this.packed.deserialize(serialized, options);
+            return this.packed.deserialize(serialized as EncoderSequence, options);
         } else {
             return this.verbose.deserialize(serialized, options);
         }

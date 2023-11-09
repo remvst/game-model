@@ -38,8 +38,8 @@ describe('set property event', () => {
         expect(event.value).toBe(123);
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.worldEvent.deserialize(serialized, options) as SetProperty;
+        const serialized = app.serializers.verbose.worldEvent.serialize(event, options);
+        const deserialized = app.serializers.verbose.worldEvent.deserialize(serialized, options) as SetProperty;
 
         expect(deserialized.entityId).toBe(event.entityId);
         expect(deserialized.property).toBe(event.property);

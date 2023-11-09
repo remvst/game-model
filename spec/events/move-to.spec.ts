@@ -50,8 +50,8 @@ describe('move to event', () => {
         event.targetEntityId = 'targ';
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.worldEvent.deserialize(serialized, options) as unknown as MoveTo;
+        const serialized = app.serializers.verbose.worldEvent.serialize(event, options);
+        const deserialized = app.serializers.verbose.worldEvent.deserialize(serialized, options) as unknown as MoveTo;
 
         expect(deserialized.entityId).toBe(event.entityId);
         expect(deserialized.duration).toBe(event.duration);

@@ -16,7 +16,7 @@ export default class WorldUpdatesReceiver {
     }
 
     applyUpdate(
-        update: WorldUpdate<any, any>, 
+        update: WorldUpdate<any, any>,
         fromPlayerId: string,
         authority: Authority,
     ) {
@@ -25,7 +25,7 @@ export default class WorldUpdatesReceiver {
         this.previousEntityIds.set(fromPlayerId, newPreviousEntityIds);
 
         for (const serializedEntity of update.entities) {
-            const deserialized = this.app.serializers.entity.deserialize(serializedEntity, this.serializationOptions);
+            const deserialized = this.app.serializers.packed.entity.deserialize(serializedEntity, this.serializationOptions);
             missingIds.delete(deserialized.id);
 
             if (this.world.authority.determinesRemoval(deserialized, fromPlayerId)) {
@@ -45,7 +45,7 @@ export default class WorldUpdatesReceiver {
                     existing.copy(deserialized, this.app);
                 }
                 break;
-                
+
             case AuthorityType.LOCAL:
             case AuthorityType.FULL:
                 continue;
@@ -62,7 +62,7 @@ export default class WorldUpdatesReceiver {
         }
 
         for (const serializedWorldEvent of update.worldEvents) {
-            const deserialized = this.app.serializers.worldEvent.deserialize(serializedWorldEvent, this.serializationOptions);
+            const deserialized = this.app.serializers.packed.worldEvent.deserialize(serializedWorldEvent, this.serializationOptions);
 
             switch (this.world.authority.worldEventAuthority(deserialized)) {
             case AuthorityType.NONE:
@@ -70,7 +70,7 @@ export default class WorldUpdatesReceiver {
             case AuthorityType.FORWARD:
                 this.world.addEvent(deserialized, authority);
                 break;
-                
+
             case AuthorityType.FULL:
                 continue;
             }

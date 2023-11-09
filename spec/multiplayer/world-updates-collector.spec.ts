@@ -1,4 +1,4 @@
-import { Authority, AuthorityType, Entity, GameModelApp, LocalAuthority, Remove, SerializationOptions, SerializationType, World } from '../../src';
+import { Authority, AuthorityType, Entity, GameModelApp, LocalAuthority, Remove, SerializationOptions, World } from '../../src';
 import WorldUpdatesCollector from '../../src/multiplayer/world-updates-collector';
 
 describe('a helper', () => {
@@ -40,7 +40,7 @@ describe('a helper', () => {
         const update = helper.generateUpdate();
         expect(update).toEqual({
             'entities': [],
-            'worldEvents': [app.serializers.worldEvent.serialize(event, serializationOptions)],
+            'worldEvents': [app.serializers.packed.worldEvent.serialize(event, serializationOptions)],
             'shortEntities': [],
         });
     });
@@ -80,7 +80,7 @@ describe('a helper', () => {
 
         const update = helper.generateUpdate();
         expect(update).toEqual({
-            'entities': [app.serializers.entity.serialize(localEntity, serializationOptions)],
+            'entities': [app.serializers.packed.entity.serialize(localEntity, serializationOptions)],
             'worldEvents': [],
             'shortEntities': [],
         });
@@ -98,22 +98,5 @@ describe('a helper', () => {
             'worldEvents': [],
             'shortEntities': [],
         });
-    });
-
-    it('will respect the serialization options', () => {
-        spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.FULL)
-
-        for (let i = 0 ; i < 20 ; i++) {
-            const localEntity = new Entity('myentity' + i, []);
-            world.entities.add(localEntity);
-        }
-
-        serializationOptions.type = SerializationType.PACKED;
-        const updatePacked = helper.generateUpdate();
-
-        serializationOptions.type = SerializationType.VERBOSE;
-        const updateVerbose = helper.generateUpdate();
-
-        expect(JSON.stringify(updatePacked).length).toBeLessThan(JSON.stringify(updateVerbose).length)
     });
 });

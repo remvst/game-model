@@ -60,6 +60,7 @@ import { between, ceilToNearest, distance, floorToNearest, isBetween, modulo, no
 import { Registry } from './registry/registry';
 import WorldUpdatesCollector from './multiplayer/world-updates-collector';
 import WorldUpdatesReceiver from './multiplayer/world-updates-receiver';
+import { AllSerializers, WorldSetup, allSerializers } from './serialization/all-serializers';
 
 export {
     Trait,
@@ -108,8 +109,8 @@ export {
     WorldSerializer,
     WorldEventSerializer,
     AnySerialized,
-    JsonSerializers,
-    jsonSerializers,
+    allSerializers,
+    AllSerializers,
     Encoder,
     Decoder,
     EncoderSequence,
@@ -118,6 +119,7 @@ export {
     PackedTraitSerializer,
     SerializationType,
     SerializationOptions,
+    WorldSetup,
 
     // Registries
     TraitRegistry,

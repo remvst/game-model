@@ -1,23 +1,20 @@
-import { PackedTraitSerializer } from "../..";
 import Entity from "../../entity";
 import { PropertyConstraints, ListConstraints, CompositeConstraints, JsonConstraints, BooleanConstraints, NumberConstraints, StringConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../../properties/property-constraints";
 import { RegistryEntry } from "../../registry/trait-registry";
 import Trait from "../../trait";
 import { TraitSerializer } from "../serializer";
 
-interface Serialized {
+export interface VerboseSerializedTrait {
     [key: string]: any;
 }
 
-export default class VerboseAutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, Serialized> {
-
-    private readonly packed = new PackedTraitSerializer(this.registryEntry);
+export default class VerboseAutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, VerboseSerializedTrait> {
 
     constructor(private readonly registryEntry: RegistryEntry<T>) {
 
     }
 
-    serialize(trait: Trait): Serialized {
+    serialize(trait: Trait): VerboseSerializedTrait {
         // Bind to a temporary entity so we can read the properties
         const oldEntity = trait.entity;
         if (!oldEntity) {
@@ -28,7 +25,7 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
             }
         }
 
-        const serialized: Serialized = {};
+        const serialized: VerboseSerializedTrait = {};
         for (const property of this.registryEntry.properties!) {
             const serializedProperty = this.serializePropertyValue(property.type, property.get(trait.entity));
             serialized[property.localIdentifier!] = serializedProperty;
@@ -36,11 +33,7 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
         return serialized;
     }
 
-    deserialize(serialized: Serialized): T {
-        if (typeof serialized === 'string') {
-            return this.packed.deserialize(serialized);
-        }
-
+    deserialize(serialized: VerboseSerializedTrait): T {
         const trait = this.registryEntry.newTrait!();
 
         // Bind to a temporary entity so we can write the properties

@@ -32,7 +32,7 @@ describe('duplicateEntities', () => {
         const duplicated = duplicateEntities(
             [entity1],
             world,
-            app.serializers.entity,
+            app.serializers.packed.entity,
             app.traitRegistry,
         );
         expect(duplicated.length).toBe(1);
@@ -48,7 +48,7 @@ describe('duplicateEntities', () => {
         const [copy] = duplicateEntities(
             [entity1],
             world,
-            app.serializers.entity,
+            app.serializers.packed.entity,
             app.traitRegistry,
         );
         expect(copy.id).not.toBe(entity1.id);
@@ -61,7 +61,7 @@ describe('duplicateEntities', () => {
         const [copy] = duplicateEntities(
             [entity1],
             world,
-            app.serializers.entity,
+            app.serializers.packed.entity,
             app.traitRegistry,
         );
         expect(world.entity(copy.id)).toBeFalsy();
@@ -79,7 +79,7 @@ describe('duplicateEntities', () => {
         const duplicated = duplicateEntities(
             [entity1, entity2],
             world,
-            app.serializers.entity,
+            app.serializers.packed.entity,
             app.traitRegistry,
         );
         expect(duplicated.length).toBe(2);

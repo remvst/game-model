@@ -1,14 +1,15 @@
 import Entity from '../entity';
 import World from '../world';
-import { TraitSerializer, WorldEventSerializer } from '../serialization/serializer';
+import { WorldEventSerializer } from '../serialization/serializer';
 import { GameModelApp, KeyProvider, PropertyConstraints, WorldEvent } from '..';
 import { CompositeConfigurable, Configurable } from '@remvst/configurable';
 import { AnySerialized } from '../serialization/serializer';
-import { EntityPropertyType, Property, WorldEventProperty } from '../properties/properties';
+import { WorldEventProperty } from '../properties/properties';
 import { propertyValueConfigurable } from '../configurable/property-value-configurable';
-import AutomaticWorldEventSerializer from '../serialization/automatic-world-event-serializer';
 import { Registry } from './registry';
-import { TraitRegistryEntry } from './trait-registry';
+import DualSupportWorldEventSerializer from '../serialization/dual/dual-support-world-event-serializer';
+import VerboseAutomaticWorldEventSerializer from '../serialization/verbose/verbose-automatic-world-event-serializer';
+import PackedAutomaticWorldEventSerializer from '../serialization/packed/packed-automatic-world-event-serializer';
 
 export interface AutoWorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly eventType: (new () => EventType) & KeyProvider;
@@ -44,7 +45,10 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
     constructor() {
         this.serializer((app: GameModelApp) => {
             const entry = app.worldEventRegistry.entry(this._key);
-            return new AutomaticWorldEventSerializer(entry)
+            return new DualSupportWorldEventSerializer<EventType>(
+                new VerboseAutomaticWorldEventSerializer(entry),
+                new PackedAutomaticWorldEventSerializer(entry),
+            );
         });
 
         this.configurable((app: GameModelApp, event: EventType, world: World) => {
@@ -143,21 +147,25 @@ export function worldEventRegistryEntry<EventType extends WorldEvent & KeyProvid
 export default class WorldEventRegistry implements Registry<WorldEventRegistryEntry<any>> {
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();
 
-    add<T extends WorldEvent>(entry: AnyWorldEventRegistryEntry<T>) {
+    add<T extends WorldEvent & KeyProvider>(entry: AnyWorldEventRegistryEntry<T>) {
         const autoEntry = entry as AutoWorldEventRegistryEntry<T>;
         const manualEntry = entry as WorldEventRegistryEntry<T>;
 
         if (autoEntry.eventType) {
-            return this.add({
-                key: autoEntry.eventType.key,
-                category: autoEntry.category,
-                newEvent: () => new autoEntry.eventType(),
-                serializer: (app) => {
-                    const entry = app.worldEventRegistry.entry(autoEntry.eventType.key);
-                    return new AutomaticWorldEventSerializer(entry);
-                },
-                properties: autoEntry.properties,
-            });
+            return this.add(worldEventRegistryEntry<T>(builder => {
+                builder.eventClass(autoEntry.eventType);
+                builder.category(autoEntry.category);
+                builder.readjust((event, world, entity, triggererID) => autoEntry.readjust(event, world, entity, triggererID));
+
+                for (const property of autoEntry.properties || []) {
+                    builder.property(
+                        property.localIdentifier,
+                        property.type,
+                        (event) => property.get(event),
+                        (event, value) => property.set(event, value),
+                    );
+                }
+            }));
         }
 
         if (this.entries.has(manualEntry.key)) {

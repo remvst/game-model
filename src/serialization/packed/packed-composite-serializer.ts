@@ -17,14 +17,10 @@ export default class PackedCompositeSerializer<ObjectType extends KeyProvider> i
 
     serialize(value: ObjectType, options: SerializationOptions): EncoderSequence {
         const serializer = this.serializers.get(value.key);
-        if (!serializer) {
-            throw new Error(`Cannot serialize item with key ${value.key}`);
-        }
-
+        if (!serializer) throw new Error(`Cannot serialize item with key ${value.key}`);
         this.encoder.reset();
         this.encoder.appendString(value.key);
         this.encoder.appendSequence(serializer.serialize(value, options));
-
         return this.encoder.getResult();
     }
 
@@ -34,10 +30,7 @@ export default class PackedCompositeSerializer<ObjectType extends KeyProvider> i
         const key = this.decoder.nextString();
 
         const serializer = this.serializers.get(key);
-        if (!serializer) {
-            throw new Error(`Cannot deserialize item with key ${key}`);
-        }
-
+        if (!serializer) throw new Error(`Cannot deserialize item with key ${key}`);
         return serializer.deserialize(this.decoder.nextSequence(), options);
     }
 }

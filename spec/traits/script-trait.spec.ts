@@ -20,8 +20,8 @@ describe('script trait', () => {
         const entity = new Entity(undefined, [trait]);
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.entity.serialize(entity, options);
-        const deserialized = app.serializers.entity.deserialize(serialized, options);
+        const serialized = app.serializers.verbose.entity.serialize(entity, options);
+        const deserialized = app.serializers.verbose.entity.deserialize(serialized, options);
 
         expect(deserialized.id).toBe(entity.id);
         expect(deserialized.age).toBe(entity.age);

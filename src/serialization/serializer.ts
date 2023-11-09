@@ -2,7 +2,7 @@ import Entity from "../entity";
 import { WorldEvent } from "../events/world-event";
 import Trait from "../trait";
 import World from "../world";
-import { WorldSetup } from "./json-serializers";
+import { WorldSetup } from "./all-serializers";
 import SerializationOptions from "./serialization-options";
 
 export interface AnySerialized {
@@ -24,9 +24,9 @@ export interface CompositeSerializer<ObjectType, SerializedType> extends Seriali
     add(key: string, serializer: Serializer<ObjectType, SerializedType>): this;
 }
 
-export interface Serializers {
-    trait: TraitSerializer<Trait, AnySerialized>;
-    entity: EntitySerializer<AnySerialized>;
-    world: WorldSerializer<AnySerialized>;
-    worldEvent: WorldEventSerializer<WorldEvent, AnySerialized>;
+export interface Serializers<SerializedTrait, SerializedEntity, SerializedWorld, SerializedWorldEvent> {
+    trait: CompositeSerializer<Trait, SerializedTrait>;
+    entity: EntitySerializer<SerializedEntity>;
+    world: WorldSerializer<SerializedWorld>;
+    worldEvent: CompositeSerializer<WorldEvent, SerializedWorldEvent>;
 }

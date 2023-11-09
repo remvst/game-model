@@ -1,18 +1,20 @@
 import Trait from "../../trait";
 import { EncoderSequence } from "../encoder";
 import SerializationOptions, { SerializationType } from "../serialization-options";
-import { TraitSerializer } from "../serializer";
+import { AnySerialized, TraitSerializer } from "../serializer";
 
-export default class DualSupportTraitSerializer<T extends Trait> implements TraitSerializer<T, any> {
+type AnySerializedTrait = AnySerialized | EncoderSequence;
+
+export default class DualSupportTraitSerializer<T extends Trait> implements TraitSerializer<T, AnySerializedTrait> {
 
     constructor(
-        private readonly verbose: TraitSerializer<T, any>,
-        private readonly packed: TraitSerializer<T, EncoderSequence>,
+        readonly verbose: TraitSerializer<T, any>,
+        readonly packed: TraitSerializer<T, EncoderSequence>,
     ) {
 
     }
 
-    serialize(trait: T, options: SerializationOptions): any {
+    serialize(trait: T, options: SerializationOptions): AnySerializedTrait {
         if (options.type === SerializationType.PACKED) {
             return this.packed.serialize(trait, options);
         } else {
@@ -20,7 +22,7 @@ export default class DualSupportTraitSerializer<T extends Trait> implements Trai
         }
     }
 
-    deserialize(serialized: any, options: SerializationOptions): T {
+    deserialize(serialized: AnySerializedTrait, options: SerializationOptions): T {
         if (options.type === SerializationType.PACKED) {
             return this.packed.deserialize(serialized as EncoderSequence, options);
         } else {

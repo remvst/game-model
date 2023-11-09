@@ -48,8 +48,8 @@ describe('interpolate property event', () => {
         expect(event.duration).toBe(10);
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.worldEvent.deserialize(serialized, options) as unknown as InterpolateProperty;
+        const serialized = app.serializers.verbose.worldEvent.serialize(event, options);
+        const deserialized = app.serializers.verbose.worldEvent.deserialize(serialized, options) as unknown as InterpolateProperty;
 
         expect(deserialized.entityId).toBe(event.entityId);
         expect(deserialized.duration).toBe(event.duration);

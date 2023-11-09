@@ -24,8 +24,8 @@ describe('remove event', () => {
         const event = new Remove();
         event.entityId = 'ent';
         const options = new SerializationOptions();
-        const serialized = app.serializers.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.worldEvent.deserialize(serialized, options) as Remove;
+        const serialized = app.serializers.packed.worldEvent.serialize(event, options);
+        const deserialized = app.serializers.packed.worldEvent.deserialize(serialized, options) as Remove;
 
         expect(deserialized.entityId).toBe(event.entityId);
     });

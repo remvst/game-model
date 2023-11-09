@@ -1,13 +1,13 @@
-import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, PropertyConstraints, CompositeConstraints } from '../properties/property-constraints';
-import { WorldEventSerializer } from './serializer';
-import { WorldEvent } from '../events/world-event';
-import { WorldEventRegistryEntry } from '../registry/world-event-registry';
+import { WorldEvent } from "../../events/world-event";
+import { PropertyConstraints, ListConstraints, CompositeConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../../properties/property-constraints";
+import { WorldEventRegistryEntry } from "../../registry/world-event-registry";
+import { WorldEventSerializer } from "../serializer";
 
 interface Serialized {
     [key: string]: any;
 }
 
-export default class AutomaticWorldEventSerializer<T extends WorldEvent> implements WorldEventSerializer<T, Serialized> {
+export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent> implements WorldEventSerializer<T, Serialized> {
 
     constructor(private readonly registryEntry: WorldEventRegistryEntry<T>) {
 
@@ -60,7 +60,7 @@ export default class AutomaticWorldEventSerializer<T extends WorldEvent> impleme
 
         throw new Error(`Unknown property type: ${type}`);
     }
-    
+
     private deserializePropertyValue(
         type: PropertyConstraints<any>,
         serializedProperty: any,

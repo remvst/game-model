@@ -10,7 +10,7 @@ export class Player {
 
     latency = 0;
     sentUpdateId = 0;
-    receivedUpdateId = 0;
+    receivedUpdateId = -1;
     acknowledgedUpdateId = 0;
     latencyProbe: {updateId: number, at: number} = null;
 
@@ -22,7 +22,7 @@ export class Player {
 }
 
 export default class Room {
-    
+
     world: World;
 
     readonly players = new Map<string, Player>();
@@ -138,7 +138,7 @@ export default class Room {
         for (const receiver of receivers) {
             if (!receiver) continue;
             if (receiver.id === this.selfId) continue;
-            
+
             this.sendUpdate(this, receiver.id, {
                 updateId,
                 players,

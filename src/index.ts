@@ -18,8 +18,7 @@ import WatchableObjectSet from './collections/watchable-object-set';
 import EntityRemoved from './events/entity-removed';
 import EntityEventProcessed from './events/entity-event-processed';
 import { vector3 } from './vector3';
-import { JsonSerializers, jsonSerializers } from './serialization/json-serializers';
-import TraitRegistry, { AutoRegistryEntry, RegistryEntry, traitRegistryEntry } from './registry/trait-registry';
+import TraitRegistry, { AutoRegistryEntry, RegistryEntry, TraitRegistryEntry, traitRegistryEntry } from './registry/trait-registry';
 import WorldEventRegistry, { AutoWorldEventRegistryEntry, WorldEventRegistryEntry, worldEventRegistryEntry } from './registry/world-event-registry';
 import { CyclePerformanceTracker } from './performance-tracker';
 import PropertyRegistry from './registry/property-registry';
@@ -128,6 +127,7 @@ export {
     AutoRegistryEntry,
     AutoWorldEventRegistryEntry,
     TraitRegistryEntryProvider,
+    TraitRegistryEntry,
     WorldEventRegistryEntryProvider,
     traitRegistryEntry,
     worldEventRegistryEntry,

@@ -110,24 +110,6 @@ describe('a watchable keyed object set', () => {
         expect(spy).not.toHaveBeenCalledWith(obj3);
     });
 
-    it('forwards map', () => {
-        objectSet.add(obj1);
-        objectSet.add(obj2);
-
-        const mapped = objectSet.map(obj => obj.value);
-        expect(mapped).toEqual([2, 3]);
-    });
-
-    it('forwards forEachItemInBucket', () => {
-        objectSet.add(obj1);
-        objectSet.add(obj3);
-
-        const spy = jasmine.createSpy('forEachItemInBucket');
-        objectSet.forEachItemInBucket('bucket1', spy);
-
-        expect(spy).toHaveBeenCalledWith(obj1);
-    });
-
     it('forwards bucketSize', () => {
         expect(objectSet.bucketSize('bucket1')).toBe(0);
         expect(objectSet.bucketSize('bucket2')).toBe(0);

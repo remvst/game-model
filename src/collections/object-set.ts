@@ -1,42 +1,27 @@
-'use strict';
-
 import { BaseObjectSet } from './base-object-set';
 
 export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> {
 
-    private getKey: (item: ObjectType) => string;
-    private getBuckets: ((item: ObjectType) => string[]) | undefined;
-
-    private list: ObjectType[];
-    private objectMap: Map<string, ObjectType>;
-    private bucketMap: Map<string, ObjectType[]>;
+    // private readonly list: ObjectType[] = [];
+    private readonly objectMap = new Map<string, ObjectType>();
+    private readonly bucketMap = new Map<string, ObjectType[]>();
 
     constructor(
-        getKey: (item: ObjectType) => string,
-        getBuckets: ((item: ObjectType) => string[]) | undefined = undefined
+        private readonly getKey: (item: ObjectType) => string,
+        private readonly getBuckets: ((item: ObjectType) => string[]) | undefined = undefined
     ) {
-        this.getKey = getKey;
-        this.getBuckets = getBuckets;
-        this.list = [];
-        this.objectMap = new Map();
-        this.bucketMap = new Map();
     }
 
     get size(): number {
-        return this.list.length;
+        return this.objectMap.size;
     }
 
     items(): Iterable<ObjectType> {
-        return this.list;
+        return this.objectMap.values();
     }
 
     bucketSize(bucketKey: string): number {
-        const bucket = this.bucketMap.get(bucketKey);
-        if (!bucket) {
-            return 0;
-        }
-
-        return bucket.length;
+        return this.bucketMap.get(bucketKey)?.length || 0;
     }
 
     add(object: ObjectType): boolean {
@@ -45,7 +30,6 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
             return false;
         }
 
-        this.list.push(object);
         this.objectMap.set(key, object);
 
         if (this.getBuckets) {
@@ -69,11 +53,6 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
             return null;
         }
 
-        const index = this.list.indexOf(object);
-        if (index >= 0) {
-            this.list.splice(index, 1);
-        }
-
         this.objectMap.delete(key);
 
         if (this.getBuckets) {
@@ -93,31 +72,13 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
         return object;
     }
 
-    forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => (boolean | void)) {
-        for (const item of this.bucket(bucketKey)) {
-            if (fn(item)) {
-                break;
-            }
-        }
-    }
-
-    * bucket(bucketKey: string): Iterable<ObjectType> {
-        const bucket = this.bucketMap.get(bucketKey);
-        if (!bucket) {
-            return;
-        }
-
-        for (let i = 0 ; i < bucket.length ; i++) {
-            yield bucket[i];
-        }
+    bucket(bucketKey: string): Iterable<ObjectType> {
+        return this.bucketMap.get(bucketKey) || [];
     }
 
     removeByKey(key: string): ObjectType | null {
         const object = this.objectMap.get(key);
-        if (!object) {
-            return null;
-        }
-
+        if (!object) return null;
         return this.remove(object);
     }
 
@@ -130,8 +91,8 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
     }
 
     forEach(fn: (item: ObjectType) => (boolean | void)) {
-        for (let i = 0 ; i < this.list.length ; i++) {
-            if (fn(this.list[i])) {
+        for (const value of this.items()) {
+            if (fn(value)) {
                 return true;
             }
         }
@@ -140,6 +101,10 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
     }
 
     map<MappedType>(fn: (item: ObjectType) => MappedType): MappedType[] {
-        return this.list.map(fn);
+        const res: MappedType[] = [];
+        for (const value of this.items()) {
+            res.push(fn(value));
+        }
+        return res;
     }
 };

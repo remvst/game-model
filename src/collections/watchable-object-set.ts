@@ -75,14 +75,6 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
         return this.wrappedSet.forEach(fn);
     }
 
-    map<MappedType>(fn: (item: ObjectType) => MappedType) {
-        return this.wrappedSet.map(fn);
-    }
-
-    forEachItemInBucket(bucketKey: string, fn: (item: ObjectType) => boolean | undefined) {
-        return this.wrappedSet.forEachItemInBucket(bucketKey, fn);
-    }
-
     bucket(bucketKey: string): Iterable<ObjectType> {
         return this.wrappedSet.bucket(bucketKey);
     }

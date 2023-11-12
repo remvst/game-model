@@ -122,43 +122,4 @@ describe('a keyed object set', () => {
         expect(objectSet.bucketSize('bucket1')).toBe(2);
         expect(objectSet.bucketSize('bucket2')).toBe(2);
     });
-
-    it('can run a function on a bucket', () => {
-        objectSet.add(obj1);
-        objectSet.add(obj2);
-        objectSet.add(obj3);
-
-        const bucket1: ObjectType[] = [];
-        const bucket2: ObjectType[] = [];
-        objectSet.forEachItemInBucket('bucket1', obj => { bucket1.push(obj); });
-        objectSet.forEachItemInBucket('bucket2', obj => { bucket2.push(obj); });
-
-        expect(bucket1).toEqual([obj1, obj2]);
-        expect(bucket2).toEqual([obj2, obj3]);
-    });
-
-    it('can run a function on a bucket and stop at the first one that runs true', () => {
-        objectSet.add(obj1);
-        objectSet.add(obj2);
-        objectSet.add(obj3);
-
-        const spy = jasmine.createSpy().and.returnValue(true);
-
-        objectSet.forEachItemInBucket('bucket1', spy);
-
-        expect(spy).toHaveBeenCalledWith(obj1);
-        expect(spy).not.toHaveBeenCalledWith(obj2);
-        expect(spy).not.toHaveBeenCalledWith(obj3);
-    });
-
-    it('can run a function on a bucket that does not exist', () => {
-        objectSet.add(obj1);
-        objectSet.add(obj2);
-        objectSet.add(obj3);
-
-        const fn = jasmine.createSpy();
-        objectSet.forEachItemInBucket('foo', fn);
-
-        expect(fn).not.toHaveBeenCalled();
-    });
 });

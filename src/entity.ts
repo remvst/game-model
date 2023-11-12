@@ -40,25 +40,21 @@ export default class Entity {
     private readonly reusableEventProcessedEvent = new EntityEventProcessed(this);
 
     readonly id: string;
-    readonly traits: ObjectSet<Trait>;
+    readonly traits = new ObjectSet<Trait>(trait => trait.key);
     world: World | null = null;
 
     position = vector3();
     private cycleStartPosition = vector3();
     cycleVelocity = vector3();
 
-    angle: number;
-    age: number;
+    angle: number = 0;
+    age: number = 0;
 
     constructor(
         id: string | undefined,
         traits: Trait[],
     ) {
         this.id = id || v4();
-        this.angle = 0;
-        this.age = 0;
-
-        this.traits = new ObjectSet(trait => trait.key);
 
         for (const trait of traits) {
             this.traits.add(trait);

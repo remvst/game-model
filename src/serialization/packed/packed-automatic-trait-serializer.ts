@@ -5,6 +5,9 @@ import { RegistryEntry } from '../../registry/trait-registry';
 import { TraitSerializer } from '../serializer';
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from '../encoder';
 import SerializationOptions from '../serialization-options';
+import RebindableEntity from '../rebindable-entity';
+
+const REBINDABLE_ENTITY = new RebindableEntity();
 
 export default class PackedTraitSerializer<T extends Trait> implements TraitSerializer<T, EncoderSequence> {
 
@@ -140,14 +143,13 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         const trait = this.registryEntry.newTrait!();
 
         // Bind to a temporary entity so we can write the properties
-        const entity = new Entity(undefined, [trait]);
-        trait.bind(entity);
+        REBINDABLE_ENTITY.setTrait(trait);
 
         this.decoder.setEncoded(serialized);
 
         for (const property of this.registryEntry.properties!) {
             const type = property.type;
-            property.set(entity, this.decode(type));
+            property.set(REBINDABLE_ENTITY, this.decode(type));
         }
         return trait;
     }

@@ -1,5 +1,6 @@
 import Entity from "../../entity";
 import { PropertyConstraints, ListConstraints, CompositeConstraints, JsonConstraints, BooleanConstraints, NumberConstraints, StringConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../../properties/property-constraints";
+import RebindableEntity from "../rebindable-entity";
 import { RegistryEntry } from "../../registry/trait-registry";
 import Trait from "../../trait";
 import { TraitSerializer } from "../serializer";
@@ -7,6 +8,8 @@ import { TraitSerializer } from "../serializer";
 export interface VerboseSerializedTrait {
     [key: string]: any;
 }
+
+const REBINDABLE_ENTITY = new RebindableEntity();
 
 export default class VerboseAutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, VerboseSerializedTrait> {
 
@@ -37,8 +40,7 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
         const trait = this.registryEntry.newTrait!();
 
         // Bind to a temporary entity so we can write the properties
-        const entity = new Entity(undefined, [trait]);
-        trait.bind(entity);
+        REBINDABLE_ENTITY.setTrait(trait);
 
         for (const property of this.registryEntry.properties!) {
             if (!serialized.hasOwnProperty(property.localIdentifier)) {
@@ -46,7 +48,7 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
             }
 
             const propertyValue = this.deserializePropertyValue(property.type, serialized[property.localIdentifier!]);
-            property.set(entity, propertyValue);
+            property.set(REBINDABLE_ENTITY, propertyValue);
         }
         return trait;
     }

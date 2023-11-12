@@ -2,7 +2,6 @@ import { BaseObjectSet } from './base-object-set';
 
 export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> {
 
-    // private readonly list: ObjectType[] = [];
     private readonly objectMap = new Map<string, ObjectType>();
     private readonly bucketMap = new Map<string, ObjectType[]>();
 

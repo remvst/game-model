@@ -11,6 +11,7 @@ export default class RebindableEntity extends Entity {
 
     setTrait(trait: Trait) {
         this.traitOverride = trait;
+        trait.bind(this);
     }
 
     trait(): Trait {

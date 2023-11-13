@@ -1,27 +1,28 @@
-import { Configurable, CompositeConfigurable } from "@remvst/configurable";
-import EntityIdConfigurable from "../configurable/entity-id-configurable";
 import Entity from "../entity";
 import TraitRegistry from "../registry/trait-registry";
 import SerializationOptions from "../serialization/serialization-options";
 import { EntitySerializer } from "../serialization/serializer";
 import World from "../world";
 import EntityIdMapping from "./entity-id-mapping";
+import { EntityIdConstraints, ListConstraints } from "../properties/property-constraints";
 
 export default function duplicateEntities(
-    entities: Iterable<Entity>, 
+    entities: Iterable<Entity>,
     targetWorld: World,
     entitySerializer: EntitySerializer<any>,
     traitRegistry: TraitRegistry,
 ): Entity[] {
+    const entitiesArray = Array.from(entities);
+
     const mapping = new EntityIdMapping(
         targetWorld,
-        Array.from(entities).map((entity) => entity.id),
+        entitiesArray.map((entity) => entity.id),
     );
 
     const duplicatedEntities: Entity[] = [];
 
     const serializationOptions = new SerializationOptions();
-    for (const sourceEntity of entities) {
+    for (const sourceEntity of entitiesArray) {
         const serialized = entitySerializer.serialize(sourceEntity, serializationOptions);
         const duplicatedEntity = entitySerializer.deserialize(serialized, serializationOptions);
 
@@ -31,10 +32,22 @@ export default function duplicateEntities(
         for (const trait of duplicatedEntity.traits.items()) {
             const registryEntry = traitRegistry.entry(trait.key);
 
-            // TODO rely on properties rather than configurables
-            if (registryEntry && registryEntry.configurable) {
-                const configurable = registryEntry.configurable(trait);
-                replaceReferencedIds(configurable, mapping);
+            if (registryEntry?.properties) {
+                for (const property of registryEntry.properties) {
+                    const type = property.type;
+
+                    if (type instanceof EntityIdConstraints) {
+                        const value = property.get(trait.entity);
+                        const mapped = mapping.destinationId(value);
+                        if (mapped) property.set(duplicatedEntity, mapped);
+                    }
+
+                    if (type instanceof ListConstraints && type.itemType instanceof EntityIdConstraints) {
+                        const values: string[] = property.get(trait.entity);
+                        const mapped = values.map((value) => mapping.destinationId(value) || value);
+                        property.set(duplicatedEntity, mapped);
+                    }
+                }
             }
         }
 
@@ -42,18 +55,4 @@ export default function duplicateEntities(
     }
 
     return duplicatedEntities;
-}
-
-function replaceReferencedIds(configurable: Configurable, idMapping: EntityIdMapping) {
-    if (configurable instanceof EntityIdConfigurable) {
-        const sourceId = configurable.read(configurable);
-        const destinationId = idMapping.destinationId(sourceId);
-        if (destinationId) {
-            configurable.write(destinationId, configurable);
-        }
-    } else if (configurable instanceof CompositeConfigurable) {
-        for (const entry of configurable.entries) {
-            replaceReferencedIds(entry.configurable, idMapping);
-        }
-    }
 }

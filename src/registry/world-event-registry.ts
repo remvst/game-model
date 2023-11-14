@@ -155,7 +155,10 @@ export default class WorldEventRegistry implements Registry<WorldEventRegistryEn
             return this.add(worldEventRegistryEntry<T>(builder => {
                 builder.eventClass(autoEntry.eventType);
                 builder.category(autoEntry.category);
-                builder.readjust((event, world, entity, triggererID) => autoEntry.readjust(event, world, entity, triggererID));
+
+                if (autoEntry.readjust) {
+                    builder.readjust((event, world, entity, triggererID) => autoEntry.readjust(event, world, entity, triggererID));
+                }
 
                 for (const property of autoEntry.properties || []) {
                     builder.property(

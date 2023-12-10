@@ -4,9 +4,9 @@ import Trait from '../trait';
 import { TraitRegistryEntry, traitRegistryEntry } from '../registry/trait-registry';
 import { PropertyType } from '../properties/property-constraints';
 
-export default class TargetFollowingTrait extends Trait {
-    static readonly key = 'target-following';
-    readonly key = TargetFollowingTrait.key;
+export default class SmoothTargetFollowingTrait extends Trait {
+    static readonly key = 'smooth-target-following';
+    readonly key = SmoothTargetFollowingTrait.key;
 
     targetEntityId: string | null = null;
     targetTraitKeys: string[];
@@ -54,9 +54,9 @@ export default class TargetFollowingTrait extends Trait {
         }
     }
 
-    static registryEntry(): TraitRegistryEntry<TargetFollowingTrait> {
+    static registryEntry(): TraitRegistryEntry<SmoothTargetFollowingTrait> {
         return traitRegistryEntry(builder => {
-            builder.traitClass(TargetFollowingTrait);
+            builder.traitClass(SmoothTargetFollowingTrait);
             builder.simpleProp('targetEntityId', PropertyType.id());
             builder.simpleProp('targetTraitKeys', PropertyType.list(PropertyType.id()));
         });

@@ -65,7 +65,7 @@ import WorldRecorder from './recording/world-recorder';
 import WorldReplayer from './recording/world-replayer';
 import CameraTrait from './traits/camera-trait';
 import RectangleBoundTrait from './traits/rectangle-bound-trait';
-import TargetFollowingTrait from './traits/target-following-trait';
+import SmoothTargetFollowingTrait from './traits/smooth-target-following-trait';
 
 export {
     Trait,
@@ -94,7 +94,7 @@ export {
     EventOnRemovalTrait,
     CameraTrait,
     RectangleBoundTrait,
-    TargetFollowingTrait,
+    SmoothTargetFollowingTrait,
 
     // Events
     WorldEvent,

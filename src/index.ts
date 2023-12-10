@@ -63,6 +63,9 @@ import RecordedFrame from './recording/recorded-frame';
 import ReplayerAuthority from './recording/replayer-authority';
 import WorldRecorder from './recording/world-recorder';
 import WorldReplayer from './recording/world-replayer';
+import CameraTrait from './traits/camera-trait';
+import RectangleBoundTrait from './traits/rectangle-bound-trait';
+import TargetFollowingTrait from './traits/target-following-trait';
 
 export {
     Trait,
@@ -89,6 +92,9 @@ export {
     EntityGroupTrait,
     DependencyTrait,
     EventOnRemovalTrait,
+    CameraTrait,
+    RectangleBoundTrait,
+    TargetFollowingTrait,
 
     // Events
     WorldEvent,

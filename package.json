@@ -12,6 +12,7 @@
   "author": "Rémi Vansteelandt",
   "license": "UNLICENSED",
   "dependencies": {
+    "@remvst/animate.js": "^2.0.0",
     "@remvst/configurable": "^1.5.0",
     "@remvst/geometry": "^2.5.1",
     "rxjs": "^7.8.0",
@@ -23,7 +24,7 @@
     "@types/uuid": "^8.3.0",
     "jasmine": "^4.4.0",
     "nyc": "^15.1.0",
-    "typescript": "^5.2.2",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }

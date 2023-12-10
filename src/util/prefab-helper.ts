@@ -1,7 +1,7 @@
+import { Vector2 } from "@remvst/geometry";
 import Entity from "../entity";
 import GameModelApp from "../game-model-app";
 import SerializationOptions from "../serialization/serialization-options";
-import Vector2 from "../vector2";
 import World from "../world";
 import duplicateEntities from "./duplicate-entities";
 import { repositionEntities } from "./reposition-entities";

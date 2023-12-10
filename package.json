@@ -13,7 +13,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@remvst/configurable": "^1.5.0",
-    "@remvst/geometry": "^2.4.0",
+    "@remvst/geometry": "^2.5.1",
     "rxjs": "^7.8.0",
     "uuid": "^9.0.0"
   },

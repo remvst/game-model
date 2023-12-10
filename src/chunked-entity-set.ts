@@ -1,7 +1,6 @@
-import { Rectangle } from "@remvst/geometry";
+import { Rectangle, isBetween } from "@remvst/geometry";
 import ObjectSet from "./collections/object-set";
 import Entity from "./entity";
-import { isBetween } from "./util/math";
 import WatchableObjectSet from "./collections/watchable-object-set";
 
 const REUSABLE_GEOMETRY_AREA = new Rectangle();

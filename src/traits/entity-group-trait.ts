@@ -4,8 +4,8 @@ import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import World from "../world";
 import Entity from "../entity";
-import { isBetween } from "../util/math";
 import { PropertyType } from "../properties/property-constraints";
+import { isBetween } from "@remvst/geometry";
 
 export default class EntityGroupTrait extends Trait {
 

@@ -1,6 +1,5 @@
+import { Vector2, roundToNearest } from "@remvst/geometry";
 import Entity from "../entity";
-import Vector2 from "../vector2";
-import { roundToNearest } from "./math";
 
 export function repositionEntities(
     entities: Entity[],
@@ -15,8 +14,8 @@ export function repositionEntities(
     const midPointX = (minX + maxX) / 2;
     const midPointY = (minY + maxY) / 2;
 
-    const offsetX = roundToNearest(newCenter.x - midPointX, precision); 
-    const offsetY = roundToNearest(newCenter.y - midPointY, precision); 
+    const offsetX = roundToNearest(newCenter.x - midPointX, precision);
+    const offsetY = roundToNearest(newCenter.y - midPointY, precision);
 
     for (const entity of entities) {
         entity.position.x += offsetX;

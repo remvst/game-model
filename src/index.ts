@@ -44,7 +44,7 @@ import Trigger from './events/trigger';
 import EntityGroupTrait from './traits/entity-group-trait';
 import DependencyTrait from './traits/dependency-trait';
 import GameModelApp from './game-model-app';
-import { Authority, AuthorityType, LocalAuthority } from './multiplayer/authority';
+import { Authority, AuthorityType, FullAuthority, LocalAuthority } from './multiplayer/authority';
 import Room, { Player } from './multiplayer/room';
 import { WorldUpdate } from './multiplayer/world-update';
 import { RoomUpdate } from './multiplayer/room-update';
@@ -59,6 +59,10 @@ import { Registry } from './registry/registry';
 import WorldUpdatesCollector from './multiplayer/world-updates-collector';
 import WorldUpdatesReceiver from './multiplayer/world-updates-receiver';
 import { AllSerializers, WorldSetup, allSerializers } from './serialization/all-serializers';
+import RecordedFrame from './recording/recorded-frame';
+import ReplayerAuthority from './recording/replayer-authority';
+import WorldRecorder from './recording/world-recorder';
+import WorldReplayer from './recording/world-replayer';
 
 export {
     Trait,
@@ -140,12 +144,19 @@ export {
     Authority,
     AuthorityType,
     LocalAuthority,
+    FullAuthority,
     Room,
     RoomUpdate,
     WorldUpdate,
     Player,
     WorldUpdatesCollector,
     WorldUpdatesReceiver,
+
+    // Recording
+    ReplayerAuthority,
+    WorldRecorder,
+    WorldReplayer,
+    RecordedFrame,
 
     // Perf
     CyclePerformanceTracker,

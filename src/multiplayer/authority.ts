@@ -38,3 +38,25 @@ export class LocalAuthority implements Authority {
         return 0;
     }
 }
+
+export class FullAuthority implements Authority {
+    entityAuthority(): AuthorityType {
+        return AuthorityType.FULL;
+    }
+
+    worldEventAuthority(): AuthorityType {
+        return AuthorityType.FULL;
+    }
+
+    entityEventAuthority(): AuthorityType {
+        return AuthorityType.FULL;
+    }
+
+    determinesRemoval(): boolean {
+        return true;
+    }
+
+    maxUpdateInterval(entity: Entity): number {
+        return 0;
+    }
+}

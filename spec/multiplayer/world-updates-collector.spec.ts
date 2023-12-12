@@ -24,11 +24,7 @@ describe('a helper', () => {
         spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.FULL);
 
         const update = helper.generateUpdate();
-        expect(update).toEqual({
-            'entities': [],
-            'worldEvents': [],
-            'shortEntities': [],
-        });
+        expect(update).toEqual({});
     });
 
     it('will queue events until the next update', () => {
@@ -39,9 +35,7 @@ describe('a helper', () => {
 
         const update = helper.generateUpdate();
         expect(update).toEqual({
-            'entities': [],
             'worldEvents': [app.serializers.packed.worldEvent.serialize(event, serializationOptions)],
-            'shortEntities': [],
         });
     });
 
@@ -50,11 +44,7 @@ describe('a helper', () => {
 
         world.addEvent(new Remove('myent'));
 
-        expect(helper.generateUpdate()).toEqual({
-            'entities': [],
-            'worldEvents': [],
-            'shortEntities': [],
-        });
+        expect(helper.generateUpdate()).toEqual({});
     });
 
     it('will only send events once', () => {
@@ -65,11 +55,7 @@ describe('a helper', () => {
 
         helper.generateUpdate();
         const update = helper.generateUpdate();
-        expect(update).toEqual({
-            'entities': [],
-            'worldEvents': [],
-            'shortEntities': [],
-        });
+        expect(update).toEqual({});
     });
 
     it('will send entities that it has authority over', () => {
@@ -81,8 +67,6 @@ describe('a helper', () => {
         const update = helper.generateUpdate();
         expect(update).toEqual({
             'entities': [app.serializers.packed.entity.serialize(localEntity, serializationOptions)],
-            'worldEvents': [],
-            'shortEntities': [],
         });
     });
 
@@ -93,10 +77,6 @@ describe('a helper', () => {
         world.entities.add(localEntity);
 
         const update = helper.generateUpdate();
-        expect(update).toEqual({
-            'entities': [],
-            'worldEvents': [],
-            'shortEntities': [],
-        });
+        expect(update).toEqual({});
     });
 });

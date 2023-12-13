@@ -122,6 +122,10 @@ export default class WorldUpdatesCollector {
         this.queuedEvents = [];
         this.entityInitializations.clear();
 
-        return { entities, worldEvents, shortEntities };
+        const res: WorldUpdate<any, any> = {};
+        if (entities.length) res.entities = entities;
+        if (worldEvents.length) res.worldEvents = worldEvents;
+        if (shortEntities.length) res.shortEntities = shortEntities;
+        return res;
     }
 }

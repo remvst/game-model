@@ -1,5 +1,5 @@
 import GameModelApp from "../game-model-app";
-import SerializationOptions, { SerializationType } from "../serialization/serialization-options";
+import SerializationOptions from "../serialization/serialization-options";
 import World from "../world";
 import { Authority, AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
@@ -24,7 +24,7 @@ export default class WorldUpdatesReceiver {
         const newPreviousEntityIds = new Set<string>();
         this.previousEntityIds.set(fromPlayerId, newPreviousEntityIds);
 
-        for (const serializedEntity of update.entities) {
+        for (const serializedEntity of update.entities || []) {
             const deserialized = this.app.serializers.packed.entity.deserialize(serializedEntity, this.serializationOptions);
             missingIds.delete(deserialized.id);
 
@@ -52,7 +52,7 @@ export default class WorldUpdatesReceiver {
             }
         }
 
-        for (const short of update.shortEntities) {
+        for (const short of update.shortEntities || []) {
             newPreviousEntityIds.add(short);
             missingIds.delete(short);
         }
@@ -61,7 +61,7 @@ export default class WorldUpdatesReceiver {
             this.world.entity(missingId)?.remove();
         }
 
-        for (const serializedWorldEvent of update.worldEvents) {
+        for (const serializedWorldEvent of update.worldEvents || []) {
             const deserialized = this.app.serializers.packed.worldEvent.deserialize(serializedWorldEvent, this.serializationOptions);
 
             switch (this.world.authority.worldEventAuthority(deserialized)) {

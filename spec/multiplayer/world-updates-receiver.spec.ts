@@ -25,9 +25,7 @@ describe('a helper', () => {
         spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.NONE);
 
         helper.applyUpdate({
-            worldEvents: [],
             entities: [app.serializers.packed.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
-            shortEntities: [],
         }, '', remoteAuthority);
 
         expect(world.entity('myentity')).toBeTruthy();
@@ -41,9 +39,7 @@ describe('a helper', () => {
         spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.NONE);
 
         helper.applyUpdate({
-            worldEvents: [],
             entities: [app.serializers.packed.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
-            shortEntities: [],
         }, '', remoteAuthority);
 
         expect(localEntity.copy).toHaveBeenCalledWith(jasmine.any(Entity), app);
@@ -57,17 +53,11 @@ describe('a helper', () => {
         world.entities.add(localEntity);
 
         helper.applyUpdate({
-            worldEvents: [],
             entities: [app.serializers.packed.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
-            shortEntities: [],
         }, '', remoteAuthority);
         expect(world.entities.size).toBe(1);
 
-        helper.applyUpdate({
-            worldEvents: [],
-            entities: [],
-            shortEntities: [],
-        }, '', remoteAuthority);
+        helper.applyUpdate({}, '', remoteAuthority);
         expect(world.entities.size).toBe(0);
     });
 
@@ -79,15 +69,11 @@ describe('a helper', () => {
         world.entities.add(localEntity);
 
         helper.applyUpdate({
-            worldEvents: [],
             entities: [app.serializers.packed.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
-            shortEntities: [],
         }, '', remoteAuthority);
         expect(world.entities.size).toBe(1);
 
         helper.applyUpdate({
-            worldEvents: [],
-            entities: [],
             shortEntities: ['myentity'],
         }, '', remoteAuthority);
         expect(world.entities.size).toBe(1);
@@ -97,9 +83,7 @@ describe('a helper', () => {
         spyOn(authority, 'entityAuthority').and.returnValue(AuthorityType.FULL);
 
         helper.applyUpdate({
-            worldEvents: [],
             entities: [app.serializers.packed.entity.serialize(new Entity('myentity', []), new SerializationOptions())],
-            shortEntities: [],
         }, '', remoteAuthority);
 
         expect(world.entities.size).toBe(0);
@@ -113,8 +97,6 @@ describe('a helper', () => {
 
         helper.applyUpdate({
             worldEvents: [app.serializers.packed.worldEvent.serialize(new Remove('removedentity'), new SerializationOptions())],
-            entities: [],
-            shortEntities: [],
         }, '', remoteAuthority);
 
         expect(eventSpy).not.toHaveBeenCalled();
@@ -128,8 +110,6 @@ describe('a helper', () => {
 
         helper.applyUpdate({
             worldEvents: [app.serializers.packed.worldEvent.serialize(new Remove('removedentity'), new SerializationOptions())],
-            entities: [],
-            shortEntities: [],
         }, '', remoteAuthority);
 
         expect(eventSpy).toHaveBeenCalled();

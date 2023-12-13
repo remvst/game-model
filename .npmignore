@@ -1,0 +1,5 @@
+spec/
+nyc.config.js
+coverage/
+.nyc_output/
+.github

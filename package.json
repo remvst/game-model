@@ -1,6 +1,6 @@
 {
   "name": "@remvst/game-model",
-  "version": "4.10.2",
+  "version": "4.10.3",
   "description": "Game models",
   "main": "lib/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "Rémi Vansteelandt",
   "license": "UNLICENSED",
   "dependencies": {
-    "@remvst/animate.js": "^2.0.0",
+    "@remvst/animate.js": "^3.0.0",
     "@remvst/configurable": "^1.5.1",
     "@remvst/geometry": "^2.5.1",
     "rxjs": "^7.8.0",

@@ -1,10 +1,13 @@
 import Entity from "../entity";
+import {
+    EntityIdConstraints,
+    ListConstraints,
+} from "../properties/property-constraints";
 import TraitRegistry from "../registry/trait-registry";
 import SerializationOptions from "../serialization/serialization-options";
 import { EntitySerializer } from "../serialization/serializer";
 import World from "../world";
 import EntityIdMapping from "./entity-id-mapping";
-import { EntityIdConstraints, ListConstraints } from "../properties/property-constraints";
 
 export default function duplicateEntities(
     entities: Iterable<Entity>,
@@ -23,8 +26,14 @@ export default function duplicateEntities(
 
     const serializationOptions = new SerializationOptions();
     for (const sourceEntity of entitiesArray) {
-        const serialized = entitySerializer.serialize(sourceEntity, serializationOptions);
-        const duplicatedEntity = entitySerializer.deserialize(serialized, serializationOptions);
+        const serialized = entitySerializer.serialize(
+            sourceEntity,
+            serializationOptions,
+        );
+        const duplicatedEntity = entitySerializer.deserialize(
+            serialized,
+            serializationOptions,
+        );
 
         (duplicatedEntity as any).id = mapping.destinationId(sourceEntity.id);
         duplicatedEntity.bind(targetWorld);
@@ -42,9 +51,14 @@ export default function duplicateEntities(
                         if (mapped) property.set(duplicatedEntity, mapped);
                     }
 
-                    if (type instanceof ListConstraints && type.itemType instanceof EntityIdConstraints) {
+                    if (
+                        type instanceof ListConstraints &&
+                        type.itemType instanceof EntityIdConstraints
+                    ) {
                         const values: string[] = property.get(trait.entity);
-                        const mapped = values.map((value) => mapping.destinationId(value) || value);
+                        const mapped = values.map(
+                            (value) => mapping.destinationId(value) || value,
+                        );
                         property.set(duplicatedEntity, mapped);
                     }
                 }

@@ -1,7 +1,6 @@
 import { Entity, GameModelApp, PrefabHelper, Vector2, World } from "../../src";
 
-describe('the prefab helper', () => {
-
+describe("the prefab helper", () => {
     let app: GameModelApp;
     let helper: PrefabHelper;
 
@@ -12,7 +11,7 @@ describe('the prefab helper', () => {
         helper = new PrefabHelper(app);
     });
 
-    it('can create a prefab from a few entities', () => {
+    it("can create a prefab from a few entities", () => {
         const entity1 = new Entity(undefined, []);
         const entity2 = new Entity(undefined, []);
         const entity3 = new Entity(undefined, []);
@@ -26,7 +25,7 @@ describe('the prefab helper', () => {
         expect(prefab).toBeTruthy();
     });
 
-    it('can create a prefab from a few entities and then instantiate', () => {
+    it("can create a prefab from a few entities and then instantiate", () => {
         const entity1 = new Entity(undefined, []);
         const entity2 = new Entity(undefined, []);
         const entity3 = new Entity(undefined, []);
@@ -38,7 +37,12 @@ describe('the prefab helper', () => {
 
         const prefab = helper.makePrefab(originWorld, [entity1, entity2]);
 
-        const newEntities = helper.instantiatePrefab(prefab, originWorld, null, 5);
+        const newEntities = helper.instantiatePrefab(
+            prefab,
+            originWorld,
+            null,
+            5,
+        );
         expect(newEntities.length).toBe(2);
 
         for (const entity of newEntities) {
@@ -46,7 +50,7 @@ describe('the prefab helper', () => {
         }
     });
 
-    it('can create a prefab at a specific position', () => {
+    it("can create a prefab at a specific position", () => {
         const entity1 = new Entity(undefined, []);
         const entity2 = new Entity(undefined, []);
 
@@ -61,7 +65,12 @@ describe('the prefab helper', () => {
 
         const prefab = helper.makePrefab(originWorld, [entity1, entity2]);
 
-        const newEntities = helper.instantiatePrefab(prefab, originWorld, new Vector2(40, 20), 5);
+        const newEntities = helper.instantiatePrefab(
+            prefab,
+            originWorld,
+            new Vector2(40, 20),
+            5,
+        );
         expect(newEntities.length).toBe(2);
 
         const [entity1Copy, entity2Copy] = newEntities;

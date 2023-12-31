@@ -7,25 +7,44 @@ export interface VerboseCompositeSerialized<SerializedItem> {
     data: SerializedItem;
 }
 
-export default class VerboseCompositeSerializer<ObjectType extends KeyProvider, SerializedItem extends AnySerialized> implements CompositeSerializer<ObjectType, VerboseCompositeSerialized<SerializedItem>> {
-    readonly serializers: Map<string, Serializer<ObjectType, AnySerialized>> = new Map();
+export default class VerboseCompositeSerializer<
+    ObjectType extends KeyProvider,
+    SerializedItem extends AnySerialized,
+> implements
+        CompositeSerializer<
+            ObjectType,
+            VerboseCompositeSerialized<SerializedItem>
+        >
+{
+    readonly serializers: Map<string, Serializer<ObjectType, AnySerialized>> =
+        new Map();
 
     add(key: string, serializer: Serializer<ObjectType, AnySerialized>): this {
         this.serializers.set(key, serializer);
         return this;
     }
 
-    serialize(value: ObjectType, options: SerializationOptions): VerboseCompositeSerialized<SerializedItem> {
-        const serializer = this.serializers.get(value.key) as Serializer<ObjectType, SerializedItem>;
-        if (!serializer) throw new Error(`Cannot serialize item with key ${value.key}`);
+    serialize(
+        value: ObjectType,
+        options: SerializationOptions,
+    ): VerboseCompositeSerialized<SerializedItem> {
+        const serializer = this.serializers.get(value.key) as Serializer<
+            ObjectType,
+            SerializedItem
+        >;
+        if (!serializer)
+            throw new Error(`Cannot serialize item with key ${value.key}`);
 
         return {
-            'key': value.key,
-            'data': serializer.serialize(value, options),
+            key: value.key,
+            data: serializer.serialize(value, options),
         };
     }
 
-    deserialize(value: VerboseCompositeSerialized<SerializedItem>, options: SerializationOptions): ObjectType {
+    deserialize(
+        value: VerboseCompositeSerialized<SerializedItem>,
+        options: SerializationOptions,
+    ): ObjectType {
         const serializer = this.serializers.get(value.key);
         if (!serializer) {
             throw new Error(`Cannot deserialize item with key ${value.key}`);

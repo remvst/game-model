@@ -11,10 +11,7 @@ export interface SerializedPrefab {
 }
 
 export default class PrefabHelper {
-
-    constructor(private readonly app: GameModelApp) {
-
-    }
+    constructor(private readonly app: GameModelApp) {}
 
     makePrefab(world: World, entities: Entity[]): SerializedPrefab {
         const ids = new Set(entities.map((entity) => entity.id));
@@ -32,7 +29,10 @@ export default class PrefabHelper {
         atPosition: Vector2 | null,
         precision: number,
     ): Entity[] {
-        const prefabWorld = this.app.serializers.verbose.world.deserialize(prefab, new SerializationOptions());
+        const prefabWorld = this.app.serializers.verbose.world.deserialize(
+            prefab,
+            new SerializationOptions(),
+        );
 
         const entities = duplicateEntities(
             prefabWorld.entities.items(),

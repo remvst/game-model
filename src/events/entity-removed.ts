@@ -1,5 +1,3 @@
-import { EntityEvent } from './entity-event';
+import { EntityEvent } from "./entity-event";
 
-export default class EntityRemoved implements EntityEvent {
-
-}
+export default class EntityRemoved implements EntityEvent {}

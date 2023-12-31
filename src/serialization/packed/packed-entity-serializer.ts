@@ -1,25 +1,30 @@
 import Entity from "../../entity";
 import Trait from "../../trait";
-import { ArrayEncoder, ArrayDecoder, EncoderSequence } from "../encoder";
+import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
 import SerializationOptions from "../serialization-options";
 import { EntitySerializer, TraitSerializer } from "../serializer";
 
-export default class PackedEntitySerializer implements EntitySerializer<EncoderSequence> {
-
+export default class PackedEntitySerializer
+    implements EntitySerializer<EncoderSequence>
+{
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
 
     constructor(
-        private readonly traitsSerializer: TraitSerializer<Trait, EncoderSequence>
-    ) {
-        
-    }
+        private readonly traitsSerializer: TraitSerializer<
+            Trait,
+            EncoderSequence
+        >,
+    ) {}
 
     serialize(value: Entity, options: SerializationOptions): EncoderSequence {
         this.encoder.reset();
 
         this.encoder.appendString(value.id);
-        this.encoder.appendNumber(options.includeEntityAges ? value.age : 0, options.maxNumberDecimals);
+        this.encoder.appendNumber(
+            options.includeEntityAges ? value.age : 0,
+            options.maxNumberDecimals,
+        );
         this.encoder.appendNumber(value.x, options.maxNumberDecimals);
         this.encoder.appendNumber(value.y, options.maxNumberDecimals);
         this.encoder.appendNumber(value.z, options.maxNumberDecimals);
@@ -30,14 +35,20 @@ export default class PackedEntitySerializer implements EntitySerializer<EncoderS
         for (const trait of value.traits.items()) {
             this.encoder.appendBool(trait.enabled);
 
-            const serializedTrait = this.traitsSerializer.serialize(trait, options);
+            const serializedTrait = this.traitsSerializer.serialize(
+                trait,
+                options,
+            );
             this.encoder.appendSequence(serializedTrait);
         }
 
         return this.encoder.getResult();
     }
 
-    deserialize(serialized: EncoderSequence, options: SerializationOptions): Entity {
+    deserialize(
+        serialized: EncoderSequence,
+        options: SerializationOptions,
+    ): Entity {
         this.decoder.setEncoded(serialized);
 
         const id = this.decoder.nextString();
@@ -50,10 +61,13 @@ export default class PackedEntitySerializer implements EntitySerializer<EncoderS
         const traitCount = this.decoder.nextNumber();
         const traits: Trait[] = [];
 
-        for (let i = 0 ; i < traitCount ; i++) {
+        for (let i = 0; i < traitCount; i++) {
             const enabled = this.decoder.nextBool();
             const serializedTrait = this.decoder.nextSequence();
-            const deserialized = this.traitsSerializer.deserialize(serializedTrait, options);
+            const deserialized = this.traitsSerializer.deserialize(
+                serializedTrait,
+                options,
+            );
             deserialized.enabled = enabled;
             traits.push(deserialized);
         }

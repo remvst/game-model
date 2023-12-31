@@ -1,8 +1,19 @@
 import Entity from "../../entity";
-import { PropertyConstraints, ListConstraints, CompositeConstraints, JsonConstraints, BooleanConstraints, NumberConstraints, StringConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../../properties/property-constraints";
-import RebindableEntity from "../rebindable-entity";
+import {
+    BooleanConstraints,
+    ColorConstraints,
+    CompositeConstraints,
+    EntityIdConstraints,
+    EnumConstraints,
+    JsonConstraints,
+    ListConstraints,
+    NumberConstraints,
+    PropertyConstraints,
+    StringConstraints,
+} from "../../properties/property-constraints";
 import { RegistryEntry } from "../../registry/trait-registry";
 import Trait from "../../trait";
+import RebindableEntity from "../rebindable-entity";
 import { TraitSerializer } from "../serializer";
 
 export interface VerboseSerializedTrait {
@@ -11,11 +22,10 @@ export interface VerboseSerializedTrait {
 
 const REBINDABLE_ENTITY = new RebindableEntity();
 
-export default class VerboseAutomaticTraitSerializer<T extends Trait> implements TraitSerializer<T, VerboseSerializedTrait> {
-
-    constructor(private readonly registryEntry: RegistryEntry<T>) {
-
-    }
+export default class VerboseAutomaticTraitSerializer<T extends Trait>
+    implements TraitSerializer<T, VerboseSerializedTrait>
+{
+    constructor(private readonly registryEntry: RegistryEntry<T>) {}
 
     serialize(trait: Trait): VerboseSerializedTrait {
         // Bind to a temporary entity so we can read the properties
@@ -30,7 +40,10 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
 
         const serialized: VerboseSerializedTrait = {};
         for (const property of this.registryEntry.properties!) {
-            const serializedProperty = this.serializePropertyValue(property.type, property.get(trait.entity));
+            const serializedProperty = this.serializePropertyValue(
+                property.type,
+                property.get(trait.entity),
+            );
             serialized[property.localIdentifier!] = serializedProperty;
         }
         return serialized;
@@ -47,7 +60,10 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
                 continue;
             }
 
-            const propertyValue = this.deserializePropertyValue(property.type, serialized[property.localIdentifier!]);
+            const propertyValue = this.deserializePropertyValue(
+                property.type,
+                serialized[property.localIdentifier!],
+            );
             property.set(REBINDABLE_ENTITY, propertyValue);
         }
         return trait;
@@ -58,7 +74,9 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
         value: any,
     ): any {
         if (type instanceof ListConstraints) {
-            return (value as any[]).map((item) => this.serializePropertyValue(type.itemType, item));
+            return (value as any[]).map((item) =>
+                this.serializePropertyValue(type.itemType, item),
+            );
         }
 
         if (type instanceof CompositeConstraints) {
@@ -99,13 +117,18 @@ export default class VerboseAutomaticTraitSerializer<T extends Trait> implements
         serializedProperty: any,
     ): any {
         if (type instanceof ListConstraints) {
-            return (serializedProperty as any[]).map((item) => this.deserializePropertyValue(type.itemType, item));
+            return (serializedProperty as any[]).map((item) =>
+                this.deserializePropertyValue(type.itemType, item),
+            );
         }
 
         if (type instanceof CompositeConstraints) {
             const res: any = {};
             for (const [key, subType] of type.properties.entries()) {
-                res[key] = this.deserializePropertyValue(subType, serializedProperty[key]);
+                res[key] = this.deserializePropertyValue(
+                    subType,
+                    serializedProperty[key],
+                );
             }
             return res;
         }

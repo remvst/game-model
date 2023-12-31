@@ -1,15 +1,23 @@
-import { Rectangle, Vector2, isBetween, roundToNearest } from '@remvst/geometry';
-import { Animation } from '@remvst/animate.js';
-import Trait from '../trait';
-import { TraitRegistryEntry, traitRegistryEntry } from '../registry/trait-registry';
-import { PropertyType } from '../properties/property-constraints';
+import { Animation } from "@remvst/animate.js";
+import {
+    Rectangle,
+    Vector2,
+    isBetween,
+    roundToNearest,
+} from "@remvst/geometry";
+import { PropertyType } from "../properties/property-constraints";
+import {
+    TraitRegistryEntry,
+    traitRegistryEntry,
+} from "../registry/trait-registry";
+import Trait from "../trait";
 
 export default class CameraTrait extends Trait {
-    static readonly key = 'camera';
+    static readonly key = "camera";
     readonly key = CameraTrait.key;
     readonly disableChunking = true;
 
-    private readonly reusableCameraRectangle = new Rectangle(0, 0, 0, 0,);
+    private readonly reusableCameraRectangle = new Rectangle(0, 0, 0, 0);
     private readonly reusablePositionOnScreen = new Vector2();
 
     width = 400;
@@ -28,7 +36,7 @@ export default class CameraTrait extends Trait {
         }
 
         this.zoomAnimation = new Animation(this)
-            .interp('zoom', this.zoom, zoom)
+            .interp("zoom", this.zoom, zoom)
             .during(duration);
     }
 
@@ -40,7 +48,8 @@ export default class CameraTrait extends Trait {
         }
 
         this.reusableCameraRectangle.centerAround(
-            x, y,
+            x,
+            y,
             this.width / this.zoom,
             this.height / this.zoom,
         );
@@ -48,14 +57,17 @@ export default class CameraTrait extends Trait {
     }
 
     isVisible(point: Vector2, margin: number): boolean {
-        return isBetween(
-            this.entity.x - this.width / 2 - margin,
-            point.x,
-            this.entity.x + this.width / 2 + margin
-        ) && isBetween(
-            this.entity.y - this.height / 2 - margin,
-            point.y,
-            this.entity.y + this.height / 2 + margin
+        return (
+            isBetween(
+                this.entity.x - this.width / 2 - margin,
+                point.x,
+                this.entity.x + this.width / 2 + margin,
+            ) &&
+            isBetween(
+                this.entity.y - this.height / 2 - margin,
+                point.y,
+                this.entity.y + this.height / 2 + margin,
+            )
         );
     }
 
@@ -74,9 +86,9 @@ export default class CameraTrait extends Trait {
     }
 
     static registryEntry(): TraitRegistryEntry<CameraTrait> {
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(CameraTrait);
-            builder.simpleProp('zoom', PropertyType.num());
+            builder.simpleProp("zoom", PropertyType.num());
         });
     }
 }

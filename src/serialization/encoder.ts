@@ -19,7 +19,6 @@ export interface Decoder {
 }
 
 export class ArrayEncoder implements Encoder {
-
     private items: any[];
 
     reset(): this {
@@ -57,7 +56,6 @@ export class ArrayEncoder implements Encoder {
 }
 
 export class ArrayDecoder implements Decoder {
-
     private items: EncoderSequence = [];
     private currentIndex = 0;
 

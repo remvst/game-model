@@ -1,20 +1,27 @@
-import Entity from '../entity';
-import World from '../world';
-import { WorldEventSerializer } from '../serialization/serializer';
-import { GameModelApp, KeyProvider, PropertyConstraints, WorldEvent } from '..';
-import { CompositeConfigurable, Configurable } from '@remvst/configurable';
-import { AnySerialized } from '../serialization/serializer';
-import { WorldEventProperty } from '../properties/properties';
-import { propertyValueConfigurable } from '../configurable/property-value-configurable';
-import { Registry } from './registry';
-import DualSupportWorldEventSerializer from '../serialization/dual/dual-support-world-event-serializer';
-import VerboseAutomaticWorldEventSerializer from '../serialization/verbose/verbose-automatic-world-event-serializer';
-import PackedAutomaticWorldEventSerializer from '../serialization/packed/packed-automatic-world-event-serializer';
+import { CompositeConfigurable, Configurable } from "@remvst/configurable";
+import { GameModelApp, KeyProvider, PropertyConstraints, WorldEvent } from "..";
+import { propertyValueConfigurable } from "../configurable/property-value-configurable";
+import Entity from "../entity";
+import { WorldEventProperty } from "../properties/properties";
+import DualSupportWorldEventSerializer from "../serialization/dual/dual-support-world-event-serializer";
+import PackedAutomaticWorldEventSerializer from "../serialization/packed/packed-automatic-world-event-serializer";
+import {
+    AnySerialized,
+    WorldEventSerializer,
+} from "../serialization/serializer";
+import VerboseAutomaticWorldEventSerializer from "../serialization/verbose/verbose-automatic-world-event-serializer";
+import World from "../world";
+import { Registry } from "./registry";
 
 export interface AutoWorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly eventType: (new () => EventType) & KeyProvider;
     readonly category?: string;
-    readjust?: (event: EventType, world: World, entity: Entity, triggererId: string) => void;
+    readjust?: (
+        event: EventType,
+        world: World,
+        entity: Entity,
+        triggererId: string,
+    ) => void;
     properties?: WorldEventProperty<any>[];
 }
 
@@ -22,24 +29,47 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly key: string;
     readonly category?: string;
     newEvent(): EventType;
-    serializer(app: GameModelApp): WorldEventSerializer<EventType, AnySerialized>;
-    readjust?: (event: EventType, world: World, entity: Entity, triggererId: string) => void;
-    configurable?: (app: GameModelApp, event: EventType, world: World) => Configurable;
+    serializer(
+        app: GameModelApp,
+    ): WorldEventSerializer<EventType, AnySerialized>;
+    readjust?: (
+        event: EventType,
+        world: World,
+        entity: Entity,
+        triggererId: string,
+    ) => void;
+    configurable?: (
+        app: GameModelApp,
+        event: EventType,
+        world: World,
+    ) => Configurable;
     properties?: WorldEventProperty<any>[];
 }
 
 export type AnyWorldEventRegistryEntry<EventType extends WorldEvent> =
-    WorldEventRegistryEntry<EventType> |
-    AutoWorldEventRegistryEntry<EventType>;
+    | WorldEventRegistryEntry<EventType>
+    | AutoWorldEventRegistryEntry<EventType>;
 
-class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider> {
-
+class WorldEventRegistryEntryBuilder<
+    EventType extends WorldEvent & KeyProvider,
+> {
     private _key: string = null;
     private _newEvent: () => EventType = null;
     private _category: string = null;
-    private _serializer: (app: GameModelApp) => WorldEventSerializer<EventType, AnySerialized> = null;
-    private _configurable: (app: GameModelApp, trait: EventType, world: World) => Configurable;
-    private _readjust: (event: EventType, world: World, entity: Entity, triggererId: string) => void;
+    private _serializer: (
+        app: GameModelApp,
+    ) => WorldEventSerializer<EventType, AnySerialized> = null;
+    private _configurable: (
+        app: GameModelApp,
+        trait: EventType,
+        world: World,
+    ) => Configurable;
+    private _readjust: (
+        event: EventType,
+        world: World,
+        entity: Entity,
+        triggererId: string,
+    ) => void;
     private readonly _properties: WorldEventProperty<any>[] = [];
 
     constructor() {
@@ -51,19 +81,24 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
             );
         });
 
-        this.configurable((app: GameModelApp, event: EventType, world: World) => {
-            const entry = app.worldEventRegistry.entry(this._key);
-            const autoConfigurable = new CompositeConfigurable();
-            for (const property of entry.properties || []) {
-                autoConfigurable.add(property.identifier, propertyValueConfigurable(
-                    world,
-                    property.type,
-                    () => property.get(event),
-                    (value) => property.set(event, value),
-                ));
-            }
-            return autoConfigurable;
-        });
+        this.configurable(
+            (app: GameModelApp, event: EventType, world: World) => {
+                const entry = app.worldEventRegistry.entry(this._key);
+                const autoConfigurable = new CompositeConfigurable();
+                for (const property of entry.properties || []) {
+                    autoConfigurable.add(
+                        property.identifier,
+                        propertyValueConfigurable(
+                            world,
+                            property.type,
+                            () => property.get(event),
+                            (value) => property.set(event, value),
+                        ),
+                    );
+                }
+                return autoConfigurable;
+            },
+        );
     }
 
     eventClass(eventClass: (new () => EventType) & KeyProvider): void {
@@ -91,7 +126,7 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
     ): void {
         const eventKey = this._key;
         this._properties.push({
-            identifier: eventKey + '.' + identifier,
+            identifier: eventKey + "." + identifier,
             localIdentifier: identifier,
             type,
             get: (event) => get(event as EventType),
@@ -99,27 +134,44 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
         });
     }
 
-    simpleProp<Key extends string & keyof EventType, PropertyType extends EventType[Key]>(
-        identifier: Key,
-        type: PropertyConstraints<PropertyType>,
-    ) {
+    simpleProp<
+        Key extends string & keyof EventType,
+        PropertyType extends EventType[Key],
+    >(identifier: Key, type: PropertyConstraints<PropertyType>) {
         this.property(
             identifier,
             type,
             (trait) => trait[identifier],
-            (trait, value) => trait[identifier] = value,
+            (trait, value) => (trait[identifier] = value),
         );
     }
 
-    serializer(serializer: (app: GameModelApp) => WorldEventSerializer<EventType, AnySerialized>) {
+    serializer(
+        serializer: (
+            app: GameModelApp,
+        ) => WorldEventSerializer<EventType, AnySerialized>,
+    ) {
         this._serializer = serializer;
     }
 
-    configurable(configurable: (app: GameModelApp, event: EventType, world: World) => Configurable) {
+    configurable(
+        configurable: (
+            app: GameModelApp,
+            event: EventType,
+            world: World,
+        ) => Configurable,
+    ) {
         this._configurable = configurable;
     }
 
-    readjust(readjust: (event: EventType, world: World, entity: Entity, triggererId: string) => void) {
+    readjust(
+        readjust: (
+            event: EventType,
+            world: World,
+            entity: Entity,
+            triggererId: string,
+        ) => void,
+    ) {
         this._readjust = readjust;
     }
 
@@ -136,7 +188,9 @@ class WorldEventRegistryEntryBuilder<EventType extends WorldEvent & KeyProvider>
     }
 }
 
-export function worldEventRegistryEntry<EventType extends WorldEvent & KeyProvider>(
+export function worldEventRegistryEntry<
+    EventType extends WorldEvent & KeyProvider,
+>(
     makeEntry: (builder: WorldEventRegistryEntryBuilder<EventType>) => void,
 ): WorldEventRegistryEntry<EventType> {
     const builder = new WorldEventRegistryEntryBuilder<EventType>();
@@ -144,31 +198,44 @@ export function worldEventRegistryEntry<EventType extends WorldEvent & KeyProvid
     return builder.build();
 }
 
-export default class WorldEventRegistry implements Registry<WorldEventRegistryEntry<any>> {
+export default class WorldEventRegistry
+    implements Registry<WorldEventRegistryEntry<any>>
+{
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();
 
-    add<T extends WorldEvent & KeyProvider>(entry: AnyWorldEventRegistryEntry<T>) {
+    add<T extends WorldEvent & KeyProvider>(
+        entry: AnyWorldEventRegistryEntry<T>,
+    ) {
         const autoEntry = entry as AutoWorldEventRegistryEntry<T>;
         const manualEntry = entry as WorldEventRegistryEntry<T>;
 
         if (autoEntry.eventType) {
-            return this.add(worldEventRegistryEntry<T>(builder => {
-                builder.eventClass(autoEntry.eventType);
-                builder.category(autoEntry.category);
+            return this.add(
+                worldEventRegistryEntry<T>((builder) => {
+                    builder.eventClass(autoEntry.eventType);
+                    builder.category(autoEntry.category);
 
-                if (autoEntry.readjust) {
-                    builder.readjust((event, world, entity, triggererID) => autoEntry.readjust(event, world, entity, triggererID));
-                }
+                    if (autoEntry.readjust) {
+                        builder.readjust((event, world, entity, triggererID) =>
+                            autoEntry.readjust(
+                                event,
+                                world,
+                                entity,
+                                triggererID,
+                            ),
+                        );
+                    }
 
-                for (const property of autoEntry.properties || []) {
-                    builder.property(
-                        property.localIdentifier,
-                        property.type,
-                        (event) => property.get(event),
-                        (event, value) => property.set(event, value),
-                    );
-                }
-            }));
+                    for (const property of autoEntry.properties || []) {
+                        builder.property(
+                            property.localIdentifier,
+                            property.type,
+                            (event) => property.get(event),
+                            (event, value) => property.set(event, value),
+                        );
+                    }
+                }),
+            );
         }
 
         if (this.entries.has(manualEntry.key)) {
@@ -181,12 +248,15 @@ export default class WorldEventRegistry implements Registry<WorldEventRegistryEn
             manualEntry.configurable = (app, event, world) => {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of entry.properties || []) {
-                    autoConfigurable.add(property.identifier, propertyValueConfigurable(
-                        world,
-                        property.type,
-                        () => property.get(event),
-                        (value) => property.set(event, value),
-                    ));
+                    autoConfigurable.add(
+                        property.identifier,
+                        propertyValueConfigurable(
+                            world,
+                            property.type,
+                            () => property.get(event),
+                            (value) => property.set(event, value),
+                        ),
+                    );
                 }
                 return autoConfigurable;
             };

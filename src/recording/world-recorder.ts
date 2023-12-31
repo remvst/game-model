@@ -1,7 +1,9 @@
 import GameModelApp from "../game-model-app";
 import { Authority } from "../multiplayer/authority";
 import WorldUpdatesCollector from "../multiplayer/world-updates-collector";
-import SerializationOptions, { SerializationType } from "../serialization/serialization-options";
+import SerializationOptions, {
+    SerializationType,
+} from "../serialization/serialization-options";
 import World from "../world";
 import RecordedFrame from "./recorded-frame";
 
@@ -18,7 +20,11 @@ export default class WorldRecorder {
     private age = 0;
     private recording = false;
 
-    private readonly updatesCollector = new WorldUpdatesCollector(this.app, this.world, this.options);
+    private readonly updatesCollector = new WorldUpdatesCollector(
+        this.app,
+        this.world,
+        this.options,
+    );
 
     constructor(
         private readonly app: GameModelApp,
@@ -59,7 +65,7 @@ export default class WorldRecorder {
             this.nextFrame = this.frameInterval;
 
             const update = this.updatesCollector.generateUpdate();
-            this.frames.push(new RecordedFrame(this.age, update))
+            this.frames.push(new RecordedFrame(this.age, update));
         }
     }
 }

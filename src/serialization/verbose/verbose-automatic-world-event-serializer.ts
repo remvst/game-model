@@ -1,5 +1,15 @@
 import { WorldEvent } from "../../events/world-event";
-import { PropertyConstraints, ListConstraints, CompositeConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints } from "../../properties/property-constraints";
+import {
+    BooleanConstraints,
+    ColorConstraints,
+    CompositeConstraints,
+    EntityIdConstraints,
+    EnumConstraints,
+    ListConstraints,
+    NumberConstraints,
+    PropertyConstraints,
+    StringConstraints,
+} from "../../properties/property-constraints";
 import { WorldEventRegistryEntry } from "../../registry/world-event-registry";
 import { WorldEventSerializer } from "../serializer";
 
@@ -7,16 +17,18 @@ interface Serialized {
     [key: string]: any;
 }
 
-export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent> implements WorldEventSerializer<T, Serialized> {
-
-    constructor(private readonly registryEntry: WorldEventRegistryEntry<T>) {
-
-    }
+export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent>
+    implements WorldEventSerializer<T, Serialized>
+{
+    constructor(private readonly registryEntry: WorldEventRegistryEntry<T>) {}
 
     serialize(event: WorldEvent): Serialized {
         const serialized: Serialized = {};
         for (const property of this.registryEntry.properties!) {
-            const serializedProperty = this.serializePropertyValue(property.type, property.get(event));
+            const serializedProperty = this.serializePropertyValue(
+                property.type,
+                property.get(event),
+            );
             serialized[property.localIdentifier!] = serializedProperty;
         }
         return serialized;
@@ -25,7 +37,10 @@ export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent> 
     deserialize(serialized: Serialized): T {
         const event = this.registryEntry.newEvent!();
         for (const property of this.registryEntry.properties!) {
-            const propertyValue = this.deserializePropertyValue(property.type, serialized[property.localIdentifier!]);
+            const propertyValue = this.deserializePropertyValue(
+                property.type,
+                serialized[property.localIdentifier!],
+            );
             property.set(event, propertyValue);
         }
         return event;
@@ -36,7 +51,9 @@ export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent> 
         value: any,
     ): any {
         if (type instanceof ListConstraints) {
-            return (value as any[]).map((item) => this.serializePropertyValue(type.itemType, item));
+            return (value as any[]).map((item) =>
+                this.serializePropertyValue(type.itemType, item),
+            );
         }
 
         if (type instanceof CompositeConstraints) {
@@ -66,13 +83,18 @@ export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent> 
         serializedProperty: any,
     ): any {
         if (type instanceof ListConstraints) {
-            return (serializedProperty as any[]).map((item) => this.deserializePropertyValue(type.itemType, item));
+            return (serializedProperty as any[]).map((item) =>
+                this.deserializePropertyValue(type.itemType, item),
+            );
         }
 
         if (type instanceof CompositeConstraints) {
             const res: any = {};
             for (const [key, subType] of type.properties.entries()) {
-                res[key] = this.deserializePropertyValue(subType, serializedProperty[key]);
+                res[key] = this.deserializePropertyValue(
+                    subType,
+                    serializedProperty[key],
+                );
             }
             return res;
         }

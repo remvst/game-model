@@ -10,7 +10,7 @@ It does NOT provide any rendering, sound, physics, controls... **It is up to the
 
 ```typescript
 class PlayerTrait {
-    static readonly key = 'player';
+    static readonly key = "player";
     readonly key = PlayerTrait.key;
 
     cycle(elapsed: number) {
@@ -21,9 +21,7 @@ class PlayerTrait {
 const world = new World();
 
 // Add a player to the world
-const player = new Entity(undefined, [
-    new PlayerTrait(),
-]);
+const player = new Entity(undefined, [new PlayerTrait()]);
 player.position.x = 100;
 player.position.y = 50;
 world.entities.add(player);
@@ -37,7 +35,7 @@ console.log(player.position.x, player.position.y); // 150,50
 
 ```typescript
 class PlayerTrait {
-    static readonly key = 'player';
+    static readonly key = "player";
     readonly key = PlayerTrait.key;
 
     speed = 0;
@@ -47,9 +45,9 @@ class PlayerTrait {
     }
 
     static registryEntry(app: GameModelApp): TraitRegistryEntry<PlayerTrait> {
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(PlayerTrait);
-            builder.simpleProp('speed', PropertyTypes.num());
+            builder.simpleProp("speed", PropertyTypes.num());
         });
     }
 }
@@ -63,9 +61,7 @@ app.finalize();
 const world = new World();
 
 // Add a player to the world
-const player = new Entity(undefined, [
-    new PlayerTrait(),
-]);
+const player = new Entity(undefined, [new PlayerTrait()]);
 player.position.x = 100;
 player.position.y = 50;
 world.entities.add(player);
@@ -73,9 +69,15 @@ world.entities.add(player);
 const serializationOptions = new SerializationOptions();
 
 // Serialize the world
-const serializedWorld = app.serializers.world.serialize(world, serializationOptions);
+const serializedWorld = app.serializers.world.serialize(
+    world,
+    serializationOptions,
+);
 saveToFile();
 
 // Deserialize the world
-const deserializedWorld = app.serializers.world.deserialize(serializedWorld, serializationOptions);
+const deserializedWorld = app.serializers.world.deserialize(
+    serializedWorld,
+    serializationOptions,
+);
 ```

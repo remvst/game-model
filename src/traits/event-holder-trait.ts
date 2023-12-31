@@ -1,19 +1,28 @@
-import { CompositeConfigurable, EnumConfigurable, NumberConfigurable } from "@remvst/configurable";
-import { Entity, EntityIdConstraints, RegistryEntry, SerializationOptions, WorldEventRegistry } from "..";
+import {
+    CompositeConfigurable,
+    EnumConfigurable,
+    NumberConfigurable,
+} from "@remvst/configurable";
+import {
+    Entity,
+    EntityIdConstraints,
+    RegistryEntry,
+    SerializationOptions,
+} from "..";
+import adaptId from "../adapt-id";
 import { EntityEvent } from "../events/entity-event";
 import Remove from "../events/remove";
 import TriggerEvent from "../events/trigger-event";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import { KeyProvider } from "../key-provider";
-import { AnySerialized, TraitSerializer, WorldEventSerializer } from "../serialization/serializer";
+import { AnySerialized, TraitSerializer } from "../serialization/serializer";
 import Trait from "../trait";
 import World from "../world";
 import DelayedActionTrait from "./delayed-action-trait";
-import adaptId from "../adapt-id";
 
 export default class EventHolderTrait extends Trait {
-    static readonly key = 'event-holder';
+    static readonly key = "event-holder";
     readonly key = EventHolderTrait.key;
 
     private readonly serializationOptions = new SerializationOptions();
@@ -29,14 +38,13 @@ export default class EventHolderTrait extends Trait {
 
     processEvent(event: EntityEvent) {
         if (event instanceof TriggerEvent) {
-            this.entity.world.entities.add(new Entity(undefined, [
-                new DelayedActionTrait(
-                    this.delay,
-                    (world) => {
+            this.entity.world.entities.add(
+                new Entity(undefined, [
+                    new DelayedActionTrait(this.delay, (world) => {
                         this.trigger(world, event.triggererId);
-                    }
-                )
-            ]));
+                    }),
+                ]),
+            );
 
             this.triggerCount--;
             if (this.triggerCount === 0) {
@@ -48,7 +56,10 @@ export default class EventHolderTrait extends Trait {
     private trigger(world: World, triggererId: string) {
         const registryEntry = this.app.worldEventRegistry.entry(this.event.key);
         const serializer = registryEntry.serializer(this.app);
-        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions), this.serializationOptions);
+        const copy = serializer.deserialize(
+            serializer.serialize(this.event, this.serializationOptions),
+            this.serializationOptions,
+        );
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
                 if (property.type instanceof EntityIdConstraints) {
@@ -69,7 +80,7 @@ export default class EventHolderTrait extends Trait {
     static registryEntry(app: GameModelApp): RegistryEntry<EventHolderTrait> {
         return {
             key: EventHolderTrait.key,
-            category: 'scripting',
+            category: "scripting",
             newTrait: () => new EventHolderTrait(app, new Remove(), 0, 1),
             serializer: () => new EventHolderSerializer(app),
             configurable: (trait: EventHolderTrait) => trait.configurable(app),
@@ -82,34 +93,52 @@ export default class EventHolderTrait extends Trait {
         const registryEntry = app.worldEventRegistry.entry(this.event.key);
 
         return new CompositeConfigurable()
-            .add('eventType', new EnumConfigurable<string>({
-                'read': () => eventClass.key,
-                'write': (key, configurable) => {
-                    this.event = app.worldEventRegistry.entry(key).newEvent();
-                    configurable.invalidate();
-                }
-            }).addItems(
-                app.worldEventRegistry.keys(),
-                key => key,
-                key => app.worldEventRegistry.entry(key).category,
-            ))
-            .add('delay', new NumberConfigurable({
-                'min': 0,
-                'max': 30,
-                'step': 0.1,
-                'read': () => this.delay,
-                'write': delay => this.delay = delay,
-            }))
-            .add('triggerCount', new NumberConfigurable({
-                'min': -1,
-                'max': 20,
-                'step': 1,
-                'read': () => this.triggerCount,
-                'write': triggerCount => this.triggerCount = triggerCount,
-            }))
-            .add('event', registryEntry?.configurable
-                ? registryEntry.configurable(app, this.event, this.entity?.world)
-                : new CompositeConfigurable());
+            .add(
+                "eventType",
+                new EnumConfigurable<string>({
+                    read: () => eventClass.key,
+                    write: (key, configurable) => {
+                        this.event = app.worldEventRegistry
+                            .entry(key)
+                            .newEvent();
+                        configurable.invalidate();
+                    },
+                }).addItems(
+                    app.worldEventRegistry.keys(),
+                    (key) => key,
+                    (key) => app.worldEventRegistry.entry(key).category,
+                ),
+            )
+            .add(
+                "delay",
+                new NumberConfigurable({
+                    min: 0,
+                    max: 30,
+                    step: 0.1,
+                    read: () => this.delay,
+                    write: (delay) => (this.delay = delay),
+                }),
+            )
+            .add(
+                "triggerCount",
+                new NumberConfigurable({
+                    min: -1,
+                    max: 20,
+                    step: 1,
+                    read: () => this.triggerCount,
+                    write: (triggerCount) => (this.triggerCount = triggerCount),
+                }),
+            )
+            .add(
+                "event",
+                registryEntry?.configurable
+                    ? registryEntry.configurable(
+                          app,
+                          this.event,
+                          this.entity?.world,
+                      )
+                    : new CompositeConfigurable(),
+            );
     }
 }
 
@@ -119,24 +148,33 @@ interface Serialized extends AnySerialized {
     triggerCount: number;
 }
 
-export class EventHolderSerializer implements TraitSerializer<EventHolderTrait, Serialized> {
+export class EventHolderSerializer
+    implements TraitSerializer<EventHolderTrait, Serialized>
+{
+    constructor(private readonly app: GameModelApp) {}
 
-    constructor(
-        private readonly app: GameModelApp,
-    ) {
-
-    }
-
-    serialize(trait: EventHolderTrait, options: SerializationOptions): Serialized {
+    serialize(
+        trait: EventHolderTrait,
+        options: SerializationOptions,
+    ): Serialized {
         return {
-            'event': this.app.serializers.verbose.worldEvent.serialize(trait.event, options),
-            'delay': trait.delay,
-            'triggerCount': trait.triggerCount,
+            event: this.app.serializers.verbose.worldEvent.serialize(
+                trait.event,
+                options,
+            ),
+            delay: trait.delay,
+            triggerCount: trait.triggerCount,
         };
     }
 
-    deserialize(serialized: Serialized, options: SerializationOptions): EventHolderTrait {
-        const event = this.app.serializers.verbose.worldEvent.deserialize(serialized.event, options);
+    deserialize(
+        serialized: Serialized,
+        options: SerializationOptions,
+    ): EventHolderTrait {
+        const event = this.app.serializers.verbose.worldEvent.deserialize(
+            serialized.event,
+            options,
+        );
         return new EventHolderTrait(
             this.app,
             event as WorldEvent & KeyProvider,

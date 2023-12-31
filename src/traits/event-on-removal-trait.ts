@@ -1,16 +1,25 @@
-import { EntityIdConstraints, EntityRemoved, RegistryEntry, SerializationOptions } from "..";
+import {
+    EntityIdConstraints,
+    EntityRemoved,
+    RegistryEntry,
+    SerializationOptions,
+} from "..";
+import adaptId from "../adapt-id";
 import { EntityEvent } from "../events/entity-event";
 import Remove from "../events/remove";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import { KeyProvider } from "../key-provider";
-import { AnySerialized, TraitSerializer, WorldEventSerializer } from "../serialization/serializer";
+import {
+    AnySerialized,
+    TraitSerializer,
+    WorldEventSerializer,
+} from "../serialization/serializer";
 import Trait from "../trait";
 import World from "../world";
-import adaptId from "../adapt-id";
 
 export default class EventOnRemovalTrait extends Trait {
-    static readonly key = 'event-on-removal';
+    static readonly key = "event-on-removal";
     readonly key = EventOnRemovalTrait.key;
 
     private readonly serializationOptions = new SerializationOptions();
@@ -31,7 +40,10 @@ export default class EventOnRemovalTrait extends Trait {
     private trigger(world: World, triggererId: string) {
         const registryEntry = this.app.worldEventRegistry.entry(this.event.key);
         const serializer = registryEntry.serializer(this.app);
-        const copy = serializer.deserialize(serializer.serialize(this.event, this.serializationOptions), this.serializationOptions);
+        const copy = serializer.deserialize(
+            serializer.serialize(this.event, this.serializationOptions),
+            this.serializationOptions,
+        );
         if (registryEntry.properties) {
             for (const property of registryEntry.properties) {
                 if (property.type instanceof EntityIdConstraints) {
@@ -49,11 +61,13 @@ export default class EventOnRemovalTrait extends Trait {
         world.addEvent(copy);
     }
 
-    static registryEntry(app: GameModelApp): RegistryEntry<EventOnRemovalTrait> {
+    static registryEntry(
+        app: GameModelApp,
+    ): RegistryEntry<EventOnRemovalTrait> {
         const { worldEvent } = app.serializers.verbose;
         return {
             key: EventOnRemovalTrait.key,
-            category: 'scripting',
+            category: "scripting",
             newTrait: () => new EventOnRemovalTrait(app, new Remove()),
             serializer: () => new EventOnRemovalSerializer(app, worldEvent),
         };
@@ -64,23 +78,31 @@ interface Serialized extends AnySerialized {
     event: any;
 }
 
-export class EventOnRemovalSerializer implements TraitSerializer<EventOnRemovalTrait, Serialized> {
-
+export class EventOnRemovalSerializer
+    implements TraitSerializer<EventOnRemovalTrait, Serialized>
+{
     constructor(
         private readonly app: GameModelApp,
         private readonly eventSerializer: WorldEventSerializer<any, any>,
-    ) {
+    ) {}
 
-    }
-
-    serialize(trait: EventOnRemovalTrait, options: SerializationOptions): Serialized {
+    serialize(
+        trait: EventOnRemovalTrait,
+        options: SerializationOptions,
+    ): Serialized {
         return {
-            'event': this.eventSerializer.serialize(trait.event, options),
+            event: this.eventSerializer.serialize(trait.event, options),
         };
     }
 
-    deserialize(serialized: Serialized, options: SerializationOptions): EventOnRemovalTrait {
-        const event = this.eventSerializer.deserialize(serialized.event, options);
+    deserialize(
+        serialized: Serialized,
+        options: SerializationOptions,
+    ): EventOnRemovalTrait {
+        const event = this.eventSerializer.deserialize(
+            serialized.event,
+            options,
+        );
         return new EventOnRemovalTrait(
             this.app,
             event as WorldEvent & KeyProvider,

@@ -1,7 +1,13 @@
-import { Entity, GameModelApp, InterpolateProperty, SerializationOptions, World } from "../../src";
+import {
+    Entity,
+    GameModelApp,
+    InterpolateProperty,
+    SerializationOptions,
+    World,
+} from "../../src";
 import { EntityProperties } from "../../src/entity";
 
-describe('interpolate property event', () => {
+describe("interpolate property event", () => {
     let app: GameModelApp;
 
     beforeEach(() => {
@@ -10,9 +16,9 @@ describe('interpolate property event', () => {
         app.finalize();
     });
 
-    it('can be applied', () => {
+    it("can be applied", () => {
         const event = new InterpolateProperty(
-            'entityId',
+            "entityId",
             EntityProperties.x,
             1337,
             10,
@@ -20,7 +26,7 @@ describe('interpolate property event', () => {
 
         const world = new World();
 
-        const entity = new Entity('entityId', []);
+        const entity = new Entity("entityId", []);
         entity.position.x = 123;
         world.entities.add(entity);
 
@@ -34,22 +40,28 @@ describe('interpolate property event', () => {
         expect(entity.position.x).toBe(1337);
     });
 
-    it('can be serialized', () => {
+    it("can be serialized", () => {
         const event = new InterpolateProperty(
-            'entityId',
+            "entityId",
             EntityProperties.x,
             1337,
             10,
         );
 
-        expect(event.entityId).toBe('entityId');
+        expect(event.entityId).toBe("entityId");
         expect(event.property).toBe(EntityProperties.x);
         expect(event.value).toBe(1337);
         expect(event.duration).toBe(10);
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.verbose.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.verbose.worldEvent.deserialize(serialized, options) as unknown as InterpolateProperty;
+        const serialized = app.serializers.verbose.worldEvent.serialize(
+            event,
+            options,
+        );
+        const deserialized = app.serializers.verbose.worldEvent.deserialize(
+            serialized,
+            options,
+        ) as unknown as InterpolateProperty;
 
         expect(deserialized.entityId).toBe(event.entityId);
         expect(deserialized.duration).toBe(event.duration);

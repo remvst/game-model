@@ -1,8 +1,8 @@
-import { KeyProvider } from '../key-provider';
 import { Trait } from "..";
 import Entity from "../entity";
-import { WorldEvent } from '../events/world-event';
-import { PropertyConstraints, PropertyType } from './property-constraints';
+import { WorldEvent } from "../events/world-event";
+import { KeyProvider } from "../key-provider";
+import { PropertyConstraints, PropertyType } from "./property-constraints";
 
 export interface GenericProperty<OwnerType, ValueType> {
     readonly identifier: string;
@@ -18,11 +18,13 @@ export enum EntityPropertyType {
     SPECIFIC_TRAIT,
 }
 
-export interface Property<ValueType> extends GenericProperty<Entity, ValueType> {
+export interface Property<ValueType>
+    extends GenericProperty<Entity, ValueType> {
     readonly entityPropertyType: EntityPropertyType;
 }
 
-export interface WorldEventProperty<ValueType> extends GenericProperty<WorldEvent, ValueType> {}
+export interface WorldEventProperty<ValueType>
+    extends GenericProperty<WorldEvent, ValueType> {}
 
 export function getSet<ValueType>(
     identifier: string,
@@ -47,7 +49,7 @@ export function traitGetSet<T extends Trait, ValueType>(
     set: (trait: T, value: ValueType) => void,
 ): Property<ValueType> {
     return {
-        identifier: traitType.key + '.' + identifier,
+        identifier: traitType.key + "." + identifier,
         localIdentifier: identifier,
         entityPropertyType: EntityPropertyType.SPECIFIC_TRAIT,
         type,
@@ -64,7 +66,7 @@ export function worldEventGetSet<T extends WorldEvent, ValueType>(
     set: (event: T, value: ValueType) => void,
 ): WorldEventProperty<ValueType> {
     return {
-        identifier: eventType.key + '.' + identifier,
+        identifier: eventType.key + "." + identifier,
         localIdentifier: identifier,
         type,
         get,
@@ -74,11 +76,11 @@ export function worldEventGetSet<T extends WorldEvent, ValueType>(
 
 export function traitEnabledProperty(key: string): Property<boolean> {
     return {
-        identifier: key + '.enabled',
-        localIdentifier: 'enabled',
+        identifier: key + ".enabled",
+        localIdentifier: "enabled",
         type: PropertyType.bool(),
         entityPropertyType: EntityPropertyType.GENERAL_TRAIT,
-        get: entity => entity.trait(key)!.enabled,
-        set: (entity, enabled) => entity.trait(key)!.enabled = enabled,
+        get: (entity) => entity.trait(key)!.enabled,
+        set: (entity, enabled) => (entity.trait(key)!.enabled = enabled),
     };
 }

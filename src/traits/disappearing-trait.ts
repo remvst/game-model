@@ -3,14 +3,13 @@ import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 
 export default class DisappearingTrait extends Trait {
-
-    static readonly key = 'disappearing';
+    static readonly key = "disappearing";
     readonly key = DisappearingTrait.key;
     readonly disableChunking: boolean = true;
 
     constructor(
         public maxAge: number = 0,
-        public sideEffect: ((trait: DisappearingTrait) => void) = () => {},
+        public sideEffect: (trait: DisappearingTrait) => void = () => {},
     ) {
         super();
         this.maxAge = maxAge;
@@ -24,9 +23,9 @@ export default class DisappearingTrait extends Trait {
     }
 
     static registryEntry(): RegistryEntry<DisappearingTrait> {
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(DisappearingTrait);
-            builder.simpleProp('maxAge', PropertyType.num());
+            builder.simpleProp("maxAge", PropertyType.num());
         });
     }
 }

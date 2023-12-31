@@ -2,7 +2,7 @@ import Trait from "../trait";
 import World from "../world";
 
 export default class DelayedActionTrait extends Trait {
-    static readonly key = 'delayed-action';
+    static readonly key = "delayed-action";
     readonly key = DelayedActionTrait.key;
     readonly disableChunking = true;
 

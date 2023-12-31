@@ -1,21 +1,30 @@
 import { KeyProvider } from "../../key-provider";
 import { EncoderSequence } from "../encoder";
 import PackedCompositeSerializer from "../packed/packed-composite-serializer";
-import SerializationOptions, { SerializationType } from "../serialization-options";
+import SerializationOptions, {
+    SerializationType,
+} from "../serialization-options";
 import { AnySerialized, CompositeSerializer, Serializer } from "../serializer";
-import VerboseCompositeSerializer, { VerboseCompositeSerialized } from "../verbose/verbose-composite-serializer";
+import VerboseCompositeSerializer, {
+    VerboseCompositeSerialized,
+} from "../verbose/verbose-composite-serializer";
 
 type AnySerializedItem = AnySerialized | EncoderSequence;
 
-export default class DualSupportCompositeSerializer<ObjectType extends KeyProvider> implements CompositeSerializer<ObjectType, AnySerializedItem> {
-    readonly serializers: Map<string, Serializer<ObjectType, AnySerialized>> = new Map();
+export default class DualSupportCompositeSerializer<
+    ObjectType extends KeyProvider,
+> implements CompositeSerializer<ObjectType, AnySerializedItem>
+{
+    readonly serializers: Map<string, Serializer<ObjectType, AnySerialized>> =
+        new Map();
 
     constructor(
-        private readonly verbose: VerboseCompositeSerializer<ObjectType, AnySerialized>,
+        private readonly verbose: VerboseCompositeSerializer<
+            ObjectType,
+            AnySerialized
+        >,
         private readonly packed: PackedCompositeSerializer<ObjectType>,
-    ) {
-
-    }
+    ) {}
 
     add(key: string, serializer: Serializer<ObjectType, any>): this {
         this.verbose.add(key, serializer);
@@ -23,8 +32,10 @@ export default class DualSupportCompositeSerializer<ObjectType extends KeyProvid
         return this;
     }
 
-
-    serialize(value: ObjectType, options: SerializationOptions): AnySerializedItem {
+    serialize(
+        value: ObjectType,
+        options: SerializationOptions,
+    ): AnySerializedItem {
         if (options.type === SerializationType.PACKED) {
             return this.packed.serialize(value, options);
         } else {
@@ -32,11 +43,17 @@ export default class DualSupportCompositeSerializer<ObjectType extends KeyProvid
         }
     }
 
-    deserialize(value: AnySerializedItem, options: SerializationOptions): ObjectType {
+    deserialize(
+        value: AnySerializedItem,
+        options: SerializationOptions,
+    ): ObjectType {
         if (options.type === SerializationType.PACKED) {
             return this.packed.deserialize(value as EncoderSequence, options);
         } else {
-            return this.verbose.deserialize(value as VerboseCompositeSerialized<AnySerialized>, options);
+            return this.verbose.deserialize(
+                value as VerboseCompositeSerialized<AnySerialized>,
+                options,
+            );
         }
     }
 }

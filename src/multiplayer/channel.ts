@@ -1,4 +1,4 @@
-import { Observable } from "rxjs"
+import { Observable } from "rxjs";
 
 export interface Channel<T> {
     incoming(): Observable<T>;

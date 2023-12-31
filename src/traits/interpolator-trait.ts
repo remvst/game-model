@@ -2,16 +2,15 @@ import GameModelApp from "../game-model-app";
 import { Property } from "../properties/properties";
 import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import { AnySerialized, TraitSerializer } from "../serialization/serializer";
 import Trait from "../trait";
 
 export default class InterpolatorTrait extends Trait {
-    static readonly key = 'mover';
+    static readonly key = "mover";
     readonly key = InterpolatorTrait.key;
     readonly disableChunking = true;
 
     constructor(
-        public targetEntityId: string = '',
+        public targetEntityId: string = "",
         public property: Property<number> = null,
         public fromValue: number = 0,
         public toValue: number = 0,
@@ -31,7 +30,8 @@ export default class InterpolatorTrait extends Trait {
             return;
         }
 
-        const newValue = ratio * (this.toValue - this.fromValue) + this.fromValue;
+        const newValue =
+            ratio * (this.toValue - this.fromValue) + this.fromValue;
         this.property.set(targetEntity, newValue);
 
         if (ratio >= 1) {
@@ -40,13 +40,19 @@ export default class InterpolatorTrait extends Trait {
     }
 
     static registryEntry(app: GameModelApp): RegistryEntry<InterpolatorTrait> {
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(InterpolatorTrait);
-            builder.simpleProp('targetEntityId', PropertyType.id());
-            builder.property('property', PropertyType.str(), (trait) => trait.property.identifier, (trait, property) => trait.property = app.propertyRegistry.entry(property));
-            builder.simpleProp('fromValue', PropertyType.num());
-            builder.simpleProp('toValue', PropertyType.num());
-            builder.simpleProp('duration', PropertyType.num());
+            builder.simpleProp("targetEntityId", PropertyType.id());
+            builder.property(
+                "property",
+                PropertyType.str(),
+                (trait) => trait.property.identifier,
+                (trait, property) =>
+                    (trait.property = app.propertyRegistry.entry(property)),
+            );
+            builder.simpleProp("fromValue", PropertyType.num());
+            builder.simpleProp("toValue", PropertyType.num());
+            builder.simpleProp("duration", PropertyType.num());
         });
     }
 }

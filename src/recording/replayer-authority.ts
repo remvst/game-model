@@ -23,5 +23,4 @@ export default class ReplayerAuthority implements Authority {
     maxUpdateInterval(entity: Entity): number {
         return AuthorityType.NONE;
     }
-
 }

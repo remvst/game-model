@@ -1,6 +1,11 @@
-import { DependencyTrait, Entity, GameModelApp, SerializationOptions } from "../../src";
+import {
+    DependencyTrait,
+    Entity,
+    GameModelApp,
+    SerializationOptions,
+} from "../../src";
 
-describe('dependency trait', () => {
+describe("dependency trait", () => {
     let app: GameModelApp;
 
     beforeEach(() => {
@@ -9,16 +14,22 @@ describe('dependency trait', () => {
         app.finalize();
     });
 
-    it('can be serialized', () => {
+    it("can be serialized", () => {
         const trait = new DependencyTrait();
-        trait.dependerIds = ['depender1', 'depender2'];
-        trait.dependsOnIds = ['dependsOn1', 'dependsOn2'];
+        trait.dependerIds = ["depender1", "depender2"];
+        trait.dependsOnIds = ["dependsOn1", "dependsOn2"];
 
         const entity = new Entity(undefined, [trait]);
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.verbose.entity.serialize(entity, options);
-        const deserialized = app.serializers.verbose.entity.deserialize(serialized, options);
+        const serialized = app.serializers.verbose.entity.serialize(
+            entity,
+            options,
+        );
+        const deserialized = app.serializers.verbose.entity.deserialize(
+            serialized,
+            options,
+        );
 
         expect(deserialized.id).toBe(entity.id);
         expect(deserialized.age).toBe(entity.age);

@@ -1,5 +1,7 @@
 import GameModelApp from "../game-model-app";
-import SerializationOptions, { SerializationType } from "../serialization/serialization-options";
+import SerializationOptions, {
+    SerializationType,
+} from "../serialization/serialization-options";
 import World from "../world";
 import { Authority } from "./authority";
 import { RoomUpdate } from "./room-update";
@@ -7,22 +9,16 @@ import WorldUpdatesCollector from "./world-updates-collector";
 import WorldUpdatesReceiver from "./world-updates-receiver";
 
 export class Player {
-
     latency = 0;
     sentUpdateId = 0;
     receivedUpdateId = -1;
     acknowledgedUpdateId = 0;
-    latencyProbe: {updateId: number, at: number} = null;
+    latencyProbe: { updateId: number; at: number } = null;
 
-    constructor(
-        readonly id: string,
-    ) {
-
-    }
+    constructor(readonly id: string) {}
 }
 
 export default class Room {
-
     world: World;
 
     readonly players = new Map<string, Player>();
@@ -39,7 +35,11 @@ export default class Room {
         readonly selfId: string,
         private readonly app: GameModelApp,
         private readonly authority: (room: Room, playerId: string) => Authority,
-        private readonly sendUpdate: (room: Room, playerId: string, update: RoomUpdate) => void,
+        private readonly sendUpdate: (
+            room: Room,
+            playerId: string,
+            update: RoomUpdate,
+        ) => void,
     ) {
         this.serializationOptions.type = SerializationType.PACKED;
     }
@@ -75,19 +75,29 @@ export default class Room {
 
         const authority = this.authority(this, this.selfId);
         this.world.authority = authority;
-        this.updatesCollector = new WorldUpdatesCollector(this.app, world, this.serializationOptions);
-        this.updatesReceiver = new WorldUpdatesReceiver(this.app, world, this.serializationOptions);
+        this.updatesCollector = new WorldUpdatesCollector(
+            this.app,
+            world,
+            this.serializationOptions,
+        );
+        this.updatesReceiver = new WorldUpdatesReceiver(
+            this.app,
+            world,
+            this.serializationOptions,
+        );
     }
 
     onUpdateReceived(playerId: string, update: RoomUpdate) {
         if (!this.players.has(playerId) && playerId !== this.hostId) {
-            console.warn(`Received update from non-existing player: ${playerId}`);
+            console.warn(
+                `Received update from non-existing player: ${playerId}`,
+            );
             return;
         }
 
         // If we're receiving an update from the host, update the players list
         if (playerId === this.hostId) {
-            const ids = new Set(update.players.map(p => p.id));
+            const ids = new Set(update.players.map((p) => p.id));
             for (const playerId of this.players.keys()) {
                 if (!ids.has(playerId)) {
                     this.removePlayer(playerId);
@@ -118,23 +128,30 @@ export default class Room {
             player.latencyProbe = null;
         }
 
-        this.updatesReceiver.applyUpdate(update.world, playerId, this.authority(this, playerId));
+        this.updatesReceiver.applyUpdate(
+            update.world,
+            playerId,
+            this.authority(this, playerId),
+        );
     }
 
     broadcast() {
         if (!this.updatesCollector) {
-            throw new Error('Did you forget to call setWorld?');
+            throw new Error("Did you forget to call setWorld?");
         }
 
         const world = this.updatesCollector.generateUpdate();
 
         const updateId = this.nextUpdateId++;
-        const players = Array.from(this.players.values()).map(p => ({
+        const players = Array.from(this.players.values()).map((p) => ({
             id: p.id,
             latency: p.latency,
         }));
 
-        const receivers = this.hostId === this.selfId ? this.players.values() : [this.players.get(this.hostId)];
+        const receivers =
+            this.hostId === this.selfId
+                ? this.players.values()
+                : [this.players.get(this.hostId)];
         for (const receiver of receivers) {
             if (!receiver) continue;
             if (receiver.id === this.selfId) continue;

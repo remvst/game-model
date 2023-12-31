@@ -7,7 +7,7 @@ import { rectangleSurface } from "../trait-surface-provider";
 import World from "../world";
 
 export default class EventTriggerTrait extends Trait {
-    static readonly key = 'event-trigger';
+    static readonly key = "event-trigger";
     readonly key = EventTriggerTrait.key;
 
     private readonly containedEntityIds = new Set<string>();
@@ -20,7 +20,7 @@ export default class EventTriggerTrait extends Trait {
         public radiusX: number = 10,
         public radiusY: number = 10,
         public triggerCount: number = 1,
-        public triggerTrait: string = 'player',
+        public triggerTrait: string = "player",
     ) {
         super();
     }
@@ -30,7 +30,8 @@ export default class EventTriggerTrait extends Trait {
         if (!world) return;
 
         for (const entity of world.entities.bucket(this.triggerTrait)) {
-            const newContained = Math.abs(entity.x - this.entity.x) <= this.radiusX &&
+            const newContained =
+                Math.abs(entity.x - this.entity.x) <= this.radiusX &&
                 Math.abs(entity.y - this.entity.y) <= this.radiusY;
 
             const previousContained = this.containedEntityIds.has(entity.id);
@@ -78,21 +79,34 @@ export default class EventTriggerTrait extends Trait {
         }
     }
 
-    private static readonly surfaceProvider = rectangleSurface((trait: EventTriggerTrait, rectangle) => {
-        rectangle.centerAround(trait.entity!.x, trait.entity!.y, trait.radiusX * 2, trait.radiusY * 2);
-    });
+    private static readonly surfaceProvider = rectangleSurface(
+        (trait: EventTriggerTrait, rectangle) => {
+            rectangle.centerAround(
+                trait.entity!.x,
+                trait.entity!.y,
+                trait.radiusX * 2,
+                trait.radiusY * 2,
+            );
+        },
+    );
     readonly surfaceProvider = EventTriggerTrait.surfaceProvider;
 
     static registryEntry(): RegistryEntry<EventTriggerTrait> {
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(EventTriggerTrait);
-            builder.category('scripting');
-            builder.simpleProp('onEnterIds', PropertyType.list(PropertyType.id()));
-            builder.simpleProp('onExitIds', PropertyType.list(PropertyType.id()));
-            builder.simpleProp('radiusX', PropertyType.num(0, 100, 5));
-            builder.simpleProp('radiusY', PropertyType.num(0, 100, 5));
-            builder.simpleProp('triggerCount', PropertyType.num(-1, 50, 1));
-            builder.simpleProp('triggerTrait', PropertyType.str());
+            builder.category("scripting");
+            builder.simpleProp(
+                "onEnterIds",
+                PropertyType.list(PropertyType.id()),
+            );
+            builder.simpleProp(
+                "onExitIds",
+                PropertyType.list(PropertyType.id()),
+            );
+            builder.simpleProp("radiusX", PropertyType.num(0, 100, 5));
+            builder.simpleProp("radiusY", PropertyType.num(0, 100, 5));
+            builder.simpleProp("triggerCount", PropertyType.num(-1, 50, 1));
+            builder.simpleProp("triggerTrait", PropertyType.str());
         });
     }
 }

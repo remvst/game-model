@@ -1,8 +1,8 @@
 import Entity from "../entity";
 
 export enum SerializationType {
-    VERBOSE = 'vb',
-    PACKED = 'pk',
+    VERBOSE = "vb",
+    PACKED = "pk",
 }
 
 export default class SerializationOptions {

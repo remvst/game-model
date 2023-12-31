@@ -1,12 +1,7 @@
 import { Rectangle } from "@remvst/geometry";
 
 class Sector<ObjectType> {
-
-    constructor(
-        readonly objects: ObjectType[] = [],
-    ) {
-
-    }
+    constructor(readonly objects: ObjectType[] = []) {}
 
     insert(object: ObjectType) {
         this.objects.push(object);
@@ -20,11 +15,7 @@ export default class SectorObjectSet<ObjectType> {
     private maxX = Number.MIN_SAFE_INTEGER;
     private maxY = Number.MIN_SAFE_INTEGER;
 
-    constructor(
-        readonly sectorSize: number,
-    ) {
-
-    }
+    constructor(readonly sectorSize: number) {}
 
     private sectorKey(x: number, y: number): string {
         return `${x},${y}`;
@@ -36,8 +27,8 @@ export default class SectorObjectSet<ObjectType> {
         const endSectorX = Math.floor(area.maxX / this.sectorSize);
         const endSectorY = Math.floor(area.maxY / this.sectorSize);
 
-        for (let sectorX = startSectorX ; sectorX <= endSectorX ; sectorX++) {
-            for (let sectorY = startSectorY ; sectorY <= endSectorY ; sectorY++) {
+        for (let sectorX = startSectorX; sectorX <= endSectorX; sectorX++) {
+            for (let sectorY = startSectorY; sectorY <= endSectorY; sectorY++) {
                 const index = this.sectorKey(sectorX, sectorY);
                 const sector = this.sectors.get(index);
                 if (!sector) {
@@ -54,7 +45,7 @@ export default class SectorObjectSet<ObjectType> {
         this.maxY = Math.max(this.maxY, area.maxY);
     }
 
-    * nonRepeatingQuery(area: Rectangle): Iterable<ObjectType> {
+    *nonRepeatingQuery(area: Rectangle): Iterable<ObjectType> {
         const visited = new Set<ObjectType>();
         for (const result of this.query(area)) {
             if (visited.has(result)) {
@@ -66,16 +57,24 @@ export default class SectorObjectSet<ObjectType> {
         }
     }
 
-    * query(area: Rectangle): Iterable<ObjectType> {
+    *query(area: Rectangle): Iterable<ObjectType> {
         if (this.sectors.size === 0) return;
 
-        const startSectorX = Math.floor(Math.max(this.minX, area.x) / this.sectorSize);
-        const startSectorY = Math.floor(Math.max(this.minY, area.y) / this.sectorSize);
-        const endSectorX = Math.floor(Math.min(this.maxX, area.maxX) / this.sectorSize);
-        const endSectorY = Math.floor(Math.min(this.maxY, area.maxY) / this.sectorSize);
+        const startSectorX = Math.floor(
+            Math.max(this.minX, area.x) / this.sectorSize,
+        );
+        const startSectorY = Math.floor(
+            Math.max(this.minY, area.y) / this.sectorSize,
+        );
+        const endSectorX = Math.floor(
+            Math.min(this.maxX, area.maxX) / this.sectorSize,
+        );
+        const endSectorY = Math.floor(
+            Math.min(this.maxY, area.maxY) / this.sectorSize,
+        );
 
-        for (let sectorX = startSectorX ; sectorX <= endSectorX ; sectorX++) {
-            for (let sectorY = startSectorY ; sectorY <= endSectorY ; sectorY++) {
+        for (let sectorX = startSectorX; sectorX <= endSectorX; sectorX++) {
+            for (let sectorY = startSectorY; sectorY <= endSectorY; sectorY++) {
                 const index = this.sectorKey(sectorX, sectorY);
                 const sector = this.sectors.get(index);
                 if (sector) {

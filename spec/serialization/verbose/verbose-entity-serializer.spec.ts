@@ -2,7 +2,7 @@ import { Entity, EntitySerializer, SerializationOptions } from "../../../src";
 import VerboseCompositeSerializer from "../../../src/serialization/verbose/verbose-composite-serializer";
 import VerboseEntitySerializer from "../../../src/serialization/verbose/verbose-entity-serializer";
 
-describe('the verbose entity serializer', () => {
+describe("the verbose entity serializer", () => {
     let traitSerializer: VerboseCompositeSerializer<any, any>;
     let serializer: EntitySerializer<any>;
 
@@ -12,7 +12,7 @@ describe('the verbose entity serializer', () => {
         serializer = new VerboseEntitySerializer(traitSerializer);
     });
 
-    it('will skip ages if specified', () => {
+    it("will skip ages if specified", () => {
         const entity = new Entity(undefined, []);
         entity.age = 22.345;
 
@@ -24,7 +24,7 @@ describe('the verbose entity serializer', () => {
         expect(deserialized.age).toBe(0);
     });
 
-    it('will include ages if specified', () => {
+    it("will include ages if specified", () => {
         const entity = new Entity(undefined, []);
         entity.age = 22.345;
 

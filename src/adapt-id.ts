@@ -1,11 +1,15 @@
 import { Entity, EntityGroupTrait } from ".";
 import World from "./world";
 
-export const TRIGGERER_ID = '_triggerer';
-export const TRAIT_PREFIX = 'trait:';
-export const GROUP_PREFIX = 'group:';
+export const TRIGGERER_ID = "_triggerer";
+export const TRAIT_PREFIX = "trait:";
+export const GROUP_PREFIX = "group:";
 
-export default function adaptId(originalId: string, triggererId: string, world: World): string {
+export default function adaptId(
+    originalId: string,
+    triggererId: string,
+    world: World,
+): string {
     if (originalId === TRIGGERER_ID) {
         return triggererId;
     }
@@ -19,9 +23,13 @@ export default function adaptId(originalId: string, triggererId: string, world: 
     // }
 
     return originalId;
-};
+}
 
-export function * resolveIds(originalId: string, triggererId: string, world: World): Iterable<Entity> {
+export function* resolveIds(
+    originalId: string,
+    triggererId: string,
+    world: World,
+): Iterable<Entity> {
     if (originalId === TRIGGERER_ID) {
         const triggerer = world.entity(triggererId);
         if (triggerer) {
@@ -42,7 +50,7 @@ export function * resolveIds(originalId: string, triggererId: string, world: Wor
         const groupId = originalId.slice(GROUP_PREFIX.length);
         const groupTrait = world.entity(groupId)?.traitOfType(EntityGroupTrait);
         if (groupTrait) {
-            yield * groupTrait.entities(world);
+            yield* groupTrait.entities(world);
         }
         return;
     }
@@ -52,4 +60,4 @@ export function * resolveIds(originalId: string, triggererId: string, world: Wor
         yield entity;
     }
     return;
-};
+}

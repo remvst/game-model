@@ -2,11 +2,14 @@ import { Entity } from "..";
 import { EntityEvent } from "../events/entity-event";
 import Trigger from "../events/trigger";
 import TriggerEvent from "../events/trigger-event";
-import { PropertyType, PropertyConstraints } from "../properties/property-constraints";
+import {
+    PropertyConstraints,
+    PropertyType,
+} from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
 import World from "../world";
-import DelayedActionTrait from './delayed-action-trait';
+import DelayedActionTrait from "./delayed-action-trait";
 
 interface ScriptStep {
     triggerEntityId: string;
@@ -14,7 +17,7 @@ interface ScriptStep {
 }
 
 export default class ScriptTrait extends Trait {
-    static readonly key = 'script';
+    static readonly key = "script";
     readonly key = ScriptTrait.key;
 
     steps: ScriptStep[] = [];
@@ -23,12 +26,18 @@ export default class ScriptTrait extends Trait {
     processEvent(event: EntityEvent, world: World) {
         if (event instanceof TriggerEvent) {
             for (const step of this.steps) {
-                world.entities.add(new Entity(undefined, [
-                    new DelayedActionTrait(
-                        step.delay,
-                        (world) => world.addEvent(new Trigger(step.triggerEntityId, event.triggererId!)),
-                    )
-                ]));
+                world.entities.add(
+                    new Entity(undefined, [
+                        new DelayedActionTrait(step.delay, (world) =>
+                            world.addEvent(
+                                new Trigger(
+                                    step.triggerEntityId,
+                                    event.triggererId!,
+                                ),
+                            ),
+                        ),
+                    ]),
+                );
             }
 
             this.triggerCount--;
@@ -39,16 +48,18 @@ export default class ScriptTrait extends Trait {
     }
 
     static registryEntry(): RegistryEntry<ScriptTrait> {
-        const stepType = PropertyType.composite(new Map<string, PropertyConstraints<string | number>>([
-            ['triggerEntityId', PropertyType.id()],
-            ['delay', PropertyType.num()],
-        ]));
+        const stepType = PropertyType.composite(
+            new Map<string, PropertyConstraints<string | number>>([
+                ["triggerEntityId", PropertyType.id()],
+                ["delay", PropertyType.num()],
+            ]),
+        );
 
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(ScriptTrait);
-            builder.category('scripting');
-            builder.simpleProp('triggerCount', PropertyType.num(-1, 100, 1));
-            builder.simpleProp('steps', PropertyType.list(stepType));
+            builder.category("scripting");
+            builder.simpleProp("triggerCount", PropertyType.num(-1, 100, 1));
+            builder.simpleProp("steps", PropertyType.list(stepType));
         });
     }
 }

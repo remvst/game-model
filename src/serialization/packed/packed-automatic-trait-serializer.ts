@@ -1,22 +1,32 @@
-import Entity from '../../entity';
-import { ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, PropertyConstraints, CompositeConstraints, JsonConstraints } from '../../properties/property-constraints';
-import Trait from '../../trait';
-import { RegistryEntry } from '../../registry/trait-registry';
-import { TraitSerializer } from '../serializer';
-import { ArrayDecoder, ArrayEncoder, EncoderSequence } from '../encoder';
-import SerializationOptions from '../serialization-options';
-import RebindableEntity from '../rebindable-entity';
+import Entity from "../../entity";
+import {
+    BooleanConstraints,
+    ColorConstraints,
+    CompositeConstraints,
+    EntityIdConstraints,
+    EnumConstraints,
+    JsonConstraints,
+    ListConstraints,
+    NumberConstraints,
+    PropertyConstraints,
+    StringConstraints,
+} from "../../properties/property-constraints";
+import { RegistryEntry } from "../../registry/trait-registry";
+import Trait from "../../trait";
+import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
+import RebindableEntity from "../rebindable-entity";
+import SerializationOptions from "../serialization-options";
+import { TraitSerializer } from "../serializer";
 
 const REBINDABLE_ENTITY = new RebindableEntity();
 
-export default class PackedTraitSerializer<T extends Trait> implements TraitSerializer<T, EncoderSequence> {
-
+export default class PackedTraitSerializer<T extends Trait>
+    implements TraitSerializer<T, EncoderSequence>
+{
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
 
-    constructor(private readonly registryEntry: RegistryEntry<T>) {
-
-    }
+    constructor(private readonly registryEntry: RegistryEntry<T>) {}
 
     private encode(
         type: PropertyConstraints<any>,
@@ -34,7 +44,7 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
 
         if (type instanceof CompositeConstraints) {
             for (const [key, subType] of type.properties.entries()) {
-                this.encode(subType, value[key], options)
+                this.encode(subType, value[key], options);
             }
             return;
         }
@@ -69,15 +79,13 @@ export default class PackedTraitSerializer<T extends Trait> implements TraitSeri
         throw new Error(`Unrecognized value type: ${type}`);
     }
 
-    private decode(
-        type: PropertyConstraints<any>,
-    ): any {
+    private decode(type: PropertyConstraints<any>): any {
         if (type instanceof ListConstraints) {
             const subType = type.itemType;
             const listLength = this.decoder.nextNumber();
 
             const res = [];
-            for (let i = 0 ; i < listLength ; i++) {
+            for (let i = 0; i < listLength; i++) {
                 res.push(this.decode(subType));
             }
             return res;

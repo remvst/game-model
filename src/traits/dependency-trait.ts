@@ -1,12 +1,12 @@
 import { CompositeConfigurable } from "@remvst/configurable";
 import EntityIdConfigurable from "../configurable/entity-id-configurable";
 import TriggerEvent from "../events/trigger-event";
+import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import Trait from "../trait";
-import { PropertyType } from '../properties/property-constraints';
 
 export default class DependencyTrait extends Trait {
-    static readonly key = 'dependency';
+    static readonly key = "dependency";
     readonly key = DependencyTrait.key;
     readonly disableChunking = true;
 
@@ -41,7 +41,11 @@ export default class DependencyTrait extends Trait {
             const depender = this.entity.world.entity(dependerId);
             if (!depender) continue;
 
-            if (depender.trait('event-holder') || depender.trait('event-trigger') || depender.trait('script')) {
+            if (
+                depender.trait("event-holder") ||
+                depender.trait("event-trigger") ||
+                depender.trait("script")
+            ) {
                 depender.addEvent(new TriggerEvent(null));
             } else {
                 depender.remove();
@@ -59,29 +63,38 @@ export default class DependencyTrait extends Trait {
         const configurable = new CompositeConfigurable();
 
         const listContent = list();
-        for (let i = 0 ; i <= listContent.length ; i++) {
+        for (let i = 0; i <= listContent.length; i++) {
             const label = `${listName}[${i}]`;
-            configurable.add(label, new EntityIdConfigurable({
-                'world': this.entity?.world,
-                'read': () => listContent[i],
-                'write': (id, configurable) => {
-                    const newIds = listContent.slice();
-                    newIds[i] = id;
-                    updateList(newIds.filter(id => !!id));
-                    configurable.invalidate();
-                }
-            }));
+            configurable.add(
+                label,
+                new EntityIdConfigurable({
+                    world: this.entity?.world,
+                    read: () => listContent[i],
+                    write: (id, configurable) => {
+                        const newIds = listContent.slice();
+                        newIds[i] = id;
+                        updateList(newIds.filter((id) => !!id));
+                        configurable.invalidate();
+                    },
+                }),
+            );
         }
 
         return configurable;
     }
 
     static registryEntry(): RegistryEntry<DependencyTrait> {
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(DependencyTrait);
-            builder.category('scripting');
-            builder.simpleProp('dependerIds', PropertyType.list(PropertyType.id()));
-            builder.simpleProp('dependsOnIds', PropertyType.list(PropertyType.id()));
+            builder.category("scripting");
+            builder.simpleProp(
+                "dependerIds",
+                PropertyType.list(PropertyType.id()),
+            );
+            builder.simpleProp(
+                "dependsOnIds",
+                PropertyType.list(PropertyType.id()),
+            );
         });
     }
 }

@@ -23,11 +23,20 @@ export default class GameModelApp {
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
                 if (serializer instanceof DualSupportTraitSerializer) {
-                    this.serializers.packed.trait.add(entry.key, serializer.packed);
-                    this.serializers.verbose.trait.add(entry.key, serializer.verbose);
+                    this.serializers.packed.trait.add(
+                        entry.key,
+                        serializer.packed,
+                    );
+                    this.serializers.verbose.trait.add(
+                        entry.key,
+                        serializer.verbose,
+                    );
                 } else {
-                    this.serializers.packed.trait.add(entry.key,serializer as any);
-                    this.serializers.verbose.trait.add(entry.key,serializer);
+                    this.serializers.packed.trait.add(
+                        entry.key,
+                        serializer as any,
+                    );
+                    this.serializers.verbose.trait.add(entry.key, serializer);
                 }
             }
 
@@ -40,11 +49,23 @@ export default class GameModelApp {
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
                 if (serializer instanceof DualSupportWorldEventSerializer) {
-                    this.serializers.packed.worldEvent.add(entry.key, serializer.packed);
-                    this.serializers.verbose.worldEvent.add(entry.key, serializer.verbose);
+                    this.serializers.packed.worldEvent.add(
+                        entry.key,
+                        serializer.packed,
+                    );
+                    this.serializers.verbose.worldEvent.add(
+                        entry.key,
+                        serializer.verbose,
+                    );
                 } else {
-                    this.serializers.packed.worldEvent.add(entry.key, serializer as any);
-                    this.serializers.verbose.worldEvent.add(entry.key, serializer);
+                    this.serializers.packed.worldEvent.add(
+                        entry.key,
+                        serializer as any,
+                    );
+                    this.serializers.verbose.worldEvent.add(
+                        entry.key,
+                        serializer,
+                    );
                 }
             }
         }

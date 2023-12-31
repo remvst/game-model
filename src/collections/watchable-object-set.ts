@@ -1,11 +1,12 @@
-'use strict';
+"use strict";
 
-import { Subject } from 'rxjs';
+import { Subject } from "rxjs";
 
-import { BaseObjectSet } from './base-object-set';
+import { BaseObjectSet } from "./base-object-set";
 
-export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<ObjectType> {
-
+export default class WatchableObjectSet<ObjectType>
+    implements BaseObjectSet<ObjectType>
+{
     private wrappedSet: BaseObjectSet<ObjectType>;
 
     additions: Subject<ObjectType>;
@@ -71,11 +72,11 @@ export default class WatchableObjectSet<ObjectType> implements BaseObjectSet<Obj
         return this.wrappedSet.hasKey(key);
     }
 
-    forEach(fn: (item: ObjectType) => (boolean | void)) {
+    forEach(fn: (item: ObjectType) => boolean | void) {
         return this.wrappedSet.forEach(fn);
     }
 
     bucket(bucketKey: string): Iterable<ObjectType> {
         return this.wrappedSet.bucket(bucketKey);
     }
-};
+}

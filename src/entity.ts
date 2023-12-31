@@ -1,46 +1,65 @@
-import { KeyProvider } from './key-provider';
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
+import { KeyProvider } from "./key-provider";
 
-import ObjectSet from './collections/object-set';
-import { EntityEvent } from './events/entity-event';
-import EntityEventProcessed from './events/entity-event-processed';
-import Trait from './trait';
-import { vector3 } from './vector3';
-import World from './world';
-import { Property, getSet } from './properties/properties';
-import { PropertyType } from './properties/property-constraints';
-import GameModelApp from './game-model-app';
-import { AuthorityType } from './multiplayer/authority';
+import ObjectSet from "./collections/object-set";
+import { EntityEvent } from "./events/entity-event";
+import EntityEventProcessed from "./events/entity-event-processed";
+import GameModelApp from "./game-model-app";
+import { AuthorityType } from "./multiplayer/authority";
+import { Property, getSet } from "./properties/properties";
+import { PropertyType } from "./properties/property-constraints";
+import Trait from "./trait";
+import { vector3 } from "./vector3";
+import World from "./world";
 
 function processMicroTime() {
-    const [seconds, nanoseconds] = process.hrtime()
+    const [seconds, nanoseconds] = process.hrtime();
     return seconds * 1000000000 + nanoseconds;
 }
 
-const now = typeof window === 'undefined' ? processMicroTime : performance.now.bind(performance);
+const now =
+    typeof window === "undefined"
+        ? processMicroTime
+        : performance.now.bind(performance);
 
 export class EntityProperties {
-    static readonly x: Property<number> = getSet('position.x', PropertyType.num(), entity => entity.x, (entity, x) => entity.x = x);
-    static readonly y: Property<number> = getSet('position.y', PropertyType.num(), entity => entity.y, (entity, y) => entity.y = y);
-    static readonly z: Property<number> = getSet('position.z', PropertyType.num(), entity => entity.z, (entity, z) => entity.z = z);
-    static readonly angle: Property<number> = getSet('angle', PropertyType.num(), entity => entity.angle, (entity, angle) => entity.angle = angle);
+    static readonly x: Property<number> = getSet(
+        "position.x",
+        PropertyType.num(),
+        (entity) => entity.x,
+        (entity, x) => (entity.x = x),
+    );
+    static readonly y: Property<number> = getSet(
+        "position.y",
+        PropertyType.num(),
+        (entity) => entity.y,
+        (entity, y) => (entity.y = y),
+    );
+    static readonly z: Property<number> = getSet(
+        "position.z",
+        PropertyType.num(),
+        (entity) => entity.z,
+        (entity, z) => (entity.z = z),
+    );
+    static readonly angle: Property<number> = getSet(
+        "angle",
+        PropertyType.num(),
+        (entity) => entity.angle,
+        (entity, angle) => (entity.angle = angle),
+    );
 
     static all() {
-        return [
-            this.x,
-            this.y,
-            this.z,
-            this.angle,
-        ];
+        return [this.x, this.y, this.z, this.angle];
     }
 }
 
 export default class Entity {
-
-    private readonly reusableEventProcessedEvent = new EntityEventProcessed(this);
+    private readonly reusableEventProcessedEvent = new EntityEventProcessed(
+        this,
+    );
 
     readonly id: string;
-    readonly traits = new ObjectSet<Trait>(trait => trait.key);
+    readonly traits = new ObjectSet<Trait>((trait) => trait.key);
     world: World | null = null;
 
     position = vector3();
@@ -50,10 +69,7 @@ export default class Entity {
     angle: number = 0;
     age: number = 0;
 
-    constructor(
-        id: string | undefined,
-        traits: Trait[],
-    ) {
+    constructor(id: string | undefined, traits: Trait[]) {
         this.id = id || v4();
 
         for (const trait of traits) {
@@ -61,13 +77,25 @@ export default class Entity {
         }
     }
 
-    get x() { return this.position.x; }
-    get y() { return this.position.y; }
-    get z() { return this.position.z; }
+    get x() {
+        return this.position.x;
+    }
+    get y() {
+        return this.position.y;
+    }
+    get z() {
+        return this.position.z;
+    }
 
-    set x(x: number) { this.position.x = x; }
-    set y(y: number) { this.position.y = y; }
-    set z(z: number) { this.position.z = z; }
+    set x(x: number) {
+        this.position.x = x;
+    }
+    set y(y: number) {
+        this.position.y = y;
+    }
+    set z(z: number) {
+        this.position.z = z;
+    }
 
     bind(world: World) {
         this.world = world;
@@ -111,7 +139,11 @@ export default class Entity {
             trait.maybeCycle(adjusted);
 
             const after = now();
-            this.world?.cyclePerformanceTracker?.addTime(this.id, trait.key, after - before);
+            this.world?.cyclePerformanceTracker?.addTime(
+                this.id,
+                trait.key,
+                after - before,
+            );
         }
     }
 
@@ -131,12 +163,16 @@ export default class Entity {
         return this.traits.getByKey(traitKey);
     }
 
-    traitOfType<T extends Trait>(keyProvider: (new (...params: any) => T) & KeyProvider): T | null {
+    traitOfType<T extends Trait>(
+        keyProvider: (new (...params: any) => T) & KeyProvider,
+    ): T | null {
         const key = keyProvider.key;
         if (!key) {
-            throw new Error('Provided trait type does not have a statically defined key');
+            throw new Error(
+                "Provided trait type does not have a statically defined key",
+            );
         }
-        return this.traits.getByKey(key) as (T | null);
+        return this.traits.getByKey(key) as T | null;
     }
 
     addEvent(event: EntityEvent) {
@@ -146,12 +182,12 @@ export default class Entity {
         }
 
         switch (world.authority.entityEventAuthority(event, this)) {
-        case AuthorityType.FULL:
-        case AuthorityType.LOCAL:
-        case AuthorityType.FORWARD:
-            break;
-        case AuthorityType.NONE:
-            return;
+            case AuthorityType.FULL:
+            case AuthorityType.LOCAL:
+            case AuthorityType.FORWARD:
+                break;
+            case AuthorityType.NONE:
+                return;
         }
 
         for (const trait of this.traits.items()) {
@@ -174,4 +210,4 @@ export default class Entity {
             existingTrait.copy(trait, app);
         }
     }
-};
+}

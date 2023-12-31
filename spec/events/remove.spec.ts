@@ -1,6 +1,12 @@
-import { Entity, GameModelApp, Remove, SerializationOptions, World } from "../../src";
+import {
+    Entity,
+    GameModelApp,
+    Remove,
+    SerializationOptions,
+    World,
+} from "../../src";
 
-describe('remove event', () => {
+describe("remove event", () => {
     let app: GameModelApp;
 
     beforeEach(() => {
@@ -9,10 +15,10 @@ describe('remove event', () => {
         app.finalize();
     });
 
-    it('can be applied', () => {
-        const event = new Remove('entityId');
+    it("can be applied", () => {
+        const event = new Remove("entityId");
         const world = new World();
-        const entity = new Entity('entityId', []);
+        const entity = new Entity("entityId", []);
         world.entities.add(entity);
 
         world.addEvent(event);
@@ -20,12 +26,18 @@ describe('remove event', () => {
         expect(entity.world).toBe(null);
     });
 
-    it('can be serialized', () => {
+    it("can be serialized", () => {
         const event = new Remove();
-        event.entityId = 'ent';
+        event.entityId = "ent";
         const options = new SerializationOptions();
-        const serialized = app.serializers.packed.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.packed.worldEvent.deserialize(serialized, options) as Remove;
+        const serialized = app.serializers.packed.worldEvent.serialize(
+            event,
+            options,
+        );
+        const deserialized = app.serializers.packed.worldEvent.deserialize(
+            serialized,
+            options,
+        ) as Remove;
 
         expect(deserialized.entityId).toBe(event.entityId);
     });

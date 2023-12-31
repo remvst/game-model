@@ -1,11 +1,14 @@
-import { Vector2, between } from '@remvst/geometry';
-import Entity from '../entity';
-import Trait from '../trait';
-import { TraitRegistryEntry, traitRegistryEntry } from '../registry/trait-registry';
-import { PropertyType } from '../properties/property-constraints';
+import { Vector2, between } from "@remvst/geometry";
+import Entity from "../entity";
+import { PropertyType } from "../properties/property-constraints";
+import {
+    TraitRegistryEntry,
+    traitRegistryEntry,
+} from "../registry/trait-registry";
+import Trait from "../trait";
 
 export default class SmoothTargetFollowingTrait extends Trait {
-    static readonly key = 'smooth-target-following';
+    static readonly key = "smooth-target-following";
     readonly key = SmoothTargetFollowingTrait.key;
 
     targetEntityId: string | null = null;
@@ -29,7 +32,11 @@ export default class SmoothTargetFollowingTrait extends Trait {
         return null;
     }
 
-    private calculateSpeed(position: Vector2, targetPosition: Vector2, outSpeed: Vector2) {
+    private calculateSpeed(
+        position: Vector2,
+        targetPosition: Vector2,
+        outSpeed: Vector2,
+    ) {
         const diffX = Math.abs(targetPosition.x - position.x);
         const diffY = Math.abs(targetPosition.y - position.y);
         outSpeed.x = Math.max(this.maxSpeed, diffX / this.reachTargetFactor);
@@ -55,10 +62,13 @@ export default class SmoothTargetFollowingTrait extends Trait {
     }
 
     static registryEntry(): TraitRegistryEntry<SmoothTargetFollowingTrait> {
-        return traitRegistryEntry(builder => {
+        return traitRegistryEntry((builder) => {
             builder.traitClass(SmoothTargetFollowingTrait);
-            builder.simpleProp('targetEntityId', PropertyType.id());
-            builder.simpleProp('targetTraitKeys', PropertyType.list(PropertyType.id()));
+            builder.simpleProp("targetEntityId", PropertyType.id());
+            builder.simpleProp(
+                "targetTraitKeys",
+                PropertyType.list(PropertyType.id()),
+            );
         });
     }
 }

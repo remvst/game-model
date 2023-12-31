@@ -1,23 +1,23 @@
 name: Check tests
 on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+    push:
+        branches:
+            - master
+    workflow_dispatch:
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: check-${{ github.ref }}
-      cancel-in-progress: true
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        run: npm install
-      - name: Run tests
-        shell: bash
-        run: npm run coverage
+    check:
+        runs-on: ubuntu-latest
+        concurrency:
+            group: check-${{ github.ref }}
+            cancel-in-progress: true
+        steps:
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+            - name: Check out repository code
+              uses: actions/checkout@v3
+            - name: Install dependencies
+              run: npm install
+            - name: Run tests
+              shell: bash
+              run: npm run coverage

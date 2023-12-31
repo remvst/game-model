@@ -1,7 +1,13 @@
-import { GameModelApp, SetProperty, SerializationOptions, World, Entity } from "../../src";
+import {
+    Entity,
+    GameModelApp,
+    SerializationOptions,
+    SetProperty,
+    World,
+} from "../../src";
 import { EntityProperties } from "../../src/entity";
 
-describe('set property event', () => {
+describe("set property event", () => {
     let app: GameModelApp;
 
     beforeEach(() => {
@@ -10,16 +16,12 @@ describe('set property event', () => {
         app.finalize();
     });
 
-    it('can be applied', () => {
-        const event = new SetProperty(
-            'entityId',
-            EntityProperties.x,
-            123,
-        );
+    it("can be applied", () => {
+        const event = new SetProperty("entityId", EntityProperties.x, 123);
 
         const world = new World();
 
-        const entity = new Entity('entityId', []);
+        const entity = new Entity("entityId", []);
         world.entities.add(entity);
 
         world.addEvent(event);
@@ -27,19 +29,21 @@ describe('set property event', () => {
         expect(entity.position.x).toBe(123);
     });
 
-    it('can be serialized', () => {
-        const event = new SetProperty(
-            'entityId',
-            EntityProperties.x,
-            123,
-        );
-        expect(event.entityId).toBe('entityId');
+    it("can be serialized", () => {
+        const event = new SetProperty("entityId", EntityProperties.x, 123);
+        expect(event.entityId).toBe("entityId");
         expect(event.property).toBe(EntityProperties.x);
         expect(event.value).toBe(123);
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.verbose.worldEvent.serialize(event, options);
-        const deserialized = app.serializers.verbose.worldEvent.deserialize(serialized, options) as SetProperty;
+        const serialized = app.serializers.verbose.worldEvent.serialize(
+            event,
+            options,
+        );
+        const deserialized = app.serializers.verbose.worldEvent.deserialize(
+            serialized,
+            options,
+        ) as SetProperty;
 
         expect(deserialized.entityId).toBe(event.entityId);
         expect(deserialized.property).toBe(event.property);

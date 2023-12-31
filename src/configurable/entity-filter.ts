@@ -13,7 +13,7 @@ export class EntityFilters {
             return true;
         };
     }
-    
+
     static or(...filters: EntityFilter[]): EntityFilter {
         return (entity: Entity) => {
             for (const filter of filters) {
@@ -24,15 +24,15 @@ export class EntityFilters {
             return false;
         };
     }
-    
+
     static trait(key: string): EntityFilter {
         return (entity: Entity) => !!entity.trait(key);
     }
-    
+
     static id(id: string): EntityFilter {
         return (entity: Entity) => entity.id === id;
     }
-    
+
     static not(filter: EntityFilter): EntityFilter {
         return (entity: Entity) => !filter(entity);
     }
@@ -41,4 +41,3 @@ export class EntityFilters {
         return () => true;
     }
 }
-

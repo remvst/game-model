@@ -1,13 +1,14 @@
 import GameModelApp from "../game-model-app";
 import { FullAuthority } from "../multiplayer/authority";
 import WorldUpdatesReceiver from "../multiplayer/world-updates-receiver";
-import SerializationOptions, { SerializationType } from "../serialization/serialization-options";
+import SerializationOptions, {
+    SerializationType,
+} from "../serialization/serialization-options";
 import World from "../world";
 import RecordedFrame from "./recorded-frame";
 import ReplayerAuthority from "./replayer-authority";
 
 export default class WorldReplayer {
-
     readonly options = (() => {
         const options = new SerializationOptions();
         options.type = SerializationType.PACKED;
@@ -15,7 +16,11 @@ export default class WorldReplayer {
         return options;
     })();
 
-    private readonly updatesReceiver = new WorldUpdatesReceiver(this.app, this.world, this.options);
+    private readonly updatesReceiver = new WorldUpdatesReceiver(
+        this.app,
+        this.world,
+        this.options,
+    );
     private readonly recorderAuthority = new FullAuthority();
     private readonly replayerAuthority = new ReplayerAuthority();
 
@@ -26,8 +31,7 @@ export default class WorldReplayer {
         private readonly app: GameModelApp,
         private readonly world: World,
         private readonly frames: RecordedFrame[],
-    ) {
-    }
+    ) {}
 
     cycle(elapsed: number) {
         this.age += elapsed;
@@ -37,7 +41,11 @@ export default class WorldReplayer {
             const authorityBefore = this.world.authority;
             try {
                 this.world.authority = this.replayerAuthority;
-                this.updatesReceiver.applyUpdate(frame.worldUpdate, '', this.recorderAuthority);
+                this.updatesReceiver.applyUpdate(
+                    frame.worldUpdate,
+                    "",
+                    this.recorderAuthority,
+                );
             } finally {
                 this.world.authority = authorityBefore;
             }

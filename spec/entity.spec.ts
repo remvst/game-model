@@ -1,21 +1,27 @@
-'use strict';
+"use strict";
 
-import { Entity, Trait, World, EntityEvent, EntityEventProcessed, vector3 } from '../src/index';
+import {
+    Entity,
+    EntityEvent,
+    EntityEventProcessed,
+    Trait,
+    World,
+    vector3,
+} from "../src/index";
 
-describe('an entity', () => {
-
+describe("an entity", () => {
     class TestTrait extends Trait {
-        static readonly key = 'test'
+        static readonly key = "test";
         readonly key = TestTrait.key;
     }
 
     class OtherTestTrait extends Trait {
-        static readonly key = 'other'
+        static readonly key = "other";
         readonly key = OtherTestTrait.key;
     }
 
     class TraitWithParams extends Trait {
-        static readonly key = 'other'
+        static readonly key = "other";
         readonly key = OtherTestTrait.key;
 
         constructor(_: string, _1: number) {
@@ -23,10 +29,9 @@ describe('an entity', () => {
         }
     }
 
-    class TestEvent implements EntityEvent {
-    }
+    class TestEvent implements EntityEvent {}
 
-    it('can be initialized with no traits', () => {
+    it("can be initialized with no traits", () => {
         const entity = new Entity(undefined, []);
 
         expect(entity.x).toBe(0);
@@ -36,20 +41,20 @@ describe('an entity', () => {
         expect(entity.traits.size).toBe(0);
     });
 
-    it('can be initialized with an ID', () => {
-        const entity = new Entity('myid', []);
+    it("can be initialized with an ID", () => {
+        const entity = new Entity("myid", []);
 
-        expect(entity.id).toBe('myid');
+        expect(entity.id).toBe("myid");
     });
 
-    it('updates its age on cycle', () => {
+    it("updates its age on cycle", () => {
         const entity = new Entity(undefined, []);
 
         entity.cycle(123);
         expect(entity.age).toBe(123);
     });
 
-    it('updates its cycle start and end positions', () => {
+    it("updates its cycle start and end positions", () => {
         const entity = new Entity(undefined, []);
         entity.position.x = 1;
         entity.position.y = 2;
@@ -64,10 +69,10 @@ describe('an entity', () => {
         expect(entity.cycleVelocity).toEqual(vector3(3, 5, 6));
     });
 
-    it('calls bind() then postBind() on all traits', () => {
+    it("calls bind() then postBind() on all traits", () => {
         const testTrait = new TestTrait();
-        spyOn(testTrait, 'bind');
-        spyOn(testTrait, 'postBind');
+        spyOn(testTrait, "bind");
+        spyOn(testTrait, "postBind");
 
         const entity = new Entity(undefined, [testTrait]);
         entity.bind({} as World);
@@ -76,9 +81,9 @@ describe('an entity', () => {
         expect(testTrait.postBind).toHaveBeenCalled();
     });
 
-    it('calls maybeCycle() on all traits', () => {
+    it("calls maybeCycle() on all traits", () => {
         const testTrait = new TestTrait();
-        spyOn(testTrait, 'maybeCycle').and.callThrough();
+        spyOn(testTrait, "maybeCycle").and.callThrough();
 
         const entity = new Entity(undefined, [testTrait]);
         entity.cycle(123);
@@ -86,7 +91,7 @@ describe('an entity', () => {
         expect(testTrait.maybeCycle).toHaveBeenCalledWith(123);
     });
 
-    it('can be bound to a world', () => {
+    it("can be bound to a world", () => {
         const world = new World();
         const entity = new Entity(undefined, []);
         entity.bind(world);
@@ -94,7 +99,7 @@ describe('an entity', () => {
         expect(entity.world).toBe(world);
     });
 
-    it('can be unbound from its world', () => {
+    it("can be unbound from its world", () => {
         const world = new World();
         const entity = new Entity(undefined, []);
         entity.bind(world);
@@ -103,7 +108,7 @@ describe('an entity', () => {
         expect(entity.world).toBe(null);
     });
 
-    it('can be removed from the world', () => {
+    it("can be removed from the world", () => {
         const world = new World();
 
         const entity = new Entity(undefined, []);
@@ -114,18 +119,18 @@ describe('an entity', () => {
         expect(world.entities.size).toBe(0);
     });
 
-    it('does not throw if removed from a world before being added', () => {
+    it("does not throw if removed from a world before being added", () => {
         const entity = new Entity(undefined, []);
         expect(() => entity.remove()).not.toThrow();
     });
 
-    it('can fetch a trait', () => {
+    it("can fetch a trait", () => {
         const testTrait = new TestTrait();
         const entity = new Entity(undefined, [testTrait]);
-        expect(entity.trait('test')).toBe(testTrait);
+        expect(entity.trait("test")).toBe(testTrait);
     });
 
-    it('can fetch a trait of a type', () => {
+    it("can fetch a trait of a type", () => {
         const testTrait = new TestTrait();
         const otherTestTrait = new OtherTestTrait();
         const entity = new Entity(undefined, [testTrait, otherTestTrait]);
@@ -133,45 +138,47 @@ describe('an entity', () => {
         expect(entity.traitOfType(OtherTestTrait)).toBe(otherTestTrait);
     });
 
-    it('can fetch a trait of a type with params', () => {
-        const traitWithParams = new TraitWithParams('', 2);
+    it("can fetch a trait of a type with params", () => {
+        const traitWithParams = new TraitWithParams("", 2);
         const entity = new Entity(undefined, [traitWithParams]);
         expect(entity.traitOfType(TraitWithParams)).toBe(traitWithParams);
     });
 
-    it('can fail to fetch a trait of a type', () => {
+    it("can fail to fetch a trait of a type", () => {
         const testTrait = new TestTrait();
         const entity = new Entity(undefined, [testTrait]);
         expect(entity.traitOfType(OtherTestTrait)).toBe(null);
     });
 
-    it('can process a local event', () => {
+    it("can process a local event", () => {
         const testTrait = new TestTrait();
-        spyOn(testTrait, 'processEvent');
+        spyOn(testTrait, "processEvent");
 
         const entity = new Entity(undefined, [testTrait]);
         const event = new TestEvent();
 
         const world = new World();
         world.entities.add(entity);
-        
+
         entity.addEvent(event);
 
         expect(testTrait.processEvent).toHaveBeenCalledWith(event, world);
     });
 
-    it('can process a local event and notify the world about it', () => {
+    it("can process a local event and notify the world about it", () => {
         const testTrait = new TestTrait();
-        spyOn(testTrait, 'processEvent');
+        spyOn(testTrait, "processEvent");
 
         const entity = new Entity(undefined, [testTrait]);
         const entityEvent = new TestEvent();
 
         const world = new World();
         world.entities.add(entity);
-        spyOn(world, 'addEvent').withArgs(jasmine.any(EntityEventProcessed)).and.callFake(event => {
-            expect((event as EntityEventProcessed).event).toBe(entityEvent);
-        });
+        spyOn(world, "addEvent")
+            .withArgs(jasmine.any(EntityEventProcessed))
+            .and.callFake((event) => {
+                expect((event as EntityEventProcessed).event).toBe(entityEvent);
+            });
 
         entity.addEvent(entityEvent);
 

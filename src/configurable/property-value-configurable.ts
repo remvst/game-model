@@ -1,11 +1,31 @@
-import { BooleanConfigurable, ButtonConfigurable, ColorConfigurable, CompositeConfigurable, Configurable, EnumConfigurable, GroupConfigurable, NumberConfigurable, StringConfigurable } from "@remvst/configurable";
-import EntityIdConfigurable from "./entity-id-configurable";
-import { PropertyConstraints, ListConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, CompositeConstraints } from "../properties/property-constraints";
+import {
+    BooleanConfigurable,
+    ButtonConfigurable,
+    ColorConfigurable,
+    CompositeConfigurable,
+    Configurable,
+    EnumConfigurable,
+    GroupConfigurable,
+    NumberConfigurable,
+    StringConfigurable,
+} from "@remvst/configurable";
+import {
+    BooleanConstraints,
+    ColorConstraints,
+    CompositeConstraints,
+    EntityIdConstraints,
+    EnumConstraints,
+    ListConstraints,
+    NumberConstraints,
+    PropertyConstraints,
+    StringConstraints,
+} from "../properties/property-constraints";
 import World from "../world";
+import EntityIdConfigurable from "./entity-id-configurable";
 
 export function propertyValueConfigurable<T>(
     world: World | null,
-    type: PropertyConstraints<T>, 
+    type: PropertyConstraints<T>,
     read: () => T,
     write: (value: T, configurable: Configurable) => void,
 ): Configurable {
@@ -13,7 +33,7 @@ export function propertyValueConfigurable<T>(
         const items = read() as any[];
 
         const configurable = new CompositeConfigurable();
-        for (let i = 0 ; i <= items.length ; i++) {
+        for (let i = 0; i <= items.length; i++) {
             const itemConfigurable = propertyValueConfigurable(
                 world,
                 type.itemType,
@@ -23,29 +43,32 @@ export function propertyValueConfigurable<T>(
                     copy[i] = value;
                     write(copy as T, configurable);
                     configurable.invalidate();
-                }
+                },
             );
 
             const deleteButton = new ButtonConfigurable({
-                'label': 'del',
-                'onClick': () => {
+                label: "del",
+                onClick: () => {
                     const copy = (read() as any[]).slice(0);
                     copy.splice(i, 1);
                     write(copy as T, configurable);
                     configurable.invalidate();
-                }
+                },
             });
 
             if (itemConfigurable instanceof GroupConfigurable) {
                 itemConfigurable.add(deleteButton);
                 configurable.add(`item[${i}]`, itemConfigurable);
             } else if (itemConfigurable instanceof CompositeConfigurable) {
-                itemConfigurable.add('del', deleteButton);
+                itemConfigurable.add("del", deleteButton);
                 configurable.add(`item[${i}]`, itemConfigurable);
             } else {
-                configurable.add(`item[${i}]`, new GroupConfigurable()
-                    .add(itemConfigurable)
-                    .add(deleteButton));
+                configurable.add(
+                    `item[${i}]`,
+                    new GroupConfigurable()
+                        .add(itemConfigurable)
+                        .add(deleteButton),
+                );
             }
         }
 
@@ -57,16 +80,19 @@ export function propertyValueConfigurable<T>(
         const configurable = new CompositeConfigurable();
 
         for (const [key, subType] of type.properties.entries()) {
-            configurable.add(key, propertyValueConfigurable(
-                world, 
-                subType,
-                () => existing[key],
-                (value, configurable) => {
-                    const newValue = Object.assign({}, existing);
-                    newValue[key] = value;
-                    write(newValue, configurable);
-                }
-            ))
+            configurable.add(
+                key,
+                propertyValueConfigurable(
+                    world,
+                    subType,
+                    () => existing[key],
+                    (value, configurable) => {
+                        const newValue = Object.assign({}, existing);
+                        newValue[key] = value;
+                        write(newValue, configurable);
+                    },
+                ),
+            );
         }
 
         return configurable;
@@ -74,52 +100,52 @@ export function propertyValueConfigurable<T>(
 
     if (type instanceof NumberConstraints) {
         return new NumberConfigurable({
-            'read': () => parseFloat(read() as any) || 0,
-            'write': (value, configurable) => write(value as T, configurable),
-            'min': type.min, 
-            'max': type.max, 
-            'step': type.step,
+            read: () => parseFloat(read() as any) || 0,
+            write: (value, configurable) => write(value as T, configurable),
+            min: type.min,
+            max: type.max,
+            step: type.step,
         });
     }
 
     if (type instanceof StringConstraints) {
         return new StringConfigurable({
-            'read': () => (read() as any).toString(),
-            'write': (value, configurable) => write(value as T, configurable),
+            read: () => (read() as any).toString(),
+            write: (value, configurable) => write(value as T, configurable),
         });
     }
 
     if (type instanceof BooleanConstraints) {
         return new BooleanConfigurable({
-            'read': () => !!read(),
-            'write': (value, configurable) => write(value as T, configurable),
+            read: () => !!read(),
+            write: (value, configurable) => write(value as T, configurable),
         });
     }
 
     if (type instanceof ColorConstraints) {
         return new ColorConfigurable({
-            'read': () => parseInt(read() as any) || 0,
-            'write': (value, configurable) => write(value as T, configurable),
+            read: () => parseInt(read() as any) || 0,
+            write: (value, configurable) => write(value as T, configurable),
         });
     }
 
     if (type instanceof EntityIdConstraints) {
         return new EntityIdConfigurable({
             world,
-            'read': () => (read() || '').toString(),
-            'write': (value, configurable) => write(value as T, configurable),
+            read: () => (read() || "").toString(),
+            write: (value, configurable) => write(value as T, configurable),
         });
     }
 
     if (type instanceof EnumConstraints) {
         const configurable = new EnumConfigurable({
-            'enumToken': type.enumToken,
-            'read': () => read() as any,
-            'write': (value, configurable) => write(value as T, configurable),
+            enumToken: type.enumToken,
+            read: () => read() as any,
+            write: (value, configurable) => write(value as T, configurable),
         });
 
         for (const value of type.values) {
-            configurable.add((value || '(empty)').toString(), value);
+            configurable.add((value || "(empty)").toString(), value);
         }
 
         return configurable;

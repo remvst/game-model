@@ -1,16 +1,16 @@
 import { EntityFilter, EntityFilters } from "../configurable/entity-filter";
 
 export class PropertyType {
-    static num(min?: number, max?: number, step?: number) { 
-        return new NumberConstraints(min, max, step); 
+    static num(min?: number, max?: number, step?: number) {
+        return new NumberConstraints(min, max, step);
     }
 
-    static id(filter: EntityFilter = EntityFilters.any()) { 
-        return new EntityIdConstraints(filter); 
+    static id(filter: EntityFilter = EntityFilters.any()) {
+        return new EntityIdConstraints(filter);
     }
 
-    static list<T>(itemType: PropertyConstraints<T>) { 
-        return new ListConstraints(itemType); 
+    static list<T>(itemType: PropertyConstraints<T>) {
+        return new ListConstraints(itemType);
     }
 
     static enum<T>(values: T[], enumToken: any = null) {
@@ -22,17 +22,27 @@ export class PropertyType {
     }
 
     static vec2(min?: number, max?: number, step?: number) {
-        return this.composite(new Map<string, PropertyConstraints<any>>([
-            ['x', PropertyType.num(min, max, step)],
-            ['y', PropertyType.num(min, max, step)],
-        ]));
+        return this.composite(
+            new Map<string, PropertyConstraints<any>>([
+                ["x", PropertyType.num(min, max, step)],
+                ["y", PropertyType.num(min, max, step)],
+            ]),
+        );
     }
-    
-    static bool() { return new BooleanConstraints(); }
-    static str() { return new StringConstraints(); }
-    static color() { return new ColorConstraints(); }
-    static json<Format>(defVal: Format) { return new JsonConstraints(defVal); }
-} 
+
+    static bool() {
+        return new BooleanConstraints();
+    }
+    static str() {
+        return new StringConstraints();
+    }
+    static color() {
+        return new ColorConstraints();
+    }
+    static json<Format>(defVal: Format) {
+        return new JsonConstraints(defVal);
+    }
+}
 
 export abstract class PropertyConstraints<T> {
     abstract defaultValue(): T;
@@ -40,7 +50,6 @@ export abstract class PropertyConstraints<T> {
 }
 
 export class JsonConstraints<Format> extends PropertyConstraints<Format> {
-
     private readonly stringifiedDefault = JSON.stringify(this.defVal);
 
     constructor(readonly defVal: any) {
@@ -76,11 +85,11 @@ export class NumberConstraints extends PropertyConstraints<number> {
 
 export class StringConstraints extends PropertyConstraints<string> {
     defaultValue() {
-        return '';
+        return "";
     }
 
     convert(value: any): string {
-        return value ? value.toString() : '';
+        return value ? value.toString() : "";
     }
 }
 
@@ -95,18 +104,16 @@ export class BooleanConstraints extends PropertyConstraints<boolean> {
 }
 
 export class EntityIdConstraints extends PropertyConstraints<string> {
-    constructor(
-        readonly filter: EntityFilter = EntityFilters.any(),
-    ) {
+    constructor(readonly filter: EntityFilter = EntityFilters.any()) {
         super();
     }
 
     defaultValue() {
-        return '';
+        return "";
     }
 
     convert(value: any): string {
-        return value ? value.toString() : '';
+        return value ? value.toString() : "";
     }
 }
 
@@ -130,13 +137,15 @@ export class ListConstraints<T> extends PropertyConstraints<T[]> {
     }
 
     convert(value: any) {
-        return Array.isArray(value) ? value.map((item) => this.itemType.convert(item)) : [];
+        return Array.isArray(value)
+            ? value.map((item) => this.itemType.convert(item))
+            : [];
     }
 }
 
 export class EnumConstraints<T> extends PropertyConstraints<T> {
     constructor(
-        readonly values: T[], 
+        readonly values: T[],
         readonly enumToken?: any,
     ) {
         super();

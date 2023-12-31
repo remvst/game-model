@@ -1,6 +1,11 @@
-import { DependencyTrait, Entity, GameModelApp, ScriptTrait, SerializationOptions } from "../../src";
+import {
+    Entity,
+    GameModelApp,
+    ScriptTrait,
+    SerializationOptions,
+} from "../../src";
 
-describe('script trait', () => {
+describe("script trait", () => {
     let app: GameModelApp;
 
     beforeEach(() => {
@@ -9,19 +14,25 @@ describe('script trait', () => {
         app.finalize();
     });
 
-    it('can be serialized', () => {
+    it("can be serialized", () => {
         const trait = new ScriptTrait();
         trait.triggerCount = 99;
         trait.steps = [
-            { delay: 123, triggerEntityId: 'entity123' },
-            { delay: 456, triggerEntityId: 'entity456' },
+            { delay: 123, triggerEntityId: "entity123" },
+            { delay: 456, triggerEntityId: "entity456" },
         ];
 
         const entity = new Entity(undefined, [trait]);
 
         const options = new SerializationOptions();
-        const serialized = app.serializers.verbose.entity.serialize(entity, options);
-        const deserialized = app.serializers.verbose.entity.deserialize(serialized, options);
+        const serialized = app.serializers.verbose.entity.serialize(
+            entity,
+            options,
+        );
+        const deserialized = app.serializers.verbose.entity.deserialize(
+            serialized,
+            options,
+        );
 
         expect(deserialized.id).toBe(entity.id);
         expect(deserialized.age).toBe(entity.age);

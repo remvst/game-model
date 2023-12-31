@@ -6,10 +6,22 @@ export function repositionEntities(
     newCenter: Vector2,
     precision: number,
 ) {
-    const minX = entities.reduce((acc, entity) => Math.min(acc, entity.x), Number.MAX_SAFE_INTEGER);
-    const minY = entities.reduce((acc, entity) => Math.min(acc, entity.y), Number.MAX_SAFE_INTEGER);
-    const maxX = entities.reduce((acc, entity) => Math.max(acc, entity.x), Number.MIN_SAFE_INTEGER);
-    const maxY = entities.reduce((acc, entity) => Math.max(acc, entity.y), Number.MIN_SAFE_INTEGER);
+    const minX = entities.reduce(
+        (acc, entity) => Math.min(acc, entity.x),
+        Number.MAX_SAFE_INTEGER,
+    );
+    const minY = entities.reduce(
+        (acc, entity) => Math.min(acc, entity.y),
+        Number.MAX_SAFE_INTEGER,
+    );
+    const maxX = entities.reduce(
+        (acc, entity) => Math.max(acc, entity.x),
+        Number.MIN_SAFE_INTEGER,
+    );
+    const maxY = entities.reduce(
+        (acc, entity) => Math.max(acc, entity.y),
+        Number.MIN_SAFE_INTEGER,
+    );
 
     const midPointX = (minX + maxX) / 2;
     const midPointY = (minY + maxY) / 2;

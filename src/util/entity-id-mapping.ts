@@ -1,22 +1,18 @@
 import World from "../world";
 
 export default class EntityIdMapping {
-
     private readonly sourceToDestinationId = new Map<string, string>();
 
-    constructor(
-        world: World,
-        sourceEntityIds: string[],
-    ) {
+    constructor(world: World, sourceEntityIds: string[]) {
         for (const sourceId of sourceEntityIds) {
             if (!world.entity(sourceId)) {
                 this.sourceToDestinationId.set(sourceId, sourceId);
-                continue
+                continue;
             }
 
             let suffix = 1;
             while (
-                world.entity(sourceId + suffix) || 
+                world.entity(sourceId + suffix) ||
                 this.sourceToDestinationId.has(sourceId + suffix)
             ) {
                 suffix++;

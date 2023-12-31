@@ -1,14 +1,16 @@
-import { Rectangle } from '@remvst/geometry';
-import { KeyProvider } from './key-provider';
-import { TraitSurfaceProvider, entityPositionSurface } from './trait-surface-provider';
-import { GameModelApp, TraitRegistry, vector3, World } from '.';
-import Entity from './entity';
-import { EntityEvent } from './events/entity-event';
+import { Rectangle } from "@remvst/geometry";
+import { GameModelApp, World, vector3 } from ".";
+import Entity from "./entity";
+import { EntityEvent } from "./events/entity-event";
+import { KeyProvider } from "./key-provider";
+import {
+    TraitSurfaceProvider,
+    entityPositionSurface,
+} from "./trait-surface-provider";
 
 const REUSABLE_GEOMETRY_AREA = new Rectangle();
 
 export default abstract class Trait implements KeyProvider {
-
     private _entity: Entity | null = null;
     enabled: boolean;
 
@@ -49,7 +51,13 @@ export default abstract class Trait implements KeyProvider {
     dependency<TraitType extends Trait>(traitId: string): TraitType {
         const trait = this.entity!.traits.getByKey(traitId);
         if (!trait) {
-            throw new Error('Trait ' + this.key + ' depends on trait ' + traitId + ' but trait was not found');
+            throw new Error(
+                "Trait " +
+                    this.key +
+                    " depends on trait " +
+                    traitId +
+                    " but trait was not found",
+            );
         }
 
         return trait as TraitType;
@@ -84,7 +92,9 @@ export default abstract class Trait implements KeyProvider {
     private makeQueriable() {
         if (!this.queriable) return;
         this.surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
-        this.entity?.world?.sectorSet(this.key)?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
+        this.entity?.world
+            ?.sectorSet(this.key)
+            ?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
     }
 
     processEvent(event: EntityEvent, world: World) {

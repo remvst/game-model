@@ -1,18 +1,28 @@
 import { WorldEvent } from "../../events/world-event";
-import { PropertyConstraints, ListConstraints, CompositeConstraints, NumberConstraints, StringConstraints, BooleanConstraints, ColorConstraints, EntityIdConstraints, EnumConstraints, JsonConstraints } from "../../properties/property-constraints";
+import {
+    BooleanConstraints,
+    ColorConstraints,
+    CompositeConstraints,
+    EntityIdConstraints,
+    EnumConstraints,
+    JsonConstraints,
+    ListConstraints,
+    NumberConstraints,
+    PropertyConstraints,
+    StringConstraints,
+} from "../../properties/property-constraints";
 import { WorldEventRegistryEntry } from "../../registry/world-event-registry";
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
 import SerializationOptions from "../serialization-options";
 import { WorldEventSerializer } from "../serializer";
 
-export default class PackedAutomaticWorldEventSerializer<T extends WorldEvent> implements WorldEventSerializer<T, EncoderSequence> {
-
+export default class PackedAutomaticWorldEventSerializer<T extends WorldEvent>
+    implements WorldEventSerializer<T, EncoderSequence>
+{
     private readonly encoder = new ArrayEncoder();
     private readonly decoder = new ArrayDecoder();
 
-    constructor(private readonly registryEntry: WorldEventRegistryEntry<T>) {
-
-    }
+    constructor(private readonly registryEntry: WorldEventRegistryEntry<T>) {}
 
     private encode(
         type: PropertyConstraints<any>,
@@ -30,7 +40,7 @@ export default class PackedAutomaticWorldEventSerializer<T extends WorldEvent> i
 
         if (type instanceof CompositeConstraints) {
             for (const [key, subType] of type.properties.entries()) {
-                this.encode(subType, value[key], options)
+                this.encode(subType, value[key], options);
             }
             return;
         }
@@ -65,15 +75,13 @@ export default class PackedAutomaticWorldEventSerializer<T extends WorldEvent> i
         throw new Error(`Unrecognized value type: ${type}`);
     }
 
-    private decode(
-        type: PropertyConstraints<any>,
-    ): any {
+    private decode(type: PropertyConstraints<any>): any {
         if (type instanceof ListConstraints) {
             const subType = type.itemType;
             const listLength = this.decoder.nextNumber();
 
             const res = [];
-            for (let i = 0 ; i < listLength ; i++) {
+            for (let i = 0; i < listLength; i++) {
                 res.push(this.decode(subType));
             }
             return res;
@@ -113,7 +121,10 @@ export default class PackedAutomaticWorldEventSerializer<T extends WorldEvent> i
         throw new Error(`Unrecognized value type: ${type}`);
     }
 
-    serialize(event: WorldEvent, options: SerializationOptions): EncoderSequence {
+    serialize(
+        event: WorldEvent,
+        options: SerializationOptions,
+    ): EncoderSequence {
         this.encoder.reset();
 
         for (const property of this.registryEntry.properties!) {

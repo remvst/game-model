@@ -1,15 +1,19 @@
-import { EntityPropertyType, Property, traitEnabledProperty } from '../properties/properties';
-import { Configurable, CompositeConfigurable } from '@remvst/configurable';
-import { TraitSerializer, AnySerialized } from '../serialization/serializer';
+import { CompositeConfigurable, Configurable } from "@remvst/configurable";
+import { propertyValueConfigurable } from "../configurable/property-value-configurable";
+import GameModelApp from "../game-model-app";
+import { KeyProvider } from "../key-provider";
+import {
+    EntityPropertyType,
+    Property,
+    traitEnabledProperty,
+} from "../properties/properties";
+import { PropertyConstraints } from "../properties/property-constraints";
+import DualSupportTraitSerializer from "../serialization/dual/dual-support-trait-serializer";
+import PackedAutomaticTraitSerializer from "../serialization/packed/packed-automatic-trait-serializer";
+import { AnySerialized, TraitSerializer } from "../serialization/serializer";
+import VerboseAutomaticTraitSerializer from "../serialization/verbose/verbose-automatic-trait-serializer";
 import Trait from "../trait";
-import { propertyValueConfigurable } from '../configurable/property-value-configurable';
-import { KeyProvider } from '../key-provider';
-import VerboseAutomaticTraitSerializer from '../serialization/verbose/verbose-automatic-trait-serializer';
-import PackedAutomaticTraitSerializer from '../serialization/packed/packed-automatic-trait-serializer';
-import DualSupportTraitSerializer from '../serialization/dual/dual-support-trait-serializer';
-import { Registry } from './registry';
-import { PropertyConstraints } from '../properties/property-constraints';
-import GameModelApp from '../game-model-app';
+import { Registry } from "./registry";
 
 export interface TraitRegistryEntry<TraitType extends Trait> {
     readonly key: string;
@@ -20,24 +24,26 @@ export interface TraitRegistryEntry<TraitType extends Trait> {
     properties?: Property<any>[];
 }
 
-export type RegistryEntry<TraitType extends Trait> = TraitRegistryEntry<TraitType>;
+export type RegistryEntry<TraitType extends Trait> =
+    TraitRegistryEntry<TraitType>;
 
 export interface AutoRegistryEntry<TraitType extends Trait> {
-    readonly traitType: (new () => TraitType) & KeyProvider,
-    readonly properties?: Property<any>[],
-    readonly category?: string,
+    readonly traitType: (new () => TraitType) & KeyProvider;
+    readonly properties?: Property<any>[];
+    readonly category?: string;
 }
 
 export type AnyTraitRegistryEntry<TraitType extends Trait> =
-    TraitRegistryEntry<TraitType> |
-    AutoRegistryEntry<TraitType>;
+    | TraitRegistryEntry<TraitType>
+    | AutoRegistryEntry<TraitType>;
 
 class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
-
     private _key: string = null;
     private _newTrait: () => TraitType = null;
     private _category: string = null;
-    private _serializer: (app: GameModelApp) => TraitSerializer<TraitType, AnySerialized> = null;
+    private _serializer: (
+        app: GameModelApp,
+    ) => TraitSerializer<TraitType, AnySerialized> = null;
     private _configurable: (trait: TraitType) => Configurable;
     private readonly _properties: Property<any>[] = [];
 
@@ -53,12 +59,15 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
         this.configurable((trait: TraitType) => {
             const autoConfigurable = new CompositeConfigurable();
             for (const property of this._properties) {
-                autoConfigurable.add(property.identifier, propertyValueConfigurable(
-                    trait.entity!.world,
-                    property.type,
-                    () => property.get(trait.entity!),
-                    (value) => property.set(trait.entity!, value),
-                ));
+                autoConfigurable.add(
+                    property.identifier,
+                    propertyValueConfigurable(
+                        trait.entity!.world,
+                        property.type,
+                        () => property.get(trait.entity!),
+                        (value) => property.set(trait.entity!, value),
+                    ),
+                );
             }
             return autoConfigurable;
         });
@@ -89,28 +98,33 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
     ): void {
         const traitKey = this._key;
         this._properties.push({
-            identifier: traitKey + '.' + identifier,
+            identifier: traitKey + "." + identifier,
             localIdentifier: identifier,
             entityPropertyType: EntityPropertyType.SPECIFIC_TRAIT,
             type,
             get: (entity) => get(entity.trait(traitKey) as TraitType),
-            set: (entity, value) => set(entity.trait(traitKey) as TraitType, value),
+            set: (entity, value) =>
+                set(entity.trait(traitKey) as TraitType, value),
         });
     }
 
-    simpleProp<Key extends string & keyof TraitType, PropertyType extends TraitType[Key]>(
-        identifier: Key,
-        type: PropertyConstraints<PropertyType>,
-    ) {
+    simpleProp<
+        Key extends string & keyof TraitType,
+        PropertyType extends TraitType[Key],
+    >(identifier: Key, type: PropertyConstraints<PropertyType>) {
         this.property(
             identifier,
             type,
             (trait) => trait[identifier],
-            (trait, value) => trait[identifier] = value,
+            (trait, value) => (trait[identifier] = value),
         );
     }
 
-    serializer(serializer: (app: GameModelApp) => TraitSerializer<TraitType, AnySerialized>) {
+    serializer(
+        serializer: (
+            app: GameModelApp,
+        ) => TraitSerializer<TraitType, AnySerialized>,
+    ) {
         this._serializer = serializer;
     }
 
@@ -138,27 +152,33 @@ export function traitRegistryEntry<TraitType extends Trait>(
     return builder.build();
 }
 
-export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
+export default class TraitRegistry
+    implements Registry<AnyTraitRegistryEntry<any>>
+{
     private readonly entries = new Map<string, TraitRegistryEntry<any>>();
 
-    add<T extends Trait>(entry: AnyTraitRegistryEntry<T>): AnyTraitRegistryEntry<T> {
+    add<T extends Trait>(
+        entry: AnyTraitRegistryEntry<T>,
+    ): AnyTraitRegistryEntry<T> {
         const autoEntry = entry as AutoRegistryEntry<T>;
         const manualEntry = entry as TraitRegistryEntry<T>;
 
         if (autoEntry.traitType) {
-            return this.add(traitRegistryEntry<T>(builder => {
-                builder.traitClass(autoEntry.traitType);
-                builder.category(autoEntry.category);
+            return this.add(
+                traitRegistryEntry<T>((builder) => {
+                    builder.traitClass(autoEntry.traitType);
+                    builder.category(autoEntry.category);
 
-                for (const property of autoEntry.properties || []) {
-                    builder.property(
-                        property.localIdentifier,
-                        property.type,
-                        (trait) => property.get(trait.entity),
-                        (trait, value) => property.set(trait.entity, value),
-                    );
-                }
-            }));
+                    for (const property of autoEntry.properties || []) {
+                        builder.property(
+                            property.localIdentifier,
+                            property.type,
+                            (trait) => property.get(trait.entity),
+                            (trait, value) => property.set(trait.entity, value),
+                        );
+                    }
+                }),
+            );
         }
 
         if (this.entries.has(manualEntry.key)) {
@@ -174,12 +194,15 @@ export default class TraitRegistry implements Registry<AnyTraitRegistryEntry<any
             manualEntry.configurable = (trait: Trait) => {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of properties) {
-                    autoConfigurable.add(property.identifier, propertyValueConfigurable(
-                        trait.entity!.world,
-                        property.type,
-                        () => property.get(trait.entity!),
-                        (value) => property.set(trait.entity!, value),
-                    ));
+                    autoConfigurable.add(
+                        property.identifier,
+                        propertyValueConfigurable(
+                            trait.entity!.world,
+                            property.type,
+                            () => property.get(trait.entity!),
+                            (value) => property.set(trait.entity!, value),
+                        ),
+                    );
                 }
                 return autoConfigurable;
             };

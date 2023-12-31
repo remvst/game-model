@@ -1,15 +1,17 @@
-import { BaseObjectSet } from './base-object-set';
+import { BaseObjectSet } from "./base-object-set";
 
-export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> {
-
+export default class ObjectSet<ObjectType>
+    implements BaseObjectSet<ObjectType>
+{
     private readonly objectMap = new Map<string, ObjectType>();
     private readonly bucketMap = new Map<string, ObjectType[]>();
 
     constructor(
         private readonly getKey: (item: ObjectType) => string,
-        private readonly getBuckets: ((item: ObjectType) => string[]) | undefined = undefined
-    ) {
-    }
+        private readonly getBuckets:
+            | ((item: ObjectType) => string[])
+            | undefined = undefined,
+    ) {}
 
     get size(): number {
         return this.objectMap.size;
@@ -32,7 +34,7 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
         this.objectMap.set(key, object);
 
         if (this.getBuckets) {
-            this.getBuckets(object).forEach(bucketKey => {
+            this.getBuckets(object).forEach((bucketKey) => {
                 let bucket = this.bucketMap.get(bucketKey);
                 if (!bucket) {
                     bucket = [];
@@ -55,7 +57,7 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
         this.objectMap.delete(key);
 
         if (this.getBuckets) {
-            this.getBuckets(object).forEach(bucketKey => {
+            this.getBuckets(object).forEach((bucketKey) => {
                 const bucket = this.bucketMap.get(bucketKey);
                 if (!bucket) {
                     return;
@@ -89,7 +91,7 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
         return this.objectMap.has(key);
     }
 
-    forEach(fn: (item: ObjectType) => (boolean | void)) {
+    forEach(fn: (item: ObjectType) => boolean | void) {
         for (const value of this.items()) {
             if (fn(value)) {
                 return true;
@@ -106,4 +108,4 @@ export default class ObjectSet<ObjectType> implements BaseObjectSet<ObjectType> 
         }
         return res;
     }
-};
+}

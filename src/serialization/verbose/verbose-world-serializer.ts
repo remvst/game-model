@@ -8,17 +8,19 @@ export interface VerboseSerializedWorld {
     entities: VerboseSerializedEntity[];
 }
 
-export class VerboseWorldSerializer implements WorldSerializer<VerboseSerializedWorld> {
-
+export class VerboseWorldSerializer
+    implements WorldSerializer<VerboseSerializedWorld>
+{
     worldSetup: WorldSetup = () => {};
 
     constructor(
         private readonly entitySerializer: EntitySerializer<VerboseSerializedEntity>,
-    ) {
+    ) {}
 
-    }
-
-    serialize(world: World, options: SerializationOptions): VerboseSerializedWorld {
+    serialize(
+        world: World,
+        options: SerializationOptions,
+    ): VerboseSerializedWorld {
         const entities: VerboseSerializedEntity[] = [];
         world.entities.forEach((entity) => {
             if (!options.shouldSerializeEntity(entity)) {
@@ -26,7 +28,10 @@ export class VerboseWorldSerializer implements WorldSerializer<VerboseSerialized
             }
 
             try {
-                const serialized = this.entitySerializer.serialize(entity, options);
+                const serialized = this.entitySerializer.serialize(
+                    entity,
+                    options,
+                );
                 entities.push(serialized);
             } catch (e) {
                 // entity is not serializable, skip
@@ -36,19 +41,28 @@ export class VerboseWorldSerializer implements WorldSerializer<VerboseSerialized
         return { entities };
     }
 
-    deserialize(serialized: VerboseSerializedWorld, options: SerializationOptions): World {
+    deserialize(
+        serialized: VerboseSerializedWorld,
+        options: SerializationOptions,
+    ): World {
         const world = new World();
         this.worldSetup(world);
 
-        serialized.entities.forEach(serializedEntity => {
+        serialized.entities.forEach((serializedEntity) => {
             try {
-                const entity = this.entitySerializer.deserialize(serializedEntity, options);
+                const entity = this.entitySerializer.deserialize(
+                    serializedEntity,
+                    options,
+                );
                 world.entities.add(entity);
             } catch (e) {
-                console.error('Failed to deserialize', JSON.stringify(serializedEntity), e);
+                console.error(
+                    "Failed to deserialize",
+                    JSON.stringify(serializedEntity),
+                    e,
+                );
             }
         });
         return world;
     }
-
 }

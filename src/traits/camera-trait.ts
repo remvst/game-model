@@ -25,7 +25,7 @@ export default class CameraTrait extends Trait {
     zoom = 1;
     rounding = 0;
 
-    private zoomAnimation: Animation;
+    private zoomAnimation: Animation<CameraTrait>;
 
     zoomTo(zoom: number, duration: number) {
         this.zoomAnimation = null;

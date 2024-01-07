@@ -16,6 +16,9 @@ export default class SmoothTargetFollowingTrait extends Trait {
     maxSpeed = 10;
     reachTargetFactor = 0.2;
 
+    private foundTarget = false;
+    private readonly lastTargetPosition = new Vector2();
+
     private readonly reusableOutSpeed: Vector2 = new Vector2();
 
     get target(): Entity | null {
@@ -46,19 +49,25 @@ export default class SmoothTargetFollowingTrait extends Trait {
     cycle(elapsed: number) {
         const { target } = this;
         if (target) {
-            this.calculateSpeed(this.entity, target, this.reusableOutSpeed);
-
-            this.entity.position.x += between(
-                -elapsed * this.reusableOutSpeed.x,
-                target.x - this.entity.position.x,
-                elapsed * this.reusableOutSpeed.x,
-            );
-            this.entity.position.y += between(
-                -elapsed * this.reusableOutSpeed.y,
-                target.y - this.entity.position.y,
-                elapsed * this.reusableOutSpeed.y,
-            );
+            this.foundTarget = true;
+            this.lastTargetPosition.x = target.position.x;
+            this.lastTargetPosition.y = target.position.y;
         }
+
+        if (!this.foundTarget) return;
+
+        this.calculateSpeed(this.entity, this.lastTargetPosition, this.reusableOutSpeed);
+
+        this.entity.position.x += between(
+            -elapsed * this.reusableOutSpeed.x,
+            this.lastTargetPosition.x - this.entity.position.x,
+            elapsed * this.reusableOutSpeed.x,
+        );
+        this.entity.position.y += between(
+            -elapsed * this.reusableOutSpeed.y,
+            this.lastTargetPosition.y - this.entity.position.y,
+            elapsed * this.reusableOutSpeed.y,
+        );
     }
 
     static registryEntry(): TraitRegistryEntry<SmoothTargetFollowingTrait> {

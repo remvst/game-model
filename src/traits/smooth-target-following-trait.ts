@@ -56,7 +56,11 @@ export default class SmoothTargetFollowingTrait extends Trait {
 
         if (!this.foundTarget) return;
 
-        this.calculateSpeed(this.entity, this.lastTargetPosition, this.reusableOutSpeed);
+        this.calculateSpeed(
+            this.entity,
+            this.lastTargetPosition,
+            this.reusableOutSpeed,
+        );
 
         this.entity.position.x += between(
             -elapsed * this.reusableOutSpeed.x,

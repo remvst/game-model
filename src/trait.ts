@@ -21,9 +21,6 @@ export default abstract class Trait implements KeyProvider {
     readonly disableChunking: boolean = false;
     readonly queriable: boolean = false;
 
-    private previousQueryArea: Rectangle;
-    private queriableInSectorSetVersion: number;
-
     constructor() {
         this.enabled = true;
     }
@@ -44,7 +41,6 @@ export default abstract class Trait implements KeyProvider {
 
         if (this.queriable) {
             entity.world?.defineSectorSet(this.key, this.queriableSectorSize);
-            entity.world?.sectorSet(this.key).markDirty();
         }
     }
 
@@ -83,27 +79,6 @@ export default abstract class Trait implements KeyProvider {
         }
 
         this.cycle(elapsed);
-    }
-
-    postCycle() {
-        if (this.queriable) {
-            // If our surface changed, mark the sector set as dirty
-            this.surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
-            if (
-                this.previousQueryArea?.minX !== REUSABLE_GEOMETRY_AREA.minX ||
-                this.previousQueryArea?.minY !== REUSABLE_GEOMETRY_AREA.minY ||
-                this.previousQueryArea?.maxX !== REUSABLE_GEOMETRY_AREA.maxX ||
-                this.previousQueryArea?.maxY !== REUSABLE_GEOMETRY_AREA.maxY
-            ) {
-                this.entity?.world?.sectorSet(this.key)?.markDirty();
-            }
-
-            if (!this.previousQueryArea) {
-                this.previousQueryArea = new Rectangle();
-            }
-
-            this.surfaceProvider.surface(this, this.previousQueryArea);
-        }
 
         this.lastEntityPosition.x = this.entity!.x;
         this.lastEntityPosition.y = this.entity!.y;
@@ -116,11 +91,10 @@ export default abstract class Trait implements KeyProvider {
 
     private makeQueriable() {
         if (!this.queriable) return;
-        const sectorSet = this.entity?.world?.sectorSet(this.key);
-        if (sectorSet.version === this.queriableInSectorSetVersion) return;
         this.surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
-        sectorSet.insert(this.entity, REUSABLE_GEOMETRY_AREA);
-        this.queriableInSectorSetVersion = sectorSet.version;
+        this.entity?.world
+            ?.sectorSet(this.key)
+            ?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
     }
 
     processEvent(event: EntityEvent, world: World) {

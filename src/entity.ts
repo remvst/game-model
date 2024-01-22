@@ -151,10 +151,6 @@ export default class Entity {
         this.cycleVelocity.x = this.position.x - this.cycleStartPosition.x;
         this.cycleVelocity.y = this.position.y - this.cycleStartPosition.y;
         this.cycleVelocity.z = this.position.z - this.cycleStartPosition.z;
-
-        for (const trait of this.traits.items()) {
-            trait.postCycle();
-        }
     }
 
     remove() {

@@ -8,9 +8,7 @@ export default class ObjectSet<ObjectType>
 
     constructor(
         private readonly getKey: (item: ObjectType) => string,
-        private readonly getBuckets:
-            | ((item: ObjectType) => string[])
-            | undefined = undefined,
+        private readonly getBuckets?: (item: ObjectType) => string[],
     ) {}
 
     get size(): number {

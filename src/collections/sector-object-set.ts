@@ -15,7 +15,14 @@ export default class SectorObjectSet<ObjectType> {
     private maxX = Number.MIN_SAFE_INTEGER;
     private maxY = Number.MIN_SAFE_INTEGER;
 
+    private isDirty = true;
+    version = 0;
+
     constructor(readonly sectorSize: number) {}
+
+    markDirty() {
+        this.isDirty = true;
+    }
 
     private sectorKey(x: number, y: number): string {
         return `${x},${y}`;
@@ -90,5 +97,11 @@ export default class SectorObjectSet<ObjectType> {
         this.minY = Number.MAX_SAFE_INTEGER;
         this.maxX = Number.MIN_SAFE_INTEGER;
         this.maxY = Number.MIN_SAFE_INTEGER;
+        this.version++;
+    }
+
+    clearIfDirty() {
+        if (!this.isDirty) return;
+        this.clear();
     }
 }

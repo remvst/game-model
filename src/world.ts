@@ -60,11 +60,8 @@ export default class World {
     }
 
     defineSectorSet(key: string, sectorSize: number) {
-        if (this.sectorSets.has(key)) {
-            return;
-        }
-        const sectorSet = new SectorObjectSet<Entity>(sectorSize);
-        this.sectorSets.set(key, sectorSet);
+        if (this.sectorSets.has(key)) return;
+        this.sectorSets.set(key, new SectorObjectSet<Entity>(sectorSize));
     }
 
     sectorSet(key: string): SectorObjectSet<Entity> | null {
@@ -73,7 +70,7 @@ export default class World {
 
     private resetSectors() {
         for (const set of this.sectorSets.values()) {
-            set.clear();
+            set.clearIfDirty();
         }
     }
 

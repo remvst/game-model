@@ -1,6 +1,6 @@
 {
     "name": "@remvst/game-model",
-    "version": "4.10.4",
+    "version": "4.10.5",
     "description": "Game models",
     "main": "lib/index.js",
     "scripts": {
@@ -9,7 +9,7 @@
         "unittest": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
         "test": "npm run prettier:check && npm run unittest",
         "coverage": "nyc npm test",
-        "build": "rm -rf lib && tsc",
+        "build": "tsc --build --clean",
         "prepublishOnly": "npm i && npm run build"
     },
     "author": "Rémi Vansteelandt",

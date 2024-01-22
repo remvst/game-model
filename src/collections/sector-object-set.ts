@@ -15,6 +15,8 @@ export default class SectorObjectSet<ObjectType> {
     private maxX = Number.MIN_SAFE_INTEGER;
     private maxY = Number.MIN_SAFE_INTEGER;
 
+    version = 0;
+
     constructor(readonly sectorSize: number) {}
 
     private sectorKey(x: number, y: number): string {

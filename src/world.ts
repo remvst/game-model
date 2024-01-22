@@ -25,8 +25,10 @@ export default class World {
     private readonly reusableRemoveEvent = new EntityRemoved();
     private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
 
+    private cycleCount = 0;
+
     cyclePerformanceTracker: CyclePerformanceTracker | null = null;
-    isEntityEnabled = (entity: Entity) => true;
+    isEntityEnabled: (entity: Entity) => boolean = () => true;
     entityTimeFactorProvider: (entity: Entity) => number = () => 1;
 
     authority: Authority = new LocalAuthority();
@@ -68,7 +70,20 @@ export default class World {
     }
 
     sectorSet(key: string): SectorObjectSet<Entity> | null {
-        return this.sectorSets.get(key) || null;
+        const sectorSet = this.sectorSets.get(key);
+        if (!sectorSet) return null;
+
+        // Make sure the sector set is up to date
+        if (sectorSet.version !== this.cycleCount) {
+            sectorSet.version = this.cycleCount;
+            sectorSet.clear();
+
+            for (const entity of this.entities.bucket(key)) {
+                entity.trait(key).makeQueriable(sectorSet);
+            }
+        }
+
+        return sectorSet;
     }
 
     private resetSectors() {
@@ -78,7 +93,9 @@ export default class World {
     }
 
     cycle(elapsed: number) {
-        this.resetSectors();
+        this.cycleCount++;
+
+        // this.resetSectors();
         this.chunked.update();
 
         for (const entity of this.entities.items()) {

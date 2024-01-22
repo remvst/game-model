@@ -1,5 +1,6 @@
 import { Rectangle } from "@remvst/geometry";
 import { GameModelApp, World, vector3 } from ".";
+import SectorObjectSet from "./collections/sector-object-set";
 import Entity from "./entity";
 import { EntityEvent } from "./events/entity-event";
 import { KeyProvider } from "./key-provider";
@@ -65,10 +66,6 @@ export default abstract class Trait implements KeyProvider {
 
     abstract get key(): string;
 
-    preCycle() {
-        this.makeQueriable();
-    }
-
     maybeCycle(elapsed: number) {
         if (!this.enabled) {
             return;
@@ -89,12 +86,9 @@ export default abstract class Trait implements KeyProvider {
         // to be implemented in subtraits
     }
 
-    private makeQueriable() {
-        if (!this.queriable) return;
+    makeQueriable(sectorSet: SectorObjectSet<Entity>) {
         this.surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
-        this.entity?.world
-            ?.sectorSet(this.key)
-            ?.insert(this.entity, REUSABLE_GEOMETRY_AREA);
+        sectorSet.insert(this.entity, REUSABLE_GEOMETRY_AREA);
     }
 
     processEvent(event: EntityEvent, world: World) {

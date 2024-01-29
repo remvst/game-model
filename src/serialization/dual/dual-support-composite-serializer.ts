@@ -46,11 +46,24 @@ export default class DualSupportCompositeSerializer<
     deserialize(
         value: AnySerializedItem,
         options: SerializationOptions,
+        output?: ObjectType,
     ): ObjectType {
         if (options.type === SerializationType.PACKED) {
-            return this.packed.deserialize(value as EncoderSequence, options);
+            return this.packed.deserialize(value as EncoderSequence, options, output);
         } else {
             return this.verbose.deserialize(
+                value as VerboseCompositeSerialized<AnySerialized>,
+                options,
+                output,
+            );
+        }
+    }
+
+    getKey(value: AnySerializedItem, options: SerializationOptions): string {
+        if (options.type === SerializationType.PACKED) {
+            return this.packed.getKey(value as EncoderSequence, options);
+        } else {
+            return this.verbose.getKey(
                 value as VerboseCompositeSerialized<AnySerialized>,
                 options,
             );

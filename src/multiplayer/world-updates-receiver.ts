@@ -23,10 +23,23 @@ export default class WorldUpdatesReceiver {
         const newPreviousEntityIds = new Set<string>();
         this.previousEntityIds.set(fromPlayerId, newPreviousEntityIds);
 
-        for (const serializedEntity of update.entities || []) {
+        loop: for (const serializedEntity of update.entities || []) {
+            const id = this.app.serializers.packed.entity.getId(serializedEntity, this.serializationOptions);
+            const existing = this.world.entity(id);
+            if (existing) {
+                switch (this.world.authority.entityAuthority(existing)) {
+                    case AuthorityType.LOCAL:
+                    case AuthorityType.FULL:
+                        continue loop;
+                    default:
+                        break;
+                }
+            }
+
             const deserialized = this.app.serializers.packed.entity.deserialize(
                 serializedEntity,
                 this.serializationOptions,
+                existing,
             );
             missingIds.delete(deserialized.id);
 
@@ -42,7 +55,6 @@ export default class WorldUpdatesReceiver {
             switch (this.world.authority.entityAuthority(deserialized)) {
                 case AuthorityType.FORWARD:
                 case AuthorityType.NONE:
-                    const existing = this.world.entity(deserialized.id);
                     if (!existing) {
                         // Entity doesn't exist locally yet, just add it
                         this.world.entities.forceAdd(deserialized);

@@ -147,8 +147,8 @@ export default class PackedTraitSerializer<T extends Trait>
         return this.encoder.getResult();
     }
 
-    deserialize(serialized: EncoderSequence): T {
-        const trait = this.registryEntry.newTrait!();
+    deserialize(serialized: EncoderSequence, options: SerializationOptions, output: T): T {
+        const trait = output || this.registryEntry.newTrait();
 
         // Bind to a temporary entity so we can write the properties
         REBINDABLE_ENTITY.setTrait(trait);

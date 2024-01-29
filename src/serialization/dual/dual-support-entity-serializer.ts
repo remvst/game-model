@@ -43,4 +43,12 @@ export default class DualSupportEntitySerializer
             return this.verbose.deserialize(serialized, options);
         }
     }
+
+    getId(serialized: AnySerializedEntity, options: SerializationOptions): string {
+        if (options.type === SerializationType.PACKED) {
+            return this.packed.getId(serialized as EncoderSequence, options);
+        } else {
+            return this.verbose.getId(serialized, options);
+        }
+    }
 }

@@ -36,6 +36,7 @@ export default class PackedCompositeSerializer<ObjectType extends KeyProvider>
     deserialize(
         value: EncoderSequence,
         options: SerializationOptions,
+        output: ObjectType,
     ): ObjectType {
         this.decoder.setEncoded(value);
 
@@ -44,6 +45,11 @@ export default class PackedCompositeSerializer<ObjectType extends KeyProvider>
         const serializer = this.serializers.get(key);
         if (!serializer)
             throw new Error(`Cannot deserialize item with key ${key}`);
-        return serializer.deserialize(this.decoder.nextSequence(), options);
+        return serializer.deserialize(this.decoder.nextSequence(), options, output);
+    }
+
+    getKey(value: EncoderSequence, options: SerializationOptions) {
+        this.decoder.setEncoded(value);
+        return this.decoder.nextString();
     }
 }

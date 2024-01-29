@@ -44,11 +44,16 @@ export default class VerboseCompositeSerializer<
     deserialize(
         value: VerboseCompositeSerialized<SerializedItem>,
         options: SerializationOptions,
+        output?: ObjectType,
     ): ObjectType {
         const serializer = this.serializers.get(value.key);
         if (!serializer) {
             throw new Error(`Cannot deserialize item with key ${value.key}`);
         }
-        return serializer.deserialize(value.data, options);
+        return serializer.deserialize(value.data, options, output);
+    }
+
+    getKey(value: VerboseCompositeSerialized<SerializedItem>, options: SerializationOptions): string {
+        return value.key;
     }
 }

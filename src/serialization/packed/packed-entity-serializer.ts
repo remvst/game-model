@@ -2,7 +2,8 @@ import Entity from "../../entity";
 import Trait from "../../trait";
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
 import SerializationOptions from "../serialization-options";
-import { EntitySerializer, TraitSerializer } from "../serializer";
+import { EntitySerializer } from "../serializer";
+import PackedCompositeSerializer from "./packed-composite-serializer";
 
 export default class PackedEntitySerializer
     implements EntitySerializer<EncoderSequence>
@@ -11,10 +12,7 @@ export default class PackedEntitySerializer
     private readonly decoder = new ArrayDecoder();
 
     constructor(
-        private readonly traitsSerializer: TraitSerializer<
-            Trait,
-            EncoderSequence
-        >,
+        private readonly traitsSerializer: PackedCompositeSerializer<Trait>,
     ) {}
 
     serialize(value: Entity, options: SerializationOptions): EncoderSequence {
@@ -48,6 +46,7 @@ export default class PackedEntitySerializer
     deserialize(
         serialized: EncoderSequence,
         options: SerializationOptions,
+        output?: Entity,
     ): Entity {
         this.decoder.setEncoded(serialized);
 
@@ -59,25 +58,35 @@ export default class PackedEntitySerializer
         const angle = this.decoder.nextNumber();
 
         const traitCount = this.decoder.nextNumber();
-        const traits: Trait[] = [];
 
+        const traits: Trait[] = [];
         for (let i = 0; i < traitCount; i++) {
             const enabled = this.decoder.nextBool();
             const serializedTrait = this.decoder.nextSequence();
+
+            const trait = output?.trait(this.traitsSerializer.getKey(serializedTrait, options));
+
             const deserialized = this.traitsSerializer.deserialize(
                 serializedTrait,
                 options,
+                trait,
             );
             deserialized.enabled = enabled;
             traits.push(deserialized);
         }
 
-        const entity = new Entity(id, traits);
+        const entity = output || new Entity(id, traits);
+
         entity.age = age;
         entity.x = x;
         entity.y = y;
         entity.z = z;
         entity.angle = angle;
         return entity;
+    }
+
+    getId(value: EncoderSequence): string {
+        this.decoder.setEncoded(value);
+        return this.decoder.nextString();
     }
 }

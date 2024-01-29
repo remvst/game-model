@@ -29,6 +29,10 @@ export default class VerboseEntitySerializer<VerboseSerializedTrait>
         >,
     ) {}
 
+    getId(value: VerboseSerializedEntity): string {
+        return value.id;
+    }
+
     serialize(
         value: Entity,
         options: SerializationOptions,

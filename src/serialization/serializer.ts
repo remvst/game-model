@@ -12,6 +12,7 @@ export interface Serializer<ObjectType, SerializedType> {
     deserialize(
         serialized: SerializedType,
         options: SerializationOptions,
+        output?: ObjectType,
     ): ObjectType;
 }
 
@@ -20,7 +21,10 @@ export interface TraitSerializer<
     SerializedTrait extends AnySerialized,
 > extends Serializer<TraitType, SerializedTrait> {}
 export interface EntitySerializer<SerializedEntity extends AnySerialized>
-    extends Serializer<Entity, SerializedEntity> {}
+    extends Serializer<Entity, SerializedEntity> {
+    getId(value: SerializedEntity, options: SerializationOptions): string;
+}
+
 export interface WorldSerializer<SerializedWorld extends AnySerialized>
     extends Serializer<World, SerializedWorld> {
     worldSetup: WorldSetup;
@@ -33,6 +37,7 @@ export interface WorldEventSerializer<
 export interface CompositeSerializer<ObjectType, SerializedType>
     extends Serializer<ObjectType, SerializedType> {
     add(key: string, serializer: Serializer<ObjectType, SerializedType>): this;
+    getKey(value: SerializedType, options: SerializationOptions): string;
 }
 
 export interface Serializers<

@@ -61,6 +61,7 @@ export default class Room {
     }
 
     addPlayer(playerId: string) {
+        if (this.players.has(playerId)) return;
         this.players.set(playerId, new Player(playerId));
         this.updatesCollector?.resetUpdateSkipping();
     }

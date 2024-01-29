@@ -58,6 +58,8 @@ export default class Entity {
         this,
     );
 
+    static createdCount = 0;
+
     readonly id: string;
     readonly traits = new ObjectSet<Trait>((trait) => trait.key);
     world: World | null = null;
@@ -71,6 +73,7 @@ export default class Entity {
 
     constructor(id: string | undefined, traits: Trait[]) {
         this.id = id || v4();
+        Entity.createdCount++;
 
         for (const trait of traits) {
             this.traits.add(trait);

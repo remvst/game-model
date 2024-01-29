@@ -13,7 +13,9 @@ const REUSABLE_GEOMETRY_AREA = new Rectangle();
 
 export default abstract class Trait implements KeyProvider {
     private _entity: Entity | null = null;
-    enabled: boolean;
+    enabled: boolean = true;
+
+    static createdCount = 0;
 
     protected readonly lastEntityPosition = vector3();
 
@@ -23,7 +25,7 @@ export default abstract class Trait implements KeyProvider {
     readonly queriable: boolean = false;
 
     constructor() {
-        this.enabled = true;
+        Trait.createdCount++;
     }
 
     get entity(): Entity | null {

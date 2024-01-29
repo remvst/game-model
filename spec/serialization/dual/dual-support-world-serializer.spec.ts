@@ -28,7 +28,9 @@ describe("the dual support world serializer", () => {
                 .createSpy()
                 .and.returnValue(["zeeentityserialized"]),
             deserialize: jasmine.createSpy(),
-            getId: () => { throw new Error() },
+            getId: () => {
+                throw new Error();
+            },
         };
 
         worldSetup = jasmine.createSpy();

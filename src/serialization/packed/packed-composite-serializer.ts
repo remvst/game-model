@@ -45,7 +45,11 @@ export default class PackedCompositeSerializer<ObjectType extends KeyProvider>
         const serializer = this.serializers.get(key);
         if (!serializer)
             throw new Error(`Cannot deserialize item with key ${key}`);
-        return serializer.deserialize(this.decoder.nextSequence(), options, output);
+        return serializer.deserialize(
+            this.decoder.nextSequence(),
+            options,
+            output,
+        );
     }
 
     getKey(value: EncoderSequence, options: SerializationOptions) {

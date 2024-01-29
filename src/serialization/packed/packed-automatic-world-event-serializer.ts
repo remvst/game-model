@@ -136,7 +136,11 @@ export default class PackedAutomaticWorldEventSerializer<T extends WorldEvent>
         return this.encoder.getResult();
     }
 
-    deserialize(serialized: EncoderSequence, options: SerializationOptions, output: T): T {
+    deserialize(
+        serialized: EncoderSequence,
+        options: SerializationOptions,
+        output: T,
+    ): T {
         const event = output || this.registryEntry.newEvent();
 
         this.decoder.setEncoded(serialized);

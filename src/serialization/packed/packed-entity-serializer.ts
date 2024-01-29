@@ -64,7 +64,9 @@ export default class PackedEntitySerializer
             const enabled = this.decoder.nextBool();
             const serializedTrait = this.decoder.nextSequence();
 
-            const trait = output?.trait(this.traitsSerializer.getKey(serializedTrait, options));
+            const trait = output?.trait(
+                this.traitsSerializer.getKey(serializedTrait, options),
+            );
 
             const deserialized = this.traitsSerializer.deserialize(
                 serializedTrait,

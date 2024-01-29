@@ -44,7 +44,10 @@ export default class DualSupportEntitySerializer
         }
     }
 
-    getId(serialized: AnySerializedEntity, options: SerializationOptions): string {
+    getId(
+        serialized: AnySerializedEntity,
+        options: SerializationOptions,
+    ): string {
         if (options.type === SerializationType.PACKED) {
             return this.packed.getId(serialized as EncoderSequence, options);
         } else {

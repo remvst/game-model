@@ -24,7 +24,10 @@ export default class WorldUpdatesReceiver {
         this.previousEntityIds.set(fromPlayerId, newPreviousEntityIds);
 
         loop: for (const serializedEntity of update.entities || []) {
-            const id = this.app.serializers.packed.entity.getId(serializedEntity, this.serializationOptions);
+            const id = this.app.serializers.packed.entity.getId(
+                serializedEntity,
+                this.serializationOptions,
+            );
             const existing = this.world.entity(id);
             if (existing) {
                 switch (this.world.authority.entityAuthority(existing)) {

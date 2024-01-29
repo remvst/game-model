@@ -53,7 +53,10 @@ export default class VerboseCompositeSerializer<
         return serializer.deserialize(value.data, options, output);
     }
 
-    getKey(value: VerboseCompositeSerialized<SerializedItem>, options: SerializationOptions): string {
+    getKey(
+        value: VerboseCompositeSerialized<SerializedItem>,
+        options: SerializationOptions,
+    ): string {
         return value.key;
     }
 }

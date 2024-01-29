@@ -49,7 +49,11 @@ export default class DualSupportCompositeSerializer<
         output?: ObjectType,
     ): ObjectType {
         if (options.type === SerializationType.PACKED) {
-            return this.packed.deserialize(value as EncoderSequence, options, output);
+            return this.packed.deserialize(
+                value as EncoderSequence,
+                options,
+                output,
+            );
         } else {
             return this.verbose.deserialize(
                 value as VerboseCompositeSerialized<AnySerialized>,

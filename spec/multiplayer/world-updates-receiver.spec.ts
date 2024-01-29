@@ -10,7 +10,7 @@ import {
 } from "../../src";
 import WorldUpdatesReceiver from "../../src/multiplayer/world-updates-receiver";
 
-describe("a helper", () => {
+describe("a world updates receiver", () => {
     let world: World;
     let app: GameModelApp;
     let helper: WorldUpdatesReceiver;

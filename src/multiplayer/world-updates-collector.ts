@@ -4,7 +4,7 @@ import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import SerializationOptions from "../serialization/serialization-options";
 import World from "../world";
-import { AuthorityType } from "./authority";
+import { Authority, AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
 
 export default class WorldUpdatesCollector {
@@ -13,6 +13,8 @@ export default class WorldUpdatesCollector {
     private worldSubscriptions: Subscription[] = [];
     private readonly entityInitializations = new Map<string, any>();
     private readonly lastGeneratedUpdates = new Map<string, number>();
+
+    authorityOverride: Authority | null = null;
 
     constructor(
         private readonly app: GameModelApp,
@@ -50,7 +52,8 @@ export default class WorldUpdatesCollector {
     }
 
     private onWorldEvent(event: WorldEvent) {
-        switch (this.world.authority.worldEventAuthority(event)) {
+        const authority = this.authorityOverride || this.world.authority;
+        switch (authority.worldEventAuthority(event)) {
             case AuthorityType.NONE:
             case AuthorityType.LOCAL:
                 return;
@@ -67,7 +70,8 @@ export default class WorldUpdatesCollector {
     }
 
     private onEntityAdded(entity: Entity) {
-        switch (this.world.authority.entityAuthority(entity)) {
+        const authority = this.authorityOverride || this.world.authority;
+        switch (authority.entityAuthority(entity)) {
             case AuthorityType.NONE:
             case AuthorityType.LOCAL:
                 return;
@@ -96,6 +100,7 @@ export default class WorldUpdatesCollector {
     generateUpdate(): WorldUpdate<any, any> {
         const entities: any[] = [];
         const shortEntities = [];
+        const authority = this.authorityOverride || this.world.authority;
 
         for (const entityId of this.watchedEntities) {
             const entity = this.world.entity(entityId);
@@ -107,8 +112,7 @@ export default class WorldUpdatesCollector {
             // For entities that tend not to change a lot, try to avoid sending them every frame
             const lastUpdate = this.lastGeneratedUpdates.get(entityId);
             if (lastUpdate > 0) {
-                const maxUpdateInterval =
-                    this.world.authority.maxUpdateInterval(entity);
+                const maxUpdateInterval = authority.maxUpdateInterval(entity);
                 if (Math.max(0, entity.age - lastUpdate) < maxUpdateInterval) {
                     shortEntities.push(entity.id);
                     continue;

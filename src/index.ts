@@ -250,5 +250,8 @@ export {
     worldEventRegistryEntry,
 };
 
+
+export * from "./util/modify-recording";
+
 // Legacy
 export * from "@remvst/geometry";

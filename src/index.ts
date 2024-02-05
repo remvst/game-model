@@ -250,7 +250,6 @@ export {
     worldEventRegistryEntry,
 };
 
-
 export * from "./util/modify-recording";
 
 // Legacy

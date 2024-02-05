@@ -19,9 +19,17 @@ export function modifyRecording(
     world.authority = new FullAuthority();
 
     for (const frame of frames) {
-        const receiver = new WorldUpdatesReceiver(app, world, serializationOptions);
+        const receiver = new WorldUpdatesReceiver(
+            app,
+            world,
+            serializationOptions,
+        );
 
-        const collector = new WorldUpdatesCollector(app, world, serializationOptions);
+        const collector = new WorldUpdatesCollector(
+            app,
+            world,
+            serializationOptions,
+        );
         collector.authorityOverride = new FullAuthority();
         collector.start();
 
@@ -30,7 +38,7 @@ export function modifyRecording(
         const initialAuthority = world.authority;
         try {
             world.authority = new ReplayerAuthority();
-            receiver.applyUpdate(frame.worldUpdate, '', new FullAuthority());
+            receiver.applyUpdate(frame.worldUpdate, "", new FullAuthority());
         } finally {
             world.authority = initialAuthority;
         }

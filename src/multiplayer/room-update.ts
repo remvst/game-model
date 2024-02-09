@@ -3,6 +3,7 @@ import { WorldUpdate } from "./world-update";
 export interface PlayerJson {
     id: string;
     latency: number;
+    isMeta: boolean;
 }
 
 export interface RoomUpdate {

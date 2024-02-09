@@ -4,11 +4,12 @@ import SerializationOptions, {
 } from "../serialization/serialization-options";
 import World from "../world";
 import { Authority } from "./authority";
-import { RoomUpdate } from "./room-update";
+import { PlayerJson, RoomUpdate } from "./room-update";
 import WorldUpdatesCollector from "./world-updates-collector";
 import WorldUpdatesReceiver from "./world-updates-receiver";
 
 export class Player {
+    isMeta = false;
     latency = 0;
     sentUpdateId = 0;
     receivedUpdateId = -1;
@@ -111,6 +112,7 @@ export default class Room {
                 }
 
                 this.players.get(player.id).latency = player.latency;
+                this.players.get(player.id).isMeta = player.isMeta;
             }
         }
 
@@ -144,9 +146,10 @@ export default class Room {
         const world = this.updatesCollector.generateUpdate();
 
         const updateId = this.nextUpdateId++;
-        const players = Array.from(this.players.values()).map((p) => ({
+        const players: PlayerJson[] = Array.from(this.players.values()).map((p) => ({
             id: p.id,
             latency: p.latency,
+            isMeta: p.isMeta,
         }));
 
         const receivers =

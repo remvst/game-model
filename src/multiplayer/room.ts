@@ -4,8 +4,7 @@ import SerializationOptions, {
 } from "../serialization/serialization-options";
 import World from "../world";
 import { Authority } from "./authority";
-import { PlayerJson, RoomUpdate } from "./room-update";
-import { WorldUpdate } from "./world-update";
+import { RoomUpdate } from "./room-update";
 import WorldUpdatesCollector from "./world-updates-collector";
 import WorldUpdatesReceiver from "./world-updates-receiver";
 

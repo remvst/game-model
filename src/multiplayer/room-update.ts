@@ -9,6 +9,6 @@ export interface PlayerJson {
 export interface RoomUpdate {
     updateId: number;
     ackId: number;
-    players: PlayerJson[];
+    players?: PlayerJson[];
     world: WorldUpdate<any, any>;
 }

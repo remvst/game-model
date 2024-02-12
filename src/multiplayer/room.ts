@@ -5,6 +5,7 @@ import SerializationOptions, {
 import World from "../world";
 import { Authority } from "./authority";
 import { PlayerJson, RoomUpdate } from "./room-update";
+import { WorldUpdate } from "./world-update";
 import WorldUpdatesCollector from "./world-updates-collector";
 import WorldUpdatesReceiver from "./world-updates-receiver";
 
@@ -98,7 +99,7 @@ export default class Room {
         }
 
         // If we're receiving an update from the host, update the players list
-        if (playerId === this.hostId) {
+        if (playerId === this.hostId && update.players) {
             const ids = new Set(update.players.map((p) => p.id));
             for (const playerId of this.players.keys()) {
                 if (!ids.has(playerId)) {
@@ -145,25 +146,33 @@ export default class Room {
 
         const world = this.updatesCollector.generateUpdate();
 
-        const updateId = this.nextUpdateId++;
-        const players: PlayerJson[] = Array.from(this.players.values()).map((p) => ({
-            id: p.id,
-            latency: p.latency,
-            isMeta: p.isMeta,
-        }));
+        const isHost = this.hostId === this.selfId;
 
-        const receivers =
-            this.hostId === this.selfId
-                ? this.players.values()
-                : [this.players.get(this.hostId)];
+        const updateId = this.nextUpdateId++;
+        const baseUpdate: RoomUpdate = {
+            updateId,
+            world,
+            ackId: 0,
+        };
+
+        // Only include the list of players if we're the host
+        if (isHost) {
+            baseUpdate.players = Array.from(this.players.values()).map((p) => ({
+                id: p.id,
+                latency: p.latency,
+                isMeta: p.isMeta,
+            }));
+        }
+
+        const receivers = isHost
+            ? this.players.values()
+            : [this.players.get(this.hostId)];
         for (const receiver of receivers) {
             if (!receiver) continue;
             if (receiver.id === this.selfId) continue;
 
             this.sendUpdate(this, receiver.id, {
-                updateId,
-                players,
-                world,
+                ...baseUpdate,
                 ackId: receiver.receivedUpdateId,
             });
 

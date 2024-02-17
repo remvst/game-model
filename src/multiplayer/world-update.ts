@@ -7,4 +7,6 @@ export interface WorldUpdate<
     worldEvents?: SerializedWorldEvent[];
     entities?: SerializedEntity[];
     shortEntities?: string[];
+    pins?: string[];
+    unpins?: string[];
 }

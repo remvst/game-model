@@ -45,6 +45,10 @@ export default class Room {
         this.serializationOptions.type = SerializationType.PACKED;
     }
 
+    pin(entityId: string) {
+        this.updatesCollector.pin(entityId);
+    }
+
     resetAllKeyFrames() {
         this.updatesCollector?.resetUpdateSkipping();
     }

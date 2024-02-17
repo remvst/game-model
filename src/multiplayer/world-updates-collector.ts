@@ -16,12 +16,28 @@ export default class WorldUpdatesCollector {
 
     authorityOverride: Authority | null = null;
 
+    private readonly pinnedEntityIds = new Set<string>();
+    private readonly unsentPins = new Set<string>();
+    private readonly unsentUnpins = new Set<string>();
+
     constructor(
         private readonly app: GameModelApp,
         private readonly world: World,
         private readonly serializationOptions: SerializationOptions,
     ) {
         this.start();
+    }
+
+    pin(entityId: string) {
+        this.pinnedEntityIds.add(entityId);
+        this.unsentPins.add(entityId);
+        this.unsentUnpins.delete(entityId);
+    }
+
+    private unpin(entityId: string) {
+        this.pinnedEntityIds.delete(entityId);
+        this.unsentPins.delete(entityId);
+        this.unsentUnpins.add(entityId);
     }
 
     start() {
@@ -95,18 +111,33 @@ export default class WorldUpdatesCollector {
 
     resetUpdateSkipping() {
         this.lastGeneratedUpdates.clear();
+
+        for (const pinnedId of this.pinnedEntityIds) {
+            this.unsentPins.add(pinnedId);
+        }
     }
 
     generateUpdate(): WorldUpdate<any, any> {
         const entities: any[] = [];
         const shortEntities = [];
         const authority = this.authorityOverride || this.world.authority;
+        const pins: string[] = [];
 
         for (const entityId of this.watchedEntities) {
             const entity = this.world.entity(entityId);
             if (!entity) {
                 this.lastGeneratedUpdates.delete(entityId);
+                this.unpin(entityId);
                 continue;
+            }
+
+            // For pinned entities, only add them to the update if the pin hasn't been sent yet
+            if (this.pinnedEntityIds.has(entityId)) {
+                if (this.unsentPins.has(entityId)) {
+                    pins.push(entityId);
+                } else {
+                    continue;
+                }
             }
 
             // For entities that tend not to change a lot, try to avoid sending them every frame
@@ -142,14 +173,23 @@ export default class WorldUpdatesCollector {
             this.lastGeneratedUpdates.set(id, 0);
         }
 
+        const unpins = Array.from(this.unsentUnpins);
+        this.unsentUnpins.clear();
+
         const worldEvents = this.queuedEvents;
         this.queuedEvents = [];
         this.entityInitializations.clear();
+
+        for (const entityId of pins) {
+            this.unsentPins.delete(entityId);
+        }
 
         const res: WorldUpdate<any, any> = {};
         if (entities.length) res.entities = entities;
         if (worldEvents.length) res.worldEvents = worldEvents;
         if (shortEntities.length) res.shortEntities = shortEntities;
+        if (pins.length) res.pins = pins;
+        if (unpins.length) res.unpins = unpins;
         return res;
     }
 }

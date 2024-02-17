@@ -20,8 +20,14 @@ export default class WorldUpdatesReceiver {
     ) {
         const missingIds =
             this.previousEntityIds.get(fromPlayerId) || new Set();
+        for (const id of update.unpins || []) {
+            missingIds.add(id);
+        }
+
         const newPreviousEntityIds = new Set<string>();
         this.previousEntityIds.set(fromPlayerId, newPreviousEntityIds);
+
+        const receivedPins = new Set(update.pins || []);
 
         loop: for (const serializedEntity of update.entities || []) {
             const id = this.app.serializers.packed.entity.getId(
@@ -52,7 +58,9 @@ export default class WorldUpdatesReceiver {
                     fromPlayerId,
                 )
             ) {
-                newPreviousEntityIds.add(deserialized.id);
+                if (!receivedPins.has(deserialized.id)) {
+                    newPreviousEntityIds.add(deserialized.id);
+                }
             }
 
             switch (this.world.authority.entityAuthority(deserialized)) {

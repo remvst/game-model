@@ -20,6 +20,7 @@ export interface TraitSerializer<
     TraitType extends Trait,
     SerializedTrait extends AnySerialized,
 > extends Serializer<TraitType, SerializedTrait> {}
+
 export interface EntitySerializer<SerializedEntity extends AnySerialized>
     extends Serializer<Entity, SerializedEntity> {
     getId(value: SerializedEntity, options: SerializationOptions): string;
@@ -29,6 +30,7 @@ export interface WorldSerializer<SerializedWorld extends AnySerialized>
     extends Serializer<World, SerializedWorld> {
     worldSetup: WorldSetup;
 }
+
 export interface WorldEventSerializer<
     WorldEventType extends WorldEvent,
     SerializedWorldEvent extends AnySerialized,

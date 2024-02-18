@@ -31,6 +31,16 @@ describe("an entity", () => {
 
     class TestEvent implements EntityEvent {}
 
+    let idGenerator: (entity: Entity) => string;
+
+    beforeEach(() => {
+        idGenerator = Entity.idGenerator;
+    });
+
+    afterEach(() => {
+        Entity.idGenerator = idGenerator;
+    });
+
     it("can be initialized with no traits", () => {
         const entity = new Entity(undefined, []);
 
@@ -45,6 +55,12 @@ describe("an entity", () => {
         const entity = new Entity("myid", []);
 
         expect(entity.id).toBe("myid");
+    });
+
+    it("can be initialized with no ID", () => {
+        Entity.idGenerator = jasmine.createSpy().and.returnValue("zeecoolid");
+        const entity = new Entity(undefined, []);
+        expect(entity.id).toBe("zeecoolid");
     });
 
     it("updates its age on cycle", () => {

@@ -54,6 +54,8 @@ export class EntityProperties {
 }
 
 export default class Entity {
+    static idGenerator: (entity: Entity) => string = () => v4();
+
     private readonly reusableEventProcessedEvent = new EntityEventProcessed(
         this,
     );
@@ -71,13 +73,14 @@ export default class Entity {
     angle: number = 0;
     age: number = 0;
 
-    constructor(id: string | undefined, traits: Trait[]) {
-        this.id = id || v4();
+    constructor(id: string | undefined, traits: Trait[] = []) {
         Entity.createdCount++;
 
         for (const trait of traits) {
             this.traits.add(trait);
         }
+
+        this.id = id || Entity.idGenerator(this);
     }
 
     get x() {

@@ -107,6 +107,7 @@ export default class WorldUpdatesCollector {
 
     private onEntityRemoved(entity: Entity) {
         this.watchedEntities.delete(entity.id);
+        this.unpin(entity.id);
     }
 
     resetUpdateSkipping() {

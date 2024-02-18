@@ -4,7 +4,7 @@ import SerializationOptions, {
 } from "../serialization/serialization-options";
 import World from "../world";
 import { Authority } from "./authority";
-import { RoomUpdate } from "./room-update";
+import { PlayerJson, RoomUpdate } from "./room-update";
 import WorldUpdatesCollector from "./world-updates-collector";
 import WorldUpdatesReceiver from "./world-updates-receiver";
 
@@ -115,8 +115,8 @@ export default class Room {
                     this.addPlayer(player.id);
                 }
 
-                this.players.get(player.id).latency = player.latency;
-                this.players.get(player.id).isMeta = player.isMeta;
+                this.players.get(player.id).latency = player.latency || 0;
+                this.players.get(player.id).isMeta = !!player.isMeta;
             }
         }
 
@@ -160,11 +160,12 @@ export default class Room {
 
         // Only include the list of players if we're the host
         if (isHost) {
-            baseUpdate.players = Array.from(this.players.values()).map((p) => ({
-                id: p.id,
-                latency: p.latency,
-                isMeta: p.isMeta,
-            }));
+            baseUpdate.players = Array.from(this.players.values()).map((p) => {
+                const jsonPlayer: PlayerJson = { id: p.id };
+                if (p.latency) jsonPlayer.latency = p.latency;
+                if (p.isMeta) jsonPlayer.isMeta = p.isMeta;
+                return jsonPlayer;
+            });
         }
 
         const receivers = isHost

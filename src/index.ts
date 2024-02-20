@@ -26,7 +26,6 @@ import {
     LocalAuthority,
 } from "./multiplayer/authority";
 import Room, { Player } from "./multiplayer/room";
-import { RoomUpdate } from "./multiplayer/room-update";
 import { WorldUpdate } from "./multiplayer/world-update";
 import WorldUpdatesCollector from "./multiplayer/world-updates-collector";
 import WorldUpdatesReceiver from "./multiplayer/world-updates-receiver";
@@ -196,7 +195,6 @@ export {
     // Recording
     ReplayerAuthority,
     Room,
-    RoomUpdate,
     ScriptTrait,
     SerializationOptions,
     SerializationType,
@@ -250,6 +248,7 @@ export {
     worldEventRegistryEntry,
 };
 
+export * from "./multiplayer/room-update";
 export * from "./util/modify-recording";
 
 // Legacy

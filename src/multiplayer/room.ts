@@ -4,7 +4,7 @@ import SerializationOptions, {
 } from "../serialization/serialization-options";
 import World from "../world";
 import { Authority } from "./authority";
-import { PlayerJson, RoomUpdate } from "./room-update";
+import { RoomPlayerJson, RoomUpdateJson } from "./room-update";
 import WorldUpdatesCollector from "./world-updates-collector";
 import WorldUpdatesReceiver from "./world-updates-receiver";
 
@@ -39,7 +39,7 @@ export default class Room {
         private readonly sendUpdate: (
             room: Room,
             playerId: string,
-            update: RoomUpdate,
+            update: RoomUpdateJson,
         ) => void,
     ) {
         this.serializationOptions.type = SerializationType.PACKED;
@@ -93,7 +93,7 @@ export default class Room {
         );
     }
 
-    onUpdateReceived(playerId: string, update: RoomUpdate) {
+    onUpdateReceived(playerId: string, update: RoomUpdateJson) {
         if (!this.players.has(playerId) && playerId !== this.hostId) {
             console.warn(
                 `Received update from non-existing player: ${playerId}`,
@@ -152,7 +152,7 @@ export default class Room {
         const isHost = this.hostId === this.selfId;
 
         const updateId = this.nextUpdateId++;
-        const baseUpdate: RoomUpdate = {
+        const baseUpdate: RoomUpdateJson = {
             updateId,
             world,
             ackId: 0,
@@ -161,7 +161,7 @@ export default class Room {
         // Only include the list of players if we're the host
         if (isHost) {
             baseUpdate.players = Array.from(this.players.values()).map((p) => {
-                const jsonPlayer: PlayerJson = { id: p.id };
+                const jsonPlayer: RoomPlayerJson = { id: p.id };
                 if (p.latency) jsonPlayer.latency = p.latency;
                 if (p.isMeta) jsonPlayer.isMeta = p.isMeta;
                 return jsonPlayer;

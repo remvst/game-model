@@ -31,7 +31,7 @@ export class ArrayEncoder implements Encoder {
     }
 
     appendString(str: string): this {
-        this.items.push(str);
+        this.items.push(str || 0);
         return this;
     }
 
@@ -65,7 +65,9 @@ export class ArrayDecoder implements Decoder {
     }
 
     nextString(): string {
-        return this.items[this.currentIndex++] as string;
+        const item = this.items[this.currentIndex++];
+        if (item === 0) return null;
+        return item as string;
     }
 
     nextNumber(): number {

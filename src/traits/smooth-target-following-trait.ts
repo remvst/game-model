@@ -11,8 +11,8 @@ export default class SmoothTargetFollowingTrait extends Trait {
     static readonly key = "smooth-target-following";
     readonly key = SmoothTargetFollowingTrait.key;
 
-    targetEntityId: string | null = null;
-    targetTraitKeys: string[];
+    targetEntityIds: string[] = [];
+    targetTraitKeys: string[] = [];
     maxSpeed = 10;
     reachTargetFactor = 0.2;
 
@@ -22,13 +22,16 @@ export default class SmoothTargetFollowingTrait extends Trait {
     private readonly reusableOutSpeed: Vector2 = new Vector2();
 
     get target(): Entity | null {
-        if (this.targetEntityId) {
-            return this.entity.world.entity(this.targetEntityId);
+        for (const id of this.targetEntityIds) {
+            const target = this.entity.world.entity(id);
+            if (target) return target;
         }
 
         for (const traitKey of this.targetTraitKeys) {
-            for (const player of this.entity.world.entities.bucket(traitKey)) {
-                return player;
+            for (const targettedTrait of this.entity.world.entities.bucket(
+                traitKey,
+            )) {
+                return targettedTrait;
             }
         }
 
@@ -77,10 +80,13 @@ export default class SmoothTargetFollowingTrait extends Trait {
     static registryEntry(): TraitRegistryEntry<SmoothTargetFollowingTrait> {
         return traitRegistryEntry((builder) => {
             builder.traitClass(SmoothTargetFollowingTrait);
-            builder.simpleProp("targetEntityId", PropertyType.id());
+            builder.simpleProp(
+                "targetEntityIds",
+                PropertyType.list(PropertyType.id()),
+            );
             builder.simpleProp(
                 "targetTraitKeys",
-                PropertyType.list(PropertyType.id()),
+                PropertyType.list(PropertyType.str()),
             );
         });
     }

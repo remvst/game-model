@@ -53,12 +53,13 @@ export default class SmoothTargetFollowingTrait extends Trait {
     cycle(elapsed: number) {
         const { target } = this;
         if (target) {
-            this.foundTarget = this.reachTargetLastPosition;
+            this.foundTarget = true;
             this.lastTargetPosition.x = target.position.x;
             this.lastTargetPosition.y = target.position.y;
         }
 
         if (!this.foundTarget) return;
+        if (!this.reachTargetLastPosition && !target) return;
 
         this.calculateSpeed(
             this.entity,

@@ -15,6 +15,7 @@ export default class SmoothTargetFollowingTrait extends Trait {
     targetTraitKeys: string[] = [];
     maxSpeed = 10;
     reachTargetFactor = 0.2;
+    reachTargetLastPosition = false;
 
     private foundTarget = false;
     private readonly lastTargetPosition = new Vector2();
@@ -52,7 +53,7 @@ export default class SmoothTargetFollowingTrait extends Trait {
     cycle(elapsed: number) {
         const { target } = this;
         if (target) {
-            this.foundTarget = true;
+            this.foundTarget = this.reachTargetLastPosition;
             this.lastTargetPosition.x = target.position.x;
             this.lastTargetPosition.y = target.position.y;
         }

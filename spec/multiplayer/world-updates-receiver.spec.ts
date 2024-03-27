@@ -1,11 +1,13 @@
 import {
     Authority,
     AuthorityType,
+    CameraTrait,
     Entity,
     GameModelApp,
     LocalAuthority,
     Remove,
     SerializationOptions,
+    Shift,
     World,
 } from "../../src";
 import WorldUpdatesReceiver from "../../src/multiplayer/world-updates-receiver";
@@ -197,5 +199,51 @@ describe("a world updates receiver", () => {
         );
 
         expect(eventSpy).toHaveBeenCalled();
+    });
+
+    it("will fail silently when finding incompatible events", () => {
+        spyOn(authority, "entityAuthority").and.returnValue(AuthorityType.NONE);
+
+        const incompatibleApp = new GameModelApp();
+        incompatibleApp.traitRegistry.add(CameraTrait.registryEntry());
+        incompatibleApp.finalize();
+
+        expect(() => {
+            helper.applyUpdate(
+                {
+                    entities: [
+                        incompatibleApp.serializers.packed.entity.serialize(
+                            new Entity("myentity", [new CameraTrait()]),
+                            new SerializationOptions(),
+                        ),
+                    ],
+                },
+                "",
+                remoteAuthority,
+            );
+        }).not.toThrow();
+    });
+
+    it("will fail silently when finding incompatible entities", () => {
+        spyOn(authority, "entityAuthority").and.returnValue(AuthorityType.NONE);
+
+        const incompatibleApp = new GameModelApp();
+        incompatibleApp.worldEventRegistry.add(Shift.registryEntry());
+        incompatibleApp.finalize();
+
+        expect(() => {
+            helper.applyUpdate(
+                {
+                    worldEvents: [
+                        incompatibleApp.serializers.packed.worldEvent.serialize(
+                            new Shift(),
+                            new SerializationOptions(),
+                        ),
+                    ],
+                },
+                "",
+                remoteAuthority,
+            );
+        }).not.toThrow();
     });
 });

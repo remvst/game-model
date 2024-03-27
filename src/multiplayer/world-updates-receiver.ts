@@ -1,3 +1,5 @@
+import Entity from "../entity";
+import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import SerializationOptions from "../serialization/serialization-options";
 import World from "../world";
@@ -45,11 +47,21 @@ export default class WorldUpdatesReceiver {
                 }
             }
 
-            const deserialized = this.app.serializers.packed.entity.deserialize(
-                serializedEntity,
-                this.serializationOptions,
-                existing,
-            );
+            let deserialized: Entity;
+            try {
+                deserialized = this.app.serializers.packed.entity.deserialize(
+                    serializedEntity,
+                    this.serializationOptions,
+                    existing,
+                );
+            } catch (err) {
+                console.log(
+                    `Failed to deserialize entity: ${err.message}`,
+                    err,
+                );
+                continue;
+            }
+
             missingIds.delete(deserialized.id);
 
             if (
@@ -92,11 +104,20 @@ export default class WorldUpdatesReceiver {
         }
 
         for (const serializedWorldEvent of update.worldEvents || []) {
-            const deserialized =
-                this.app.serializers.packed.worldEvent.deserialize(
-                    serializedWorldEvent,
-                    this.serializationOptions,
+            let deserialized: WorldEvent;
+            try {
+                deserialized =
+                    this.app.serializers.packed.worldEvent.deserialize(
+                        serializedWorldEvent,
+                        this.serializationOptions,
+                    );
+            } catch (err) {
+                console.log(
+                    `Failed to deserialize world event: ${err.message}`,
+                    err,
                 );
+                continue;
+            }
 
             switch (this.world.authority.worldEventAuthority(deserialized)) {
                 case AuthorityType.NONE:

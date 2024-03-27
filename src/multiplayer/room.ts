@@ -15,6 +15,7 @@ export class Player {
     receivedUpdateId = -1;
     acknowledgedUpdateId = 0;
     latencyProbe: { updateId: number; at: number } = null;
+    sentUpdatesWithoutResponse = 0;
 
     constructor(readonly id: string) {}
 }
@@ -30,6 +31,9 @@ export default class Room {
     private updatesCollector: WorldUpdatesCollector;
 
     readonly serializationOptions = new SerializationOptions();
+
+    // Number of updates that we're going to send before wait to get one update from a player
+    maxPlayerBacklogSize: number = 5;
 
     constructor(
         public hostId: string,
@@ -128,6 +132,7 @@ export default class Room {
 
         player.acknowledgedUpdateId = update.ackId;
         player.receivedUpdateId = update.updateId;
+        player.sentUpdatesWithoutResponse = 0;
 
         const { latencyProbe } = player;
         if (latencyProbe && update.ackId >= latencyProbe.updateId) {
@@ -175,12 +180,20 @@ export default class Room {
             if (!receiver) continue;
             if (receiver.id === this.selfId) continue;
 
+            // If we've been sending too many updates without receiving one, skip this one to
+            // avoid building up backpressure on the outgoing side
+            const hasPins = (baseUpdate.world?.pins?.length || 0) > 0;
+            const isBacklogged =
+                receiver.sentUpdatesWithoutResponse > this.maxPlayerBacklogSize;
+            if (isBacklogged && !hasPins) continue;
+
             this.sendUpdate(this, receiver.id, {
                 ...baseUpdate,
                 ackId: receiver.receivedUpdateId,
             });
 
             receiver.sentUpdateId = updateId;
+            receiver.sentUpdatesWithoutResponse++;
 
             if (!receiver.latencyProbe) {
                 receiver.latencyProbe = {

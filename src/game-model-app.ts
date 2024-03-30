@@ -6,6 +6,7 @@ import WorldEventRegistry from "./registry/world-event-registry";
 import { allSerializers } from "./serialization/all-serializers";
 import DualSupportTraitSerializer from "./serialization/dual/dual-support-trait-serializer";
 import DualSupportWorldEventSerializer from "./serialization/dual/dual-support-world-event-serializer";
+import { hashString } from "./util/hash-string";
 
 export default class GameModelApp {
     readonly traitRegistry = new TraitRegistry();
@@ -13,9 +14,15 @@ export default class GameModelApp {
     readonly propertyRegistry = new PropertyRegistry<Property<any>>();
     readonly serializers = allSerializers();
 
+    hash: number = 0;
+
     finalize() {
+        const hashStrings = [];
+
         for (const entityProperty of EntityProperties.all()) {
             this.propertyRegistry.add(entityProperty);
+
+            hashStrings.push(entityProperty.identifier);
         }
 
         for (const key of this.traitRegistry.keys()) {
@@ -40,10 +47,14 @@ export default class GameModelApp {
                 }
             }
 
+            hashStrings.push(key);
+
             for (const property of entry.properties || []) {
                 this.propertyRegistry.add(property);
+                hashStrings.push(property.identifier);
             }
         }
+
         for (const key of this.worldEventRegistry.keys()) {
             const entry = this.worldEventRegistry.entry(key);
             if (entry.serializer) {
@@ -68,6 +79,14 @@ export default class GameModelApp {
                     );
                 }
             }
+
+            hashStrings.push(entry.key);
+
+            for (const property of entry.properties || []) {
+                hashStrings.push(property.identifier);
+            }
         }
+
+        this.hash = hashString(hashStrings.sort().join(''));
     }
 }

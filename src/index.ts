@@ -249,6 +249,9 @@ export {
 };
 
 export * from "./multiplayer/room-update";
+
+// Utils
+export * from "./util/hash-string";
 export * from "./util/modify-recording";
 
 // Legacy

@@ -1,4 +1,12 @@
-import { CameraTrait, DependencyTrait, GameModelApp, PropertyType, Remove, Trait, TraitRegistryEntry, traitRegistryEntry } from "../src";
+import {
+    CameraTrait,
+    DependencyTrait,
+    GameModelApp,
+    PropertyType,
+    Remove,
+    Trait,
+    traitRegistryEntry,
+} from "../src";
 
 describe("game model app", () => {
     it("has a different hash if it has different events", () => {
@@ -63,33 +71,33 @@ describe("game model app", () => {
 
     it("has a different hash if trait properties are defined in different order", () => {
         class TraitV1 extends Trait {
-            static readonly key = 'mytrait';
+            static readonly key = "mytrait";
             readonly key = TraitV1.key;
 
-            foo: string = '';
-            bar: string = '';
+            foo: string = "";
+            bar: string = "";
 
             static registryEntry() {
-                return traitRegistryEntry<TraitV1>(builder => {
+                return traitRegistryEntry<TraitV1>((builder) => {
                     builder.traitClass(TraitV1);
-                    builder.simpleProp('foo', PropertyType.str());
-                    builder.simpleProp('bar', PropertyType.str());
+                    builder.simpleProp("foo", PropertyType.str());
+                    builder.simpleProp("bar", PropertyType.str());
                 });
             }
         }
 
         class TraitV2 extends Trait {
-            static readonly key = 'mytrait';
+            static readonly key = "mytrait";
             readonly key = TraitV2.key;
 
-            foo: string = '';
-            bar: string = '';
+            foo: string = "";
+            bar: string = "";
 
             static registryEntry() {
-                return traitRegistryEntry<TraitV2>(builder => {
+                return traitRegistryEntry<TraitV2>((builder) => {
                     builder.traitClass(TraitV2);
-                    builder.simpleProp('bar', PropertyType.str());
-                    builder.simpleProp('foo', PropertyType.str());
+                    builder.simpleProp("bar", PropertyType.str());
+                    builder.simpleProp("foo", PropertyType.str());
                 });
             }
         }

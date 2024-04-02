@@ -25,7 +25,7 @@ export default class GameModelApp {
             hashStrings.push(entityProperty.identifier);
         }
 
-        for (const key of this.traitRegistry.keys()) {
+        for (const key of Array.from(this.traitRegistry.keys()).sort()) {
             const entry = this.traitRegistry.entry(key);
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
@@ -55,7 +55,7 @@ export default class GameModelApp {
             }
         }
 
-        for (const key of this.worldEventRegistry.keys()) {
+        for (const key of Array.from(this.worldEventRegistry.keys()).sort()) {
             const entry = this.worldEventRegistry.entry(key);
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
@@ -87,6 +87,6 @@ export default class GameModelApp {
             }
         }
 
-        this.hash = hashString(hashStrings.sort().join(""));
+        this.hash = hashString(hashStrings.join(""));
     }
 }

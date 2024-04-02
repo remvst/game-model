@@ -1,4 +1,4 @@
-import { CameraTrait, DependencyTrait, GameModelApp, Remove } from "../src";
+import { CameraTrait, DependencyTrait, GameModelApp, PropertyType, Remove, Trait, TraitRegistryEntry, traitRegistryEntry } from "../src";
 
 describe("game model app", () => {
     it("has a different hash if it has different events", () => {
@@ -59,5 +59,49 @@ describe("game model app", () => {
         app2.finalize();
 
         expect(app1.hash).toEqual(app2.hash);
+    });
+
+    it("has a different hash if trait properties are defined in different order", () => {
+        class TraitV1 extends Trait {
+            static readonly key = 'mytrait';
+            readonly key = TraitV1.key;
+
+            foo: string = '';
+            bar: string = '';
+
+            static registryEntry() {
+                return traitRegistryEntry<TraitV1>(builder => {
+                    builder.traitClass(TraitV1);
+                    builder.simpleProp('foo', PropertyType.str());
+                    builder.simpleProp('bar', PropertyType.str());
+                });
+            }
+        }
+
+        class TraitV2 extends Trait {
+            static readonly key = 'mytrait';
+            readonly key = TraitV2.key;
+
+            foo: string = '';
+            bar: string = '';
+
+            static registryEntry() {
+                return traitRegistryEntry<TraitV2>(builder => {
+                    builder.traitClass(TraitV2);
+                    builder.simpleProp('bar', PropertyType.str());
+                    builder.simpleProp('foo', PropertyType.str());
+                });
+            }
+        }
+
+        const app1 = new GameModelApp();
+        app1.traitRegistry.add(TraitV1.registryEntry());
+        app1.finalize();
+
+        const app2 = new GameModelApp();
+        app2.traitRegistry.add(TraitV2.registryEntry());
+        app2.finalize();
+
+        expect(app1.hash).not.toEqual(app2.hash);
     });
 });

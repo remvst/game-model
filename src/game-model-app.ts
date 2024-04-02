@@ -87,6 +87,6 @@ export default class GameModelApp {
             }
         }
 
-        this.hash = hashString(hashStrings.sort().join(''));
+        this.hash = hashString(hashStrings.sort().join(""));
     }
 }

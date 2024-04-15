@@ -110,7 +110,7 @@ export function propertyValueConfigurable<T>(
 
     if (type instanceof StringConstraints) {
         return new StringConfigurable({
-            read: () => (read() as any).toString(),
+            read: () => (read() || "").toString(),
             write: (value, configurable) => write(value as T, configurable),
         });
     }

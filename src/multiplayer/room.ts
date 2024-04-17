@@ -147,6 +147,25 @@ export default class Room {
         );
     }
 
+    private playerToJson(player: Player): RoomPlayerJson {
+        const jsonPlayer: RoomPlayerJson = { id: player.id };
+
+        const { latencyProbe, latency, isMeta } = player;
+        const actualLatency = Math.max(
+            latency,
+            latencyProbe ? Date.now() - latencyProbe.at : 9999,
+        );
+        if (actualLatency) {
+            jsonPlayer.latency = actualLatency;
+        }
+
+        if (isMeta) {
+            jsonPlayer.isMeta = isMeta;
+        }
+
+        return jsonPlayer;
+    }
+
     broadcast() {
         if (!this.updatesCollector) {
             throw new Error("Did you forget to call setWorld?");
@@ -165,12 +184,9 @@ export default class Room {
 
         // Only include the list of players if we're the host
         if (isHost) {
-            baseUpdate.players = Array.from(this.players.values()).map((p) => {
-                const jsonPlayer: RoomPlayerJson = { id: p.id };
-                if (p.latency) jsonPlayer.latency = p.latency;
-                if (p.isMeta) jsonPlayer.isMeta = p.isMeta;
-                return jsonPlayer;
-            });
+            baseUpdate.players = Array.from(this.players.values()).map((p) =>
+                this.playerToJson(p),
+            );
         }
 
         const receivers = isHost

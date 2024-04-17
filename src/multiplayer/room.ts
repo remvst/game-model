@@ -147,20 +147,24 @@ export default class Room {
         );
     }
 
-    private playerToJson(player: Player): RoomPlayerJson {
-        const jsonPlayer: RoomPlayerJson = { id: player.id };
-
-        const { latencyProbe, latency, isMeta } = player;
-        const actualLatency = Math.max(
+    private playerLatency(player: Player): number {
+        const { latencyProbe, latency } = player;
+        return Math.max(
             latency,
             latencyProbe ? Date.now() - latencyProbe.at : 9999,
         );
-        if (actualLatency) {
-            jsonPlayer.latency = actualLatency;
+    }
+
+    private playerToJson(player: Player): RoomPlayerJson {
+        const jsonPlayer: RoomPlayerJson = { id: player.id };
+
+        const playerLatency = this.playerLatency(player);
+        if (playerLatency) {
+            jsonPlayer.latency = playerLatency;
         }
 
-        if (isMeta) {
-            jsonPlayer.isMeta = isMeta;
+        if (player.isMeta) {
+            jsonPlayer.isMeta = player.isMeta;
         }
 
         return jsonPlayer;

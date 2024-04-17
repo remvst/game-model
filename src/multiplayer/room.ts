@@ -147,11 +147,12 @@ export default class Room {
         );
     }
 
-    private playerLatency(player: Player): number {
+    playerLatency(player: Player): number {
         const { latencyProbe, latency } = player;
         return Math.max(
             latency,
-            latencyProbe ? Date.now() - latencyProbe.at : 9999,
+            latencyProbe ? Date.now() - latencyProbe.at : 0,
+            player.acknowledgedUpdateId ? 0 : 9999,
         );
     }
 

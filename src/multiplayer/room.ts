@@ -183,9 +183,10 @@ export default class Room {
             // If we've been sending too many updates without receiving one, skip this one to
             // avoid building up backpressure on the outgoing side
             const hasPins = (baseUpdate.world?.pins?.length || 0) > 0;
+            const hasUnpins = (baseUpdate.world?.unpins?.length || 0) > 0;
             const isBacklogged =
                 receiver.sentUpdatesWithoutResponse > this.maxPlayerBacklogSize;
-            if (isBacklogged && !hasPins) continue;
+            if (isBacklogged && !hasPins && !hasUnpins) continue;
 
             this.sendUpdate(this, receiver.id, {
                 ...baseUpdate,

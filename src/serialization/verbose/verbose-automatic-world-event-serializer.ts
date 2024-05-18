@@ -5,6 +5,7 @@ import {
     CompositeConstraints,
     EntityIdConstraints,
     EnumConstraints,
+    JsonConstraints,
     ListConstraints,
     NumberConstraints,
     PropertyConstraints,
@@ -75,6 +76,10 @@ export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent>
             return value;
         }
 
+        if (type instanceof JsonConstraints) {
+            return JSON.stringify(value);
+        }
+
         throw new Error(`Unknown property type: ${type}`);
     }
 
@@ -108,6 +113,10 @@ export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent>
             type instanceof EnumConstraints
         ) {
             return serializedProperty;
+        }
+
+        if (type instanceof JsonConstraints) {
+            return JSON.parse(serializedProperty);
         }
 
         throw new Error(`Unknown property type: ${type}`);

@@ -1,259 +1,70 @@
-import adaptId, { resolveIds } from "./adapt-id";
-import ObjectSet from "./collections/object-set";
-import WatchableObjectSet from "./collections/watchable-object-set";
-import entityConfigurable from "./configurable/entity-configurable";
-import { EntityFilter, EntityFilters } from "./configurable/entity-filter";
-import EntityIdConfigurable from "./configurable/entity-id-configurable";
-import Entity, { entity } from "./entity";
-import { EntityEvent } from "./events/entity-event";
-import EntityEventProcessed from "./events/entity-event-processed";
-import EntityRemoved from "./events/entity-removed";
-import EntitySelectionRequested from "./events/entity-selection-requested";
-import InterpolateProperty from "./events/interpolate-property";
-import MoveTo from "./events/move-to";
-import Remove from "./events/remove";
-import SetProperty from "./events/set-property";
-import Shift from "./events/shift";
-import Trigger from "./events/trigger";
-import TriggerEvent from "./events/trigger-event";
-import { WorldEvent } from "./events/world-event";
-import GameModelApp from "./game-model-app";
-import { KeyProvider } from "./key-provider";
-import {
-    Authority,
-    AuthorityType,
-    FullAuthority,
-    LocalAuthority,
-} from "./multiplayer/authority";
-import Room, { Player } from "./multiplayer/room";
-import { WorldUpdate } from "./multiplayer/world-update";
-import WorldUpdatesCollector from "./multiplayer/world-updates-collector";
-import WorldUpdatesReceiver from "./multiplayer/world-updates-receiver";
-import { CyclePerformanceTracker } from "./performance-tracker";
-import {
-    GenericProperty,
-    Property,
-    getSet,
-    traitGetSet,
-    worldEventGetSet,
-} from "./properties/properties";
-import {
-    BooleanConstraints,
-    ColorConstraints,
-    CompositeConstraints,
-    EntityIdConstraints,
-    EnumConstraints,
-    JsonConstraints,
-    ListConstraints,
-    NumberConstraints,
-    PropertyConstraints,
-    PropertyType,
-    StringConstraints,
-} from "./properties/property-constraints";
-import RecordedFrame from "./recording/recorded-frame";
-import ReplayerAuthority from "./recording/replayer-authority";
-import WorldRecorder from "./recording/world-recorder";
-import WorldReplayer from "./recording/world-replayer";
-import PropertyRegistry from "./registry/property-registry";
-import { Registry } from "./registry/registry";
-import {
-    TraitRegistryEntryProvider,
-    WorldEventRegistryEntryProvider,
-} from "./registry/registry-entry-provider";
-import TraitRegistry, {
-    AutoRegistryEntry,
-    RegistryEntry,
-    TraitRegistryEntry,
-    traitRegistryEntry,
-} from "./registry/trait-registry";
-import WorldEventRegistry, {
-    AutoWorldEventRegistryEntry,
-    WorldEventRegistryEntry,
-    worldEventRegistryEntry,
-} from "./registry/world-event-registry";
-import {
-    AllSerializers,
-    WorldSetup,
-    allSerializers,
-} from "./serialization/all-serializers";
-import {
-    ArrayDecoder,
-    ArrayEncoder,
-    Decoder,
-    Encoder,
-    EncoderSequence,
-} from "./serialization/encoder";
-import PackedTraitSerializer from "./serialization/packed/packed-automatic-trait-serializer";
-import SerializationOptions, {
-    SerializationType,
-} from "./serialization/serialization-options";
-import {
-    AnySerialized,
-    EntitySerializer,
-    Serializer,
-    TraitSerializer,
-    WorldEventSerializer,
-    WorldSerializer,
-} from "./serialization/serializer";
-import Trait from "./trait";
-import {
-    TraitSurfaceProvider,
-    rectangleSurface,
-} from "./trait-surface-provider";
-import CameraTrait from "./traits/camera-trait";
-import DelayedActionTrait from "./traits/delayed-action-trait";
-import DependencyTrait from "./traits/dependency-trait";
-import DisappearingTrait from "./traits/disappearing-trait";
-import EntityGroupTrait from "./traits/entity-group-trait";
-import EntitySelectorTrait from "./traits/entity-selector-trait";
-import EventHolderTrait from "./traits/event-holder-trait";
-import EventOnRemovalTrait from "./traits/event-on-removal-trait";
-import EventTriggerTrait from "./traits/event-trigger-trait";
-import InterpolatorTrait from "./traits/interpolator-trait";
-import PositionBindingTrait from "./traits/position-binding-trait";
-import RectangleBoundTrait from "./traits/rectangle-bound-trait";
-import ScriptTrait from "./traits/script-trait";
-import SmoothTargetFollowingTrait from "./traits/smooth-target-following-trait";
-import duplicateEntities from "./util/duplicate-entities";
-import EntityIdMapping from "./util/entity-id-mapping";
-import firstAvailableId from "./util/first-available-id";
-import PrefabHelper, { SerializedPrefab } from "./util/prefab-helper";
-import { repositionEntities } from "./util/reposition-entities";
-import { vector3 } from "./vector3";
-import World from "./world";
-
-export {
-    AllSerializers,
-    AnySerialized,
-    ArrayDecoder,
-    ArrayEncoder,
-    // Multiplayer
-    Authority,
-    AuthorityType,
-    AutoRegistryEntry,
-    AutoWorldEventRegistryEntry,
-    BooleanConstraints,
-    CameraTrait,
-    ColorConstraints,
-    CompositeConstraints,
-    // Perf
-    CyclePerformanceTracker,
-    Decoder,
-    DelayedActionTrait,
-    DependencyTrait,
-    DisappearingTrait,
-    Encoder,
-    EncoderSequence,
-    Entity,
-    EntityEvent,
-    EntityEventProcessed,
-    EntityFilter,
-    EntityFilters,
-    EntityGroupTrait,
-    // Configurables
-    EntityIdConfigurable,
-    EntityIdConstraints,
-    EntityIdMapping,
-    EntityRemoved,
-    EntitySelectionRequested,
-    EntitySelectorTrait,
-    EntitySerializer,
-    EnumConstraints,
-    EventHolderTrait,
-    EventOnRemovalTrait,
-    EventTriggerTrait,
-    FullAuthority,
-    // App
-    GameModelApp,
-    GenericProperty,
-    InterpolateProperty,
-    // Traits
-    InterpolatorTrait,
-    JsonConstraints,
-    KeyProvider,
-    ListConstraints,
-    LocalAuthority,
-    MoveTo,
-    NumberConstraints,
-    // Collections
-    ObjectSet,
-    PackedTraitSerializer,
-    Player,
-    PositionBindingTrait,
-    PrefabHelper,
-    // Properties
-    Property,
-    // Property types
-    PropertyConstraints,
-    PropertyRegistry,
-    PropertyType,
-    RecordedFrame,
-    RectangleBoundTrait,
-    Registry,
-    RegistryEntry,
-    Remove,
-    // Recording
-    ReplayerAuthority,
-    Room,
-    ScriptTrait,
-    SerializationOptions,
-    SerializationType,
-    SerializedPrefab,
-    // Serializers
-    Serializer,
-    SetProperty,
-    Shift,
-    SmoothTargetFollowingTrait,
-    StringConstraints,
-    Trait,
-    // Registries
-    TraitRegistry,
-    TraitRegistryEntry,
-    TraitRegistryEntryProvider,
-    TraitSerializer,
-    // Surfaces
-    TraitSurfaceProvider,
-    Trigger,
-    TriggerEvent,
-    WatchableObjectSet,
-    World,
-    // Events
-    WorldEvent,
-    WorldEventRegistry,
-    WorldEventRegistryEntry,
-    WorldEventRegistryEntryProvider,
-    WorldEventSerializer,
-    WorldRecorder,
-    WorldReplayer,
-    WorldSerializer,
-    WorldSetup,
-    WorldUpdate,
-    WorldUpdatesCollector,
-    WorldUpdatesReceiver,
-    // Utils
-    adaptId,
-    allSerializers,
-    duplicateEntities,
-    entity,
-    entityConfigurable,
-    firstAvailableId,
-    getSet,
-    // Geometry
-    rectangleSurface,
-    repositionEntities,
-    resolveIds,
-    traitGetSet,
-    traitRegistryEntry,
-    vector3,
-    worldEventGetSet,
-    worldEventRegistryEntry,
-};
-
+export * from "@remvst/geometry";
+export * from "./adapt-id";
+export * from "./collections/object-set";
+export * from "./collections/watchable-object-set";
+export * from "./configurable/entity-configurable";
+export * from "./configurable/entity-filter";
+export * from "./configurable/entity-id-configurable";
+export * from "./entity";
+export * from "./events/entity-event";
+export * from "./events/entity-event-processed";
+export * from "./events/entity-removed";
+export * from "./events/entity-selection-requested";
+export * from "./events/interpolate-property";
+export * from "./events/move-to";
+export * from "./events/remove";
+export * from "./events/set-property";
+export * from "./events/shift";
+export * from "./events/trigger";
+export * from "./events/trigger-event";
+export * from "./events/world-event";
+export * from "./game-model-app";
+export * from "./key-provider";
+export * from "./multiplayer/authority";
+export * from "./multiplayer/room";
 export * from "./multiplayer/room-update";
-
-// Utils
+export * from "./multiplayer/world-update";
+export * from "./multiplayer/world-updates-collector";
+export * from "./multiplayer/world-updates-receiver";
+export * from "./performance-tracker";
+export * from "./properties/properties";
+export * from "./properties/property-constraints";
+export * from "./recording/recorded-frame";
+export * from "./recording/replayer-authority";
+export * from "./recording/world-recorder";
+export * from "./recording/world-replayer";
+export * from "./registry/property-registry";
+export * from "./registry/registry";
+export * from "./registry/registry-entry-provider";
+export * from "./registry/trait-registry";
+export * from "./registry/world-event-registry";
+export * from "./serialization/all-serializers";
+export * from "./serialization/encoder";
+export * from "./serialization/packed/packed-automatic-trait-serializer";
+export * from "./serialization/serialization-options";
+export * from "./serialization/serializer";
+export * from "./trait";
+export * from "./trait-surface-provider";
+export * from "./traits/camera-trait";
+export * from "./traits/delayed-action-trait";
+export * from "./traits/dependency-trait";
+export * from "./traits/disappearing-trait";
+export * from "./traits/entity-group-trait";
+export * from "./traits/entity-selector-trait";
+export * from "./traits/event-holder-trait";
+export * from "./traits/event-on-removal-trait";
+export * from "./traits/event-trigger-trait";
+export * from "./traits/interpolator-trait";
+export * from "./traits/position-binding-trait";
+export * from "./traits/rectangle-bound-trait";
+export * from "./traits/script-trait";
+export * from "./traits/smooth-target-following-trait";
+export * from "./util/duplicate-entities";
+export * from "./util/entity-id-mapping";
+export * from "./util/first-available-id";
 export * from "./util/hash-string";
 export * from "./util/modify-recording";
-
-// Legacy
-export * from "@remvst/geometry";
+export * from "./util/prefab-helper";
+export * from "./util/reposition-entities";
+export * from "./vector3";
+export * from "./world";

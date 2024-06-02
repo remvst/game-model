@@ -1,13 +1,13 @@
-import { Entity, InterpolatorTrait, vector3 } from "..";
 import { resolveIds } from "../adapt-id";
 import { PropertyType } from "../properties/property-constraints";
 import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,
 } from "../registry/world-event-registry";
-import { Vector3 } from "../vector3";
+import InterpolatorTrait from "../traits/interpolator-trait";
+import { Vector3, vector3 } from "../vector3";
 import World from "../world";
-import { EntityProperties } from "./../entity";
+import Entity, { EntityProperties } from "./../entity";
 import { WorldEvent } from "./world-event";
 
 export default class Shift implements WorldEvent {

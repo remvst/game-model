@@ -1,4 +1,4 @@
-import { Entity } from "..";
+import Entity from "../entity";
 import { EntityEvent } from "../events/entity-event";
 import Trigger from "../events/trigger";
 import TriggerEvent from "../events/trigger-event";

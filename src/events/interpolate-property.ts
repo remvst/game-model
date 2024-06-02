@@ -2,14 +2,9 @@ import {
     CompositeConfigurable,
     NumberConfigurable,
 } from "@remvst/configurable";
-import {
-    Entity,
-    EntityIdConfigurable,
-    PropertyRegistry,
-    SetProperty,
-} from "..";
 import { resolveIds } from "../adapt-id";
 import { anyProperty } from "../configurable/any-property-configurable";
+import EntityIdConfigurable from "../configurable/entity-id-configurable";
 import { propertyValueConfigurable } from "../configurable/property-value-configurable";
 import GameModelApp from "../game-model-app";
 import { onlyRelevantProperties } from "../properties/only-relevant-properties";
@@ -18,11 +13,13 @@ import {
     NumberConstraints,
     PropertyType,
 } from "../properties/property-constraints";
+import PropertyRegistry from "../registry/property-registry";
 import { WorldEventRegistryEntry } from "../registry/world-event-registry";
 import { WorldEventSerializer } from "../serialization/serializer";
 import InterpolatorTrait from "../traits/interpolator-trait";
 import World from "../world";
-import { EntityProperties } from "./../entity";
+import Entity, { EntityProperties } from "./../entity";
+import SetProperty from "./set-property";
 import { WorldEvent } from "./world-event";
 
 export default class InterpolateProperty implements WorldEvent {
@@ -143,7 +140,7 @@ interface Serialized {
     readonly duration: number;
 }
 
-export class Serializer
+class Serializer
     implements WorldEventSerializer<InterpolateProperty, Serialized>
 {
     constructor(

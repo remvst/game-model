@@ -1,4 +1,9 @@
-import { ArrayDecoder, ArrayEncoder, Decoder, Encoder } from "../../src";
+import {
+    ArrayDecoder,
+    ArrayEncoder,
+    Decoder,
+    Encoder,
+} from "../../src/serialization/encoder";
 
 describe("a string encoder/decoder", () => {
     let encoder: Encoder;

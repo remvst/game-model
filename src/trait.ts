@@ -1,13 +1,15 @@
 import { Rectangle } from "@remvst/geometry";
-import { GameModelApp, World, vector3 } from ".";
 import SectorObjectSet from "./collections/sector-object-set";
 import Entity from "./entity";
 import { EntityEvent } from "./events/entity-event";
+import GameModelApp from "./game-model-app";
 import { KeyProvider } from "./key-provider";
 import {
     TraitSurfaceProvider,
     entityPositionSurface,
 } from "./trait-surface-provider";
+import { vector3 } from "./vector3";
+import World from "./world";
 
 const REUSABLE_GEOMETRY_AREA = new Rectangle();
 

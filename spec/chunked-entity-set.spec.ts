@@ -1,13 +1,13 @@
 import { Rectangle } from "@remvst/geometry";
-import {
-    Entity,
-    ObjectSet,
-    Trait,
-    TraitSurfaceProvider,
-    WatchableObjectSet,
-    rectangleSurface,
-} from "../src";
 import ChunkedEntitySet from "../src/chunked-entity-set";
+import ObjectSet from "../src/collections/object-set";
+import WatchableObjectSet from "../src/collections/watchable-object-set";
+import Entity from "../src/entity";
+import Trait from "../src/trait";
+import {
+    TraitSurfaceProvider,
+    rectangleSurface,
+} from "../src/trait-surface-provider";
 
 describe("a chunked entity set", () => {
     let originalSet: WatchableObjectSet<Entity>;

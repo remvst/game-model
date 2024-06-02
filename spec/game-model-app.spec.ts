@@ -1,12 +1,10 @@
-import {
-    CameraTrait,
-    DependencyTrait,
-    GameModelApp,
-    PropertyType,
-    Remove,
-    Trait,
-    traitRegistryEntry,
-} from "../src";
+import Remove from "../src/events/remove";
+import GameModelApp from "../src/game-model-app";
+import { PropertyType } from "../src/properties/property-constraints";
+import { traitRegistryEntry } from "../src/registry/trait-registry";
+import Trait from "../src/trait";
+import CameraTrait from "../src/traits/camera-trait";
+import DependencyTrait from "../src/traits/dependency-trait";
 
 describe("game model app", () => {
     it("has a different hash if it has different events", () => {

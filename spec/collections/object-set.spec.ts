@@ -1,6 +1,4 @@
-"use strict";
-
-import { ObjectSet } from "../../src/index";
+import ObjectSet from "../../src/collections/object-set";
 
 type ObjectType = {
     key: string;

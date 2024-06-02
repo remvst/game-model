@@ -1,5 +1,5 @@
 import { Configurable, EnumConfigurable } from "@remvst/configurable";
-import { Property } from "..";
+import { Property } from "../properties/properties";
 import PropertyRegistry from "../registry/property-registry";
 
 export function anyProperty(opts: {

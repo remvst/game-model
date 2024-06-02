@@ -1,13 +1,9 @@
-"use strict";
-
-import {
-    Entity,
-    EntityEvent,
-    EntityEventProcessed,
-    Trait,
-    World,
-    vector3,
-} from "../src/index";
+import Entity from "../src/entity";
+import { EntityEvent } from "../src/events/entity-event";
+import EntityEventProcessed from "../src/events/entity-event-processed";
+import Trait from "../src/trait";
+import { vector3 } from "../src/vector3";
+import World from "../src/world";
 
 describe("an entity", () => {
     class TestTrait extends Trait {

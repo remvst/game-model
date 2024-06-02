@@ -1,11 +1,9 @@
-import {
-    Entity,
-    GameModelApp,
-    SerializationOptions,
-    Shift,
-    World,
-    vector3,
-} from "../../src";
+import Entity from "../../src/entity";
+import Shift from "../../src/events/shift";
+import GameModelApp from "../../src/game-model-app";
+import SerializationOptions from "../../src/serialization/serialization-options";
+import { vector3 } from "../../src/vector3";
+import World from "../../src/world";
 
 describe("shift event", () => {
     let app: GameModelApp;

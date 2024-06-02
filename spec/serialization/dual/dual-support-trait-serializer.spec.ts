@@ -1,9 +1,7 @@
-import {
-    PropertyType,
-    Trait,
-    TraitRegistry,
+import { PropertyType } from "../../../src/properties/property-constraints";
+import TraitRegistry, {
     traitRegistryEntry,
-} from "../../../src";
+} from "../../../src/registry/trait-registry";
 import DualSupportTraitSerializer from "../../../src/serialization/dual/dual-support-trait-serializer";
 import PackedAutomaticTraitSerializer from "../../../src/serialization/packed/packed-automatic-trait-serializer";
 import SerializationOptions, {
@@ -11,6 +9,7 @@ import SerializationOptions, {
 } from "../../../src/serialization/serialization-options";
 import { TraitSerializer } from "../../../src/serialization/serializer";
 import VerboseAutomaticTraitSerializer from "../../../src/serialization/verbose/verbose-automatic-trait-serializer";
+import Trait from "../../../src/trait";
 
 describe("the dual support trait serializer", () => {
     class TestTrait extends Trait {

@@ -1,4 +1,5 @@
-import { Entity, EntityGroupTrait } from ".";
+import Entity from "./entity";
+import EntityGroupTrait from "./traits/entity-group-trait";
 import World from "./world";
 
 export const TRIGGERER_ID = "_triggerer";

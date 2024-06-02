@@ -1,10 +1,8 @@
-import {
-    Entity,
-    GameModelApp,
-    Remove,
-    SerializationOptions,
-    World,
-} from "../../src";
+import Entity from "../../src/entity";
+import Remove from "../../src/events/remove";
+import GameModelApp from "../../src/game-model-app";
+import SerializationOptions from "../../src/serialization/serialization-options";
+import World from "../../src/world";
 
 describe("remove event", () => {
     let app: GameModelApp;

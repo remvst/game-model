@@ -1,8 +1,10 @@
-import { Entity, Vector2, repositionEntities } from "../../src";
+import { Vector2 } from "@remvst/geometry";
+import { entity } from "../../src/entity";
+import { repositionEntities } from "../../src/util/reposition-entities";
 
 describe("repositionEntities", () => {
     it("will reposition a single entity", () => {
-        const entity1 = new Entity(undefined, []);
+        const entity1 = entity();
         entity1.position.x = 123;
         entity1.position.y = 456;
 
@@ -13,11 +15,11 @@ describe("repositionEntities", () => {
     });
 
     it("will reposition two entities", () => {
-        const entity1 = new Entity(undefined, []);
+        const entity1 = entity();
         entity1.position.x = 0;
         entity1.position.y = 100;
 
-        const entity2 = new Entity(undefined, []);
+        const entity2 = entity();
         entity2.position.x = 100;
         entity2.position.y = 200;
 

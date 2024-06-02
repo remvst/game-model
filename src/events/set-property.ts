@@ -1,12 +1,13 @@
 import { CompositeConfigurable, EnumConfigurable } from "@remvst/configurable";
-import { EntityIdConfigurable, PropertyRegistry } from "..";
 import { resolveIds } from "../adapt-id";
 import { anyProperty } from "../configurable/any-property-configurable";
+import EntityIdConfigurable from "../configurable/entity-id-configurable";
 import { propertyValueConfigurable } from "../configurable/property-value-configurable";
 import { EntityProperties } from "../entity";
 import GameModelApp from "../game-model-app";
 import { onlyRelevantProperties } from "../properties/only-relevant-properties";
 import { Property } from "../properties/properties";
+import PropertyRegistry from "../registry/property-registry";
 import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,

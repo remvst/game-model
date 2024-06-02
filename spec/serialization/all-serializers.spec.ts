@@ -1,14 +1,15 @@
+import Entity from "../../src/entity";
 import {
     AllSerializers,
-    Entity,
-    SerializationOptions,
-    SerializationType,
-    Trait,
-    TraitSerializer,
-    World,
+    WorldSetup,
     allSerializers,
-} from "../../src";
-import { WorldSetup } from "../../src/serialization/all-serializers";
+} from "../../src/serialization/all-serializers";
+import SerializationOptions, {
+    SerializationType,
+} from "../../src/serialization/serialization-options";
+import { TraitSerializer } from "../../src/serialization/serializer";
+import Trait from "../../src/trait";
+import World from "../../src/world";
 
 describe("allSerializers", () => {
     class TestTrait1 extends Trait {

@@ -1,8 +1,11 @@
 import { CompositeConfigurable, Configurable } from "@remvst/configurable";
-import { GameModelApp, KeyProvider, PropertyConstraints, WorldEvent } from "..";
 import { propertyValueConfigurable } from "../configurable/property-value-configurable";
 import Entity from "../entity";
+import { WorldEvent } from "../events/world-event";
+import GameModelApp from "../game-model-app";
+import { KeyProvider } from "../key-provider";
 import { WorldEventProperty } from "../properties/properties";
+import { PropertyConstraints } from "../properties/property-constraints";
 import DualSupportWorldEventSerializer from "../serialization/dual/dual-support-world-event-serializer";
 import PackedAutomaticWorldEventSerializer from "../serialization/packed/packed-automatic-world-event-serializer";
 import {

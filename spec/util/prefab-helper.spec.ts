@@ -1,4 +1,8 @@
-import { Entity, GameModelApp, PrefabHelper, Vector2, World } from "../../src";
+import { Vector2 } from "@remvst/geometry";
+import Entity from "../../src/entity";
+import GameModelApp from "../../src/game-model-app";
+import PrefabHelper from "../../src/util/prefab-helper";
+import World from "../../src/world";
 
 describe("the prefab helper", () => {
     let app: GameModelApp;

@@ -1,11 +1,9 @@
-import {
-    Entity,
-    GameModelApp,
-    SerializationOptions,
-    Trigger,
-    TriggerEvent,
-    World,
-} from "../../src";
+import Entity from "../../src/entity";
+import Trigger from "../../src/events/trigger";
+import TriggerEvent from "../../src/events/trigger-event";
+import GameModelApp from "../../src/game-model-app";
+import SerializationOptions from "../../src/serialization/serialization-options";
+import World from "../../src/world";
 
 describe("move to event", () => {
     let app: GameModelApp;

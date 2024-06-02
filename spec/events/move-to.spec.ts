@@ -1,10 +1,8 @@
-import {
-    Entity,
-    GameModelApp,
-    MoveTo,
-    SerializationOptions,
-    World,
-} from "../../src";
+import Entity from "../../src/entity";
+import MoveTo from "../../src/events/move-to";
+import GameModelApp from "../../src/game-model-app";
+import SerializationOptions from "../../src/serialization/serialization-options";
+import World from "../../src/world";
 
 describe("move to event", () => {
     let app: GameModelApp;

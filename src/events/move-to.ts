@@ -1,6 +1,6 @@
-import { Entity, PropertyType } from "..";
 import { resolveIds } from "../adapt-id";
-import { EntityProperties } from "../entity";
+import Entity, { EntityProperties } from "../entity";
+import { PropertyType } from "../properties/property-constraints";
 import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,

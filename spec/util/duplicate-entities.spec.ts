@@ -1,12 +1,10 @@
-import {
-    Entity,
-    GameModelApp,
-    PropertyType,
-    Trait,
-    World,
-    duplicateEntities,
-    traitRegistryEntry,
-} from "../../src";
+import Entity from "../../src/entity";
+import GameModelApp from "../../src/game-model-app";
+import { PropertyType } from "../../src/properties/property-constraints";
+import { traitRegistryEntry } from "../../src/registry/trait-registry";
+import Trait from "../../src/trait";
+import duplicateEntities from "../../src/util/duplicate-entities";
+import World from "../../src/world";
 
 describe("duplicateEntities", () => {
     let world: World;

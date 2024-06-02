@@ -1,6 +1,5 @@
-"use strict";
-
-import { ObjectSet, WatchableObjectSet } from "../../src/index";
+import ObjectSet from "../../src/collections/object-set";
+import WatchableObjectSet from "../../src/collections/watchable-object-set";
 
 type ObjectType = {
     key: string;

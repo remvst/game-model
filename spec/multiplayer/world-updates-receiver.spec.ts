@@ -1,16 +1,16 @@
+import Entity from "../../src/entity";
+import Remove from "../../src/events/remove";
+import Shift from "../../src/events/shift";
+import GameModelApp from "../../src/game-model-app";
 import {
     Authority,
     AuthorityType,
-    CameraTrait,
-    Entity,
-    GameModelApp,
     LocalAuthority,
-    Remove,
-    SerializationOptions,
-    Shift,
-    World,
-} from "../../src";
+} from "../../src/multiplayer/authority";
 import WorldUpdatesReceiver from "../../src/multiplayer/world-updates-receiver";
+import SerializationOptions from "../../src/serialization/serialization-options";
+import CameraTrait from "../../src/traits/camera-trait";
+import World from "../../src/world";
 
 describe("a world updates receiver", () => {
     let world: World;

@@ -1,4 +1,6 @@
-import { Entity, EntitySerializer, SerializationOptions } from "../../../src";
+import Entity from "../../../src/entity";
+import SerializationOptions from "../../../src/serialization/serialization-options";
+import { EntitySerializer } from "../../../src/serialization/serializer";
 import VerboseCompositeSerializer from "../../../src/serialization/verbose/verbose-composite-serializer";
 import VerboseEntitySerializer from "../../../src/serialization/verbose/verbose-entity-serializer";
 

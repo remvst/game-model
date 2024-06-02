@@ -1,13 +1,14 @@
 import {
     PropertyConstraints,
     PropertyType,
-    Trait,
-    TraitRegistry,
+} from "../../../src/properties/property-constraints";
+import TraitRegistry, {
     traitRegistryEntry,
-} from "../../../src";
+} from "../../../src/registry/trait-registry";
 import PackedAutomaticTraitSerializer from "../../../src/serialization/packed/packed-automatic-trait-serializer";
 import SerializationOptions from "../../../src/serialization/serialization-options";
 import { TraitSerializer } from "../../../src/serialization/serializer";
+import Trait from "../../../src/trait";
 
 describe("the packed trait serializer", () => {
     class TestTrait extends Trait {

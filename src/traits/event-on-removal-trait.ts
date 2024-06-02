@@ -1,15 +1,13 @@
-import {
-    EntityIdConstraints,
-    EntityRemoved,
-    RegistryEntry,
-    SerializationOptions,
-} from "..";
 import adaptId from "../adapt-id";
 import { EntityEvent } from "../events/entity-event";
+import EntityRemoved from "../events/entity-removed";
 import Remove from "../events/remove";
 import { WorldEvent } from "../events/world-event";
 import GameModelApp from "../game-model-app";
 import { KeyProvider } from "../key-provider";
+import { EntityIdConstraints } from "../properties/property-constraints";
+import { RegistryEntry } from "../registry/trait-registry";
+import SerializationOptions from "../serialization/serialization-options";
 import {
     AnySerialized,
     TraitSerializer,

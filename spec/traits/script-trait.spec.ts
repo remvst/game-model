@@ -1,9 +1,7 @@
-import {
-    Entity,
-    GameModelApp,
-    ScriptTrait,
-    SerializationOptions,
-} from "../../src";
+import Entity from "../../src/entity";
+import GameModelApp from "../../src/game-model-app";
+import SerializationOptions from "../../src/serialization/serialization-options";
+import ScriptTrait from "../../src/traits/script-trait";
 
 describe("script trait", () => {
     let app: GameModelApp;

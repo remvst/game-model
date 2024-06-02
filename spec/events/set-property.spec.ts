@@ -1,11 +1,8 @@
-import {
-    Entity,
-    GameModelApp,
-    SerializationOptions,
-    SetProperty,
-    World,
-} from "../../src";
-import { EntityProperties } from "../../src/entity";
+import Entity, { EntityProperties } from "../../src/entity";
+import SetProperty from "../../src/events/set-property";
+import GameModelApp from "../../src/game-model-app";
+import SerializationOptions from "../../src/serialization/serialization-options";
+import World from "../../src/world";
 
 describe("set property event", () => {
     let app: GameModelApp;

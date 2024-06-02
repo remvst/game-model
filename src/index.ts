@@ -4,7 +4,7 @@ import WatchableObjectSet from "./collections/watchable-object-set";
 import entityConfigurable from "./configurable/entity-configurable";
 import { EntityFilter, EntityFilters } from "./configurable/entity-filter";
 import EntityIdConfigurable from "./configurable/entity-id-configurable";
-import Entity from "./entity";
+import Entity, { entity } from "./entity";
 import { EntityEvent } from "./events/entity-event";
 import EntityEventProcessed from "./events/entity-event-processed";
 import EntityRemoved from "./events/entity-removed";
@@ -145,6 +145,7 @@ export {
     Encoder,
     EncoderSequence,
     Entity,
+    entity,
     EntityEvent,
     EntityEventProcessed,
     EntityFilter,

@@ -213,3 +213,21 @@ export default class Entity {
         }
     }
 }
+
+export function entity(
+    arg0: string | Trait[],
+    arg1?: Trait[],
+) {
+    let id: string;
+    let traits: Trait[];
+
+    if (typeof arg0 === "string") {
+        id = arg0;
+        traits = arg1;
+    } else {
+        id = undefined;
+        traits = arg0;
+    }
+
+    return new Entity(id, traits);
+}

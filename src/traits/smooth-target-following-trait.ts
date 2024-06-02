@@ -13,9 +13,10 @@ export default class SmoothTargetFollowingTrait extends Trait {
 
     targetEntityIds: string[] = [];
     targetTraitKeys: string[] = [];
-    maxSpeed = 10;
+    maxSpeed = Number.MAX_SAFE_INTEGER;
     reachTargetFactor = 0.2;
     reachTargetLastPosition = false;
+    offset = new Vector2();
 
     private foundTarget = false;
     private readonly lastTargetPosition = new Vector2();
@@ -46,16 +47,16 @@ export default class SmoothTargetFollowingTrait extends Trait {
     ) {
         const diffX = Math.abs(targetPosition.x - position.x);
         const diffY = Math.abs(targetPosition.y - position.y);
-        outSpeed.x = Math.max(this.maxSpeed, diffX / this.reachTargetFactor);
-        outSpeed.y = Math.max(this.maxSpeed, diffY / this.reachTargetFactor);
+        outSpeed.x = Math.min(this.maxSpeed, diffX / this.reachTargetFactor);
+        outSpeed.y = Math.min(this.maxSpeed, diffY / this.reachTargetFactor);
     }
 
     cycle(elapsed: number) {
         const { target } = this;
         if (target) {
             this.foundTarget = true;
-            this.lastTargetPosition.x = target.position.x;
-            this.lastTargetPosition.y = target.position.y;
+            this.lastTargetPosition.x = target.position.x + this.offset.x;
+            this.lastTargetPosition.y = target.position.y + this.offset.y;
         }
 
         if (!this.foundTarget) return;

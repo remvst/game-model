@@ -3,7 +3,6 @@
     "version": "4.22.0",
     "description": "Game models",
     "main": "lib/cjs/index.js",
-    "type": "module",
     "exports": {
         "require": "./lib/cjs/index.js",
         "import": "./lib/esm/index.js"

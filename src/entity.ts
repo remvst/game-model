@@ -214,10 +214,7 @@ export default class Entity {
     }
 }
 
-export function entity(
-    arg0: string | Trait[],
-    arg1?: Trait[],
-) {
+export function entity(arg0: string | Trait[], arg1?: Trait[]) {
     let id: string;
     let traits: Trait[];
 

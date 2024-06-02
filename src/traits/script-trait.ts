@@ -1,22 +1,22 @@
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { EntityEvent } from "../events/entity-event";
-import Trigger from "../events/trigger";
-import TriggerEvent from "../events/trigger-event";
+import { Trigger } from "../events/trigger";
+import { TriggerEvent } from "../events/trigger-event";
 import {
     PropertyConstraints,
     PropertyType,
 } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import Trait from "../trait";
-import World from "../world";
-import DelayedActionTrait from "./delayed-action-trait";
+import { Trait } from "../trait";
+import { World } from "../world";
+import { DelayedActionTrait } from "./delayed-action-trait";
 
 interface ScriptStep {
     triggerEntityId: string;
     delay: number;
 }
 
-export default class ScriptTrait extends Trait {
+export class ScriptTrait extends Trait {
     static readonly key = "script";
     readonly key = ScriptTrait.key;
 

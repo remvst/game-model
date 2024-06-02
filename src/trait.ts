@@ -1,19 +1,19 @@
 import { Rectangle } from "@remvst/geometry";
-import SectorObjectSet from "./collections/sector-object-set";
-import Entity from "./entity";
+import { SectorObjectSet } from "./collections/sector-object-set";
+import { Entity } from "./entity";
 import { EntityEvent } from "./events/entity-event";
-import GameModelApp from "./game-model-app";
+import { GameModelApp } from "./game-model-app";
 import { KeyProvider } from "./key-provider";
 import {
     TraitSurfaceProvider,
     entityPositionSurface,
 } from "./trait-surface-provider";
 import { vector3 } from "./vector3";
-import World from "./world";
+import { World } from "./world";
 
 const REUSABLE_GEOMETRY_AREA = new Rectangle();
 
-export default abstract class Trait implements KeyProvider {
+export abstract class Trait implements KeyProvider {
     private _entity: Entity | null = null;
     enabled: boolean = true;
 

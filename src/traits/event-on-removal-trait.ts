@@ -1,22 +1,22 @@
-import adaptId from "../adapt-id";
+import { adaptId } from "../adapt-id";
 import { EntityEvent } from "../events/entity-event";
-import EntityRemoved from "../events/entity-removed";
-import Remove from "../events/remove";
+import { EntityRemoved } from "../events/entity-removed";
+import { Remove } from "../events/remove";
 import { WorldEvent } from "../events/world-event";
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { KeyProvider } from "../key-provider";
 import { EntityIdConstraints } from "../properties/property-constraints";
 import { RegistryEntry } from "../registry/trait-registry";
-import SerializationOptions from "../serialization/serialization-options";
+import { SerializationOptions } from "../serialization/serialization-options";
 import {
     AnySerialized,
     TraitSerializer,
     WorldEventSerializer,
 } from "../serialization/serializer";
-import Trait from "../trait";
-import World from "../world";
+import { Trait } from "../trait";
+import { World } from "../world";
 
-export default class EventOnRemovalTrait extends Trait {
+export class EventOnRemovalTrait extends Trait {
     static readonly key = "event-on-removal";
     readonly key = EventOnRemovalTrait.key;
 

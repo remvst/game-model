@@ -5,13 +5,13 @@ import {
     GroupConfigurable,
     StringConfigurable,
 } from "@remvst/configurable";
-import Entity from "../entity";
-import EntitySelectionRequested from "../events/entity-selection-requested";
-import EntitySelectorTrait from "../traits/entity-selector-trait";
-import World from "../world";
+import { Entity } from "../entity";
+import { EntitySelectionRequested } from "../events/entity-selection-requested";
+import { EntitySelectorTrait } from "../traits/entity-selector-trait";
+import { World } from "../world";
 import { EntityFilter, EntityFilters } from "./entity-filter";
 
-export default class EntityIdConfigurable extends GroupConfigurable {
+export class EntityIdConfigurable extends GroupConfigurable {
     readonly read: (configurable: Configurable) => string;
     readonly write: (value: string, configurable: Configurable) => void;
     private filter: EntityFilter;

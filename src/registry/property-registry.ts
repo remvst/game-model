@@ -1,9 +1,8 @@
 import { GenericProperty } from "../properties/properties";
 import { Registry } from "./registry";
 
-export default class PropertyRegistry<
-    PropertyType extends GenericProperty<any, any>,
-> implements Registry<PropertyType>
+export class PropertyRegistry<PropertyType extends GenericProperty<any, any>>
+    implements Registry<PropertyType>
 {
     private readonly properties = new Map<string, PropertyType>();
 

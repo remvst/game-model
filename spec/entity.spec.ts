@@ -1,9 +1,9 @@
-import Entity from "../src/entity";
+import { Entity } from "../src/entity";
 import { EntityEvent } from "../src/events/entity-event";
-import EntityEventProcessed from "../src/events/entity-event-processed";
-import Trait from "../src/trait";
+import { EntityEventProcessed } from "../src/events/entity-event-processed";
+import { Trait } from "../src/trait";
 import { vector3 } from "../src/vector3";
-import World from "../src/world";
+import { World } from "../src/world";
 
 describe("an entity", () => {
     class TestTrait extends Trait {

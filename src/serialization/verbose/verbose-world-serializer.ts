@@ -1,6 +1,6 @@
-import World from "../../world";
+import { World } from "../../world";
 import { WorldSetup } from "../all-serializers";
-import SerializationOptions from "../serialization-options";
+import { SerializationOptions } from "../serialization-options";
 import { EntitySerializer, WorldSerializer } from "../serializer";
 import { VerboseSerializedEntity } from "./verbose-entity-serializer";
 

@@ -4,7 +4,7 @@ import { Subject } from "rxjs";
 
 import { BaseObjectSet } from "./base-object-set";
 
-export default class WatchableObjectSet<ObjectType>
+export class WatchableObjectSet<ObjectType>
     implements BaseObjectSet<ObjectType>
 {
     private wrappedSet: BaseObjectSet<ObjectType>;

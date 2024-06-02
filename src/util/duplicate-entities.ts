@@ -1,15 +1,15 @@
-import Entity from "../entity";
+import { Entity } from "../entity";
 import {
     EntityIdConstraints,
     ListConstraints,
 } from "../properties/property-constraints";
-import TraitRegistry from "../registry/trait-registry";
-import SerializationOptions from "../serialization/serialization-options";
+import { TraitRegistry } from "../registry/trait-registry";
+import { SerializationOptions } from "../serialization/serialization-options";
 import { EntitySerializer } from "../serialization/serializer";
-import World from "../world";
-import EntityIdMapping from "./entity-id-mapping";
+import { World } from "../world";
+import { EntityIdMapping } from "./entity-id-mapping";
 
-export default function duplicateEntities(
+export function duplicateEntities(
     entities: Iterable<Entity>,
     targetWorld: World,
     entitySerializer: EntitySerializer<any>,

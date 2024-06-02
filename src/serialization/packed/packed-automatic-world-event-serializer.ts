@@ -13,10 +13,10 @@ import {
 } from "../../properties/property-constraints";
 import { WorldEventRegistryEntry } from "../../registry/world-event-registry";
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
-import SerializationOptions from "../serialization-options";
+import { SerializationOptions } from "../serialization-options";
 import { WorldEventSerializer } from "../serializer";
 
-export default class PackedAutomaticWorldEventSerializer<T extends WorldEvent>
+export class PackedAutomaticWorldEventSerializer<T extends WorldEvent>
     implements WorldEventSerializer<T, EncoderSequence>
 {
     private readonly encoder = new ArrayEncoder();

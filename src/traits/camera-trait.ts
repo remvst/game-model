@@ -10,9 +10,9 @@ import {
     TraitRegistryEntry,
     traitRegistryEntry,
 } from "../registry/trait-registry";
-import Trait from "../trait";
+import { Trait } from "../trait";
 
-export default class CameraTrait extends Trait {
+export class CameraTrait extends Trait {
     static readonly key = "camera";
     readonly key = CameraTrait.key;
     readonly disableChunking = true;

@@ -1,19 +1,19 @@
 import { CompositeConfigurable, Configurable } from "@remvst/configurable";
 import { propertyValueConfigurable } from "../configurable/property-value-configurable";
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { WorldEvent } from "../events/world-event";
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { KeyProvider } from "../key-provider";
 import { WorldEventProperty } from "../properties/properties";
 import { PropertyConstraints } from "../properties/property-constraints";
-import DualSupportWorldEventSerializer from "../serialization/dual/dual-support-world-event-serializer";
-import PackedAutomaticWorldEventSerializer from "../serialization/packed/packed-automatic-world-event-serializer";
+import { DualSupportWorldEventSerializer } from "../serialization/dual/dual-support-world-event-serializer";
+import { PackedAutomaticWorldEventSerializer } from "../serialization/packed/packed-automatic-world-event-serializer";
 import {
     AnySerialized,
     WorldEventSerializer,
 } from "../serialization/serializer";
-import VerboseAutomaticWorldEventSerializer from "../serialization/verbose/verbose-automatic-world-event-serializer";
-import World from "../world";
+import { VerboseAutomaticWorldEventSerializer } from "../serialization/verbose/verbose-automatic-world-event-serializer";
+import { World } from "../world";
 import { Registry } from "./registry";
 
 export interface AutoWorldEventRegistryEntry<EventType extends WorldEvent> {
@@ -201,7 +201,7 @@ export function worldEventRegistryEntry<
     return builder.build();
 }
 
-export default class WorldEventRegistry
+export class WorldEventRegistry
     implements Registry<WorldEventRegistryEntry<any>>
 {
     private readonly entries = new Map<string, WorldEventRegistryEntry<any>>();

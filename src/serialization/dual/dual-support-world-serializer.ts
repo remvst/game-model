@@ -1,7 +1,8 @@
-import World from "../../world";
+import { World } from "../../world";
 import { WorldSetup } from "../all-serializers";
 import { EncoderSequence } from "../encoder";
-import SerializationOptions, {
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization-options";
 import { WorldSerializer } from "../serializer";
@@ -9,7 +10,7 @@ import { VerboseSerializedWorld } from "../verbose/verbose-world-serializer";
 
 type AnySerializedWorld = VerboseSerializedWorld | EncoderSequence;
 
-export default class DualSupportWorldSerializer
+export class DualSupportWorldSerializer
     implements WorldSerializer<AnySerializedWorld>
 {
     constructor(

@@ -1,18 +1,19 @@
 import { WorldEvent } from "../events/world-event";
 import { KeyProvider } from "../key-provider";
-import Trait from "../trait";
-import World from "../world";
-import DualSupportCompositeSerializer from "./dual/dual-support-composite-serializer";
-import DualSupportEntitySerializer from "./dual/dual-support-entity-serializer";
-import DualSupportWorldSerializer from "./dual/dual-support-world-serializer";
+import { Trait } from "../trait";
+import { World } from "../world";
+import { DualSupportCompositeSerializer } from "./dual/dual-support-composite-serializer";
+import { DualSupportEntitySerializer } from "./dual/dual-support-entity-serializer";
+import { DualSupportWorldSerializer } from "./dual/dual-support-world-serializer";
 import { EncoderSequence } from "./encoder";
-import PackedCompositeSerializer from "./packed/packed-composite-serializer";
-import PackedEntitySerializer from "./packed/packed-entity-serializer";
+import { PackedCompositeSerializer } from "./packed/packed-composite-serializer";
+import { PackedEntitySerializer } from "./packed/packed-entity-serializer";
 import { PackedWorldSerializer } from "./packed/packed-world-serializer";
 import { AnySerialized, Serializers } from "./serializer";
 import { VerboseSerializedTrait } from "./verbose/verbose-automatic-trait-serializer";
-import VerboseCompositeSerializer from "./verbose/verbose-composite-serializer";
-import VerboseEntitySerializer, {
+import { VerboseCompositeSerializer } from "./verbose/verbose-composite-serializer";
+import {
+    VerboseEntitySerializer,
     VerboseSerializedEntity,
 } from "./verbose/verbose-entity-serializer";
 import {

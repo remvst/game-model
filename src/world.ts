@@ -1,11 +1,11 @@
 import { Subject } from "rxjs";
 
-import ChunkedEntitySet from "./chunked-entity-set";
-import ObjectSet from "./collections/object-set";
-import SectorObjectSet from "./collections/sector-object-set";
-import WatchableObjectSet from "./collections/watchable-object-set";
-import Entity from "./entity";
-import EntityRemoved from "./events/entity-removed";
+import { ChunkedEntitySet } from "./chunked-entity-set";
+import { ObjectSet } from "./collections/object-set";
+import { SectorObjectSet } from "./collections/sector-object-set";
+import { WatchableObjectSet } from "./collections/watchable-object-set";
+import { Entity } from "./entity";
+import { EntityRemoved } from "./events/entity-removed";
 import { WorldEvent } from "./events/world-event";
 import { KeyProvider } from "./key-provider";
 import {
@@ -14,9 +14,9 @@ import {
     LocalAuthority,
 } from "./multiplayer/authority";
 import { CyclePerformanceTracker } from "./performance-tracker";
-import Trait from "./trait";
+import { Trait } from "./trait";
 
-export default class World {
+export class World {
     readonly events: Subject<WorldEvent>;
     readonly entities: WatchableObjectSet<Entity>;
 

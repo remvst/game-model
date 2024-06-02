@@ -1,8 +1,9 @@
-import Entity from "../../../src/entity";
-import DualSupportWorldSerializer from "../../../src/serialization/dual/dual-support-world-serializer";
+import { Entity } from "../../../src/entity";
+import { DualSupportWorldSerializer } from "../../../src/serialization/dual/dual-support-world-serializer";
 import { EncoderSequence } from "../../../src/serialization/encoder";
 import { PackedWorldSerializer } from "../../../src/serialization/packed/packed-world-serializer";
-import SerializationOptions, {
+import {
+    SerializationOptions,
     SerializationType,
 } from "../../../src/serialization/serialization-options";
 import { EntitySerializer } from "../../../src/serialization/serializer";
@@ -10,7 +11,7 @@ import {
     VerboseSerializedWorld,
     VerboseWorldSerializer,
 } from "../../../src/serialization/verbose/verbose-world-serializer";
-import World from "../../../src/world";
+import { World } from "../../../src/world";
 
 describe("the dual support world serializer", () => {
     let entitySerializer: EntitySerializer<any>;

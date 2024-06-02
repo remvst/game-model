@@ -1,6 +1,6 @@
-import World from "../world";
+import { World } from "../world";
 
-export default function firstAvailableId(world: World, id: string): string {
+export function firstAvailableId(world: World, id: string): string {
     if (!world.entity(id)) {
         return id;
     }

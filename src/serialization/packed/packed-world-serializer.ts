@@ -1,7 +1,7 @@
-import World from "../../world";
+import { World } from "../../world";
 import { WorldSetup } from "../all-serializers";
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
-import SerializationOptions from "../serialization-options";
+import { SerializationOptions } from "../serialization-options";
 import { EntitySerializer, WorldSerializer } from "../serializer";
 
 export class PackedWorldSerializer implements WorldSerializer<EncoderSequence> {

@@ -1,14 +1,14 @@
-import Entity from "../../src/entity";
-import Remove from "../../src/events/remove";
-import GameModelApp from "../../src/game-model-app";
+import { Entity } from "../../src/entity";
+import { Remove } from "../../src/events/remove";
+import { GameModelApp } from "../../src/game-model-app";
 import {
     Authority,
     AuthorityType,
     LocalAuthority,
 } from "../../src/multiplayer/authority";
-import WorldUpdatesCollector from "../../src/multiplayer/world-updates-collector";
-import SerializationOptions from "../../src/serialization/serialization-options";
-import World from "../../src/world";
+import { WorldUpdatesCollector } from "../../src/multiplayer/world-updates-collector";
+import { SerializationOptions } from "../../src/serialization/serialization-options";
+import { World } from "../../src/world";
 
 describe("a helper", () => {
     let world: World;

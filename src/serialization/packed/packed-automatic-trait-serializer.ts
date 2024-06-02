@@ -1,4 +1,4 @@
-import Entity from "../../entity";
+import { Entity } from "../../entity";
 import {
     BooleanConstraints,
     ColorConstraints,
@@ -12,15 +12,15 @@ import {
     StringConstraints,
 } from "../../properties/property-constraints";
 import { RegistryEntry } from "../../registry/trait-registry";
-import Trait from "../../trait";
+import { Trait } from "../../trait";
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
-import RebindableEntity from "../rebindable-entity";
-import SerializationOptions from "../serialization-options";
+import { RebindableEntity } from "../rebindable-entity";
+import { SerializationOptions } from "../serialization-options";
 import { TraitSerializer } from "../serializer";
 
 const REBINDABLE_ENTITY = new RebindableEntity();
 
-export default class PackedTraitSerializer<T extends Trait>
+export class PackedAutomaticTraitSerializer<T extends Trait>
     implements TraitSerializer<T, EncoderSequence>
 {
     private readonly encoder = new ArrayEncoder();

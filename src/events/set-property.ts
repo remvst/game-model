@@ -1,23 +1,23 @@
 import { CompositeConfigurable, EnumConfigurable } from "@remvst/configurable";
 import { resolveIds } from "../adapt-id";
 import { anyProperty } from "../configurable/any-property-configurable";
-import EntityIdConfigurable from "../configurable/entity-id-configurable";
+import { EntityIdConfigurable } from "../configurable/entity-id-configurable";
 import { propertyValueConfigurable } from "../configurable/property-value-configurable";
 import { EntityProperties } from "../entity";
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { onlyRelevantProperties } from "../properties/only-relevant-properties";
 import { Property } from "../properties/properties";
-import PropertyRegistry from "../registry/property-registry";
+import { PropertyRegistry } from "../registry/property-registry";
 import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,
 } from "../registry/world-event-registry";
 import { WorldEventSerializer } from "../serialization/serializer";
-import World from "../world";
+import { World } from "../world";
 import { PropertyType } from "./../properties/property-constraints";
 import { WorldEvent } from "./world-event";
 
-export default class SetProperty implements WorldEvent {
+export class SetProperty implements WorldEvent {
     static readonly key = "set-property";
     readonly key = SetProperty.key;
 

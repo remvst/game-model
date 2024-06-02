@@ -1,6 +1,6 @@
 import { CompositeConfigurable, Configurable } from "@remvst/configurable";
 import { propertyValueConfigurable } from "../configurable/property-value-configurable";
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { KeyProvider } from "../key-provider";
 import {
     EntityPropertyType,
@@ -8,11 +8,11 @@ import {
     traitEnabledProperty,
 } from "../properties/properties";
 import { PropertyConstraints } from "../properties/property-constraints";
-import DualSupportTraitSerializer from "../serialization/dual/dual-support-trait-serializer";
-import PackedAutomaticTraitSerializer from "../serialization/packed/packed-automatic-trait-serializer";
+import { DualSupportTraitSerializer } from "../serialization/dual/dual-support-trait-serializer";
+import { PackedAutomaticTraitSerializer } from "../serialization/packed/packed-automatic-trait-serializer";
 import { AnySerialized, TraitSerializer } from "../serialization/serializer";
-import VerboseAutomaticTraitSerializer from "../serialization/verbose/verbose-automatic-trait-serializer";
-import Trait from "../trait";
+import { VerboseAutomaticTraitSerializer } from "../serialization/verbose/verbose-automatic-trait-serializer";
+import { Trait } from "../trait";
 import { Registry } from "./registry";
 
 export interface TraitRegistryEntry<TraitType extends Trait> {
@@ -152,9 +152,7 @@ export function traitRegistryEntry<TraitType extends Trait>(
     return builder.build();
 }
 
-export default class TraitRegistry
-    implements Registry<AnyTraitRegistryEntry<any>>
-{
+export class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
     private readonly entries = new Map<string, TraitRegistryEntry<any>>();
 
     add<T extends Trait>(

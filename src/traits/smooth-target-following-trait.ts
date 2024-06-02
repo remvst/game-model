@@ -1,13 +1,13 @@
 import { Vector2, between } from "@remvst/geometry";
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { PropertyType } from "../properties/property-constraints";
 import {
     TraitRegistryEntry,
     traitRegistryEntry,
 } from "../registry/trait-registry";
-import Trait from "../trait";
+import { Trait } from "../trait";
 
-export default class SmoothTargetFollowingTrait extends Trait {
+export class SmoothTargetFollowingTrait extends Trait {
     static readonly key = "smooth-target-following";
     readonly key = SmoothTargetFollowingTrait.key;
 

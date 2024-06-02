@@ -1,16 +1,16 @@
 import { Vector2 } from "@remvst/geometry";
-import Entity from "../entity";
-import GameModelApp from "../game-model-app";
-import SerializationOptions from "../serialization/serialization-options";
-import World from "../world";
-import duplicateEntities from "./duplicate-entities";
+import { Entity } from "../entity";
+import { GameModelApp } from "../game-model-app";
+import { SerializationOptions } from "../serialization/serialization-options";
+import { World } from "../world";
+import { duplicateEntities } from "./duplicate-entities";
 import { repositionEntities } from "./reposition-entities";
 
 export interface SerializedPrefab {
     entities: any[];
 }
 
-export default class PrefabHelper {
+export class PrefabHelper {
     constructor(private readonly app: GameModelApp) {}
 
     makePrefab(world: World, entities: Entity[]): SerializedPrefab {

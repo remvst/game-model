@@ -1,11 +1,11 @@
-import Entity from "../../entity";
-import Trait from "../../trait";
+import { Entity } from "../../entity";
+import { Trait } from "../../trait";
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
-import SerializationOptions from "../serialization-options";
+import { SerializationOptions } from "../serialization-options";
 import { EntitySerializer } from "../serializer";
-import PackedCompositeSerializer from "./packed-composite-serializer";
+import { PackedCompositeSerializer } from "./packed-composite-serializer";
 
-export default class PackedEntitySerializer
+export class PackedEntitySerializer
     implements EntitySerializer<EncoderSequence>
 {
     private readonly encoder = new ArrayEncoder();

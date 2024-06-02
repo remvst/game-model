@@ -1,5 +1,5 @@
 import { KeyProvider } from "../../key-provider";
-import SerializationOptions from "../serialization-options";
+import { SerializationOptions } from "../serialization-options";
 import { AnySerialized, CompositeSerializer, Serializer } from "../serializer";
 
 export interface VerboseCompositeSerialized<SerializedItem> {
@@ -7,7 +7,7 @@ export interface VerboseCompositeSerialized<SerializedItem> {
     data: SerializedItem;
 }
 
-export default class VerboseCompositeSerializer<
+export class VerboseCompositeSerializer<
     ObjectType extends KeyProvider,
     SerializedItem extends AnySerialized,
 > implements

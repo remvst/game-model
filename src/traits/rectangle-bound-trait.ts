@@ -4,9 +4,9 @@ import {
     TraitRegistryEntry,
     traitRegistryEntry,
 } from "../registry/trait-registry";
-import Trait from "../trait";
+import { Trait } from "../trait";
 
-export default class RectangleBoundTrait extends Trait {
+export class RectangleBoundTrait extends Trait {
     static readonly key = "rectangle-bound";
     readonly key = RectangleBoundTrait.key;
 

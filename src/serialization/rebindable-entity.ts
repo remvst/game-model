@@ -1,7 +1,7 @@
-import Entity from "../entity";
-import Trait from "../trait";
+import { Entity } from "../entity";
+import { Trait } from "../trait";
 
-export default class RebindableEntity extends Entity {
+export class RebindableEntity extends Entity {
     private traitOverride: Trait;
 
     constructor() {

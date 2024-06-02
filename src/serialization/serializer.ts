@@ -1,9 +1,9 @@
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { WorldEvent } from "../events/world-event";
-import Trait from "../trait";
-import World from "../world";
+import { Trait } from "../trait";
+import { World } from "../world";
 import { WorldSetup } from "./all-serializers";
-import SerializationOptions from "./serialization-options";
+import { SerializationOptions } from "./serialization-options";
 
 export interface AnySerialized {}
 

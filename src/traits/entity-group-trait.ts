@@ -1,13 +1,13 @@
 import { isBetween } from "@remvst/geometry";
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { EntityEvent } from "../events/entity-event";
-import Trigger from "../events/trigger";
+import { Trigger } from "../events/trigger";
 import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import Trait from "../trait";
-import World from "../world";
+import { Trait } from "../trait";
+import { World } from "../world";
 
-export default class EntityGroupTrait extends Trait {
+export class EntityGroupTrait extends Trait {
     static readonly key = "entity-group";
     readonly key = EntityGroupTrait.key;
     readonly disableChunking = true;

@@ -8,7 +8,7 @@ class Sector<ObjectType> {
     }
 }
 
-export default class SectorObjectSet<ObjectType> {
+export class SectorObjectSet<ObjectType> {
     private readonly sectors = new Map<string, Sector<ObjectType>>();
     private minX = Number.MAX_SAFE_INTEGER;
     private minY = Number.MAX_SAFE_INTEGER;

@@ -1,4 +1,4 @@
-import ObjectSet from "../../src/collections/object-set";
+import { ObjectSet } from "../../src/collections/object-set";
 
 type ObjectType = {
     key: string;

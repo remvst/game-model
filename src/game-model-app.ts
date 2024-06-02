@@ -1,14 +1,14 @@
 import { EntityProperties } from "./entity";
 import { Property } from "./properties/properties";
-import PropertyRegistry from "./registry/property-registry";
-import TraitRegistry from "./registry/trait-registry";
-import WorldEventRegistry from "./registry/world-event-registry";
+import { PropertyRegistry } from "./registry/property-registry";
+import { TraitRegistry } from "./registry/trait-registry";
+import { WorldEventRegistry } from "./registry/world-event-registry";
 import { allSerializers } from "./serialization/all-serializers";
-import DualSupportTraitSerializer from "./serialization/dual/dual-support-trait-serializer";
-import DualSupportWorldEventSerializer from "./serialization/dual/dual-support-world-event-serializer";
+import { DualSupportTraitSerializer } from "./serialization/dual/dual-support-trait-serializer";
+import { DualSupportWorldEventSerializer } from "./serialization/dual/dual-support-world-event-serializer";
 import { hashString } from "./util/hash-string";
 
-export default class GameModelApp {
+export class GameModelApp {
     readonly traitRegistry = new TraitRegistry();
     readonly worldEventRegistry = new WorldEventRegistry();
     readonly propertyRegistry = new PropertyRegistry<Property<any>>();

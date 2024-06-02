@@ -1,5 +1,5 @@
-import TraitRegistry from "../registry/trait-registry";
-import World from "../world";
+import { TraitRegistry } from "../registry/trait-registry";
+import { World } from "../world";
 import { EntityPropertyType, Property } from "./properties";
 
 type PropertyFilter = (property: Property<any>) => boolean;

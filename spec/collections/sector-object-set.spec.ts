@@ -1,5 +1,5 @@
 import { Rectangle } from "@remvst/geometry";
-import SectorObjectSet from "../../src/collections/sector-object-set";
+import { SectorObjectSet } from "../../src/collections/sector-object-set";
 
 describe("a sector object set", () => {
     let set: SectorObjectSet<any>;

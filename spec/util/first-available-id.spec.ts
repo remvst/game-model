@@ -1,6 +1,6 @@
-import Entity from "../../src/entity";
-import firstAvailableId from "../../src/util/first-available-id";
-import World from "../../src/world";
+import { Entity } from "../../src/entity";
+import { firstAvailableId } from "../../src/util/first-available-id";
+import { World } from "../../src/world";
 
 describe("firstAvailableId", () => {
     let world: World;

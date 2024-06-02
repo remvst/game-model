@@ -1,12 +1,12 @@
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { WorldEvent } from "../events/world-event";
-import GameModelApp from "../game-model-app";
-import SerializationOptions from "../serialization/serialization-options";
-import World from "../world";
+import { GameModelApp } from "../game-model-app";
+import { SerializationOptions } from "../serialization/serialization-options";
+import { World } from "../world";
 import { Authority, AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
 
-export default class WorldUpdatesReceiver {
+export class WorldUpdatesReceiver {
     private previousEntityIds = new Map<string, Set<string>>();
 
     constructor(

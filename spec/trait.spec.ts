@@ -1,6 +1,6 @@
-import Entity from "../src/entity";
-import Trait from "../src/trait";
-import World from "../src/world";
+import { Entity } from "../src/entity";
+import { Trait } from "../src/trait";
+import { World } from "../src/world";
 
 describe("a trait", () => {
     class Trait1 extends Trait {

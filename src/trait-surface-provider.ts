@@ -1,5 +1,5 @@
 import { Rectangle } from "@remvst/geometry";
-import Trait from "./trait";
+import { Trait } from "./trait";
 import { Vector3 } from "./vector3";
 
 export interface TraitSurfaceProvider {

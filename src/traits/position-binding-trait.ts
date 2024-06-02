@@ -1,8 +1,8 @@
 import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import Trait from "../trait";
+import { Trait } from "../trait";
 
-export default class PositionBindingTrait extends Trait {
+export class PositionBindingTrait extends Trait {
     static readonly key = "position-binding";
     readonly key = PositionBindingTrait.key;
     readonly disableChunking = true;

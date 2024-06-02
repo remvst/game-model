@@ -1,9 +1,9 @@
 import { Rectangle } from "@remvst/geometry";
-import ChunkedEntitySet from "../src/chunked-entity-set";
-import ObjectSet from "../src/collections/object-set";
-import WatchableObjectSet from "../src/collections/watchable-object-set";
-import Entity from "../src/entity";
-import Trait from "../src/trait";
+import { ChunkedEntitySet } from "../src/chunked-entity-set";
+import { ObjectSet } from "../src/collections/object-set";
+import { WatchableObjectSet } from "../src/collections/watchable-object-set";
+import { Entity } from "../src/entity";
+import { Trait } from "../src/trait";
 import {
     TraitSurfaceProvider,
     rectangleSurface,

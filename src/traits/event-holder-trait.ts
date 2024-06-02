@@ -3,23 +3,23 @@ import {
     EnumConfigurable,
     NumberConfigurable,
 } from "@remvst/configurable";
-import adaptId from "../adapt-id";
-import Entity from "../entity";
+import { adaptId } from "../adapt-id";
+import { Entity } from "../entity";
 import { EntityEvent } from "../events/entity-event";
-import Remove from "../events/remove";
-import TriggerEvent from "../events/trigger-event";
+import { Remove } from "../events/remove";
+import { TriggerEvent } from "../events/trigger-event";
 import { WorldEvent } from "../events/world-event";
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { KeyProvider } from "../key-provider";
 import { EntityIdConstraints } from "../properties/property-constraints";
 import { RegistryEntry } from "../registry/trait-registry";
-import SerializationOptions from "../serialization/serialization-options";
+import { SerializationOptions } from "../serialization/serialization-options";
 import { AnySerialized, TraitSerializer } from "../serialization/serializer";
-import Trait from "../trait";
-import World from "../world";
-import DelayedActionTrait from "./delayed-action-trait";
+import { Trait } from "../trait";
+import { World } from "../world";
+import { DelayedActionTrait } from "./delayed-action-trait";
 
-export default class EventHolderTrait extends Trait {
+export class EventHolderTrait extends Trait {
     static readonly key = "event-holder";
     readonly key = EventHolderTrait.key;
 

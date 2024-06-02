@@ -1,12 +1,12 @@
-import Entity from "./entity";
-import EntityGroupTrait from "./traits/entity-group-trait";
-import World from "./world";
+import { Entity } from "./entity";
+import { EntityGroupTrait } from "./traits/entity-group-trait";
+import { World } from "./world";
 
 export const TRIGGERER_ID = "_triggerer";
 export const TRAIT_PREFIX = "trait:";
 export const GROUP_PREFIX = "group:";
 
-export default function adaptId(
+export function adaptId(
     originalId: string,
     triggererId: string,
     world: World,

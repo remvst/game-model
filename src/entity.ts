@@ -1,16 +1,16 @@
 import { v4 } from "uuid";
 import { KeyProvider } from "./key-provider";
 
-import ObjectSet from "./collections/object-set";
+import { ObjectSet } from "./collections/object-set";
 import { EntityEvent } from "./events/entity-event";
-import EntityEventProcessed from "./events/entity-event-processed";
-import GameModelApp from "./game-model-app";
+import { EntityEventProcessed } from "./events/entity-event-processed";
+import { GameModelApp } from "./game-model-app";
 import { AuthorityType } from "./multiplayer/authority";
 import { Property, getSet } from "./properties/properties";
 import { PropertyType } from "./properties/property-constraints";
-import Trait from "./trait";
+import { Trait } from "./trait";
 import { vector3 } from "./vector3";
-import World from "./world";
+import { World } from "./world";
 
 function processMicroTime() {
     const [seconds, nanoseconds] = process.hrtime();
@@ -53,7 +53,7 @@ export class EntityProperties {
     }
 }
 
-export default class Entity {
+export class Entity {
     static idGenerator: (entity: Entity) => string = () => v4();
 
     private readonly reusableEventProcessedEvent = new EntityEventProcessed(

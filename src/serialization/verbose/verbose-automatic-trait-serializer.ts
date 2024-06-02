@@ -1,4 +1,4 @@
-import Entity from "../../entity";
+import { Entity } from "../../entity";
 import {
     BooleanConstraints,
     ColorConstraints,
@@ -12,8 +12,8 @@ import {
     StringConstraints,
 } from "../../properties/property-constraints";
 import { RegistryEntry } from "../../registry/trait-registry";
-import Trait from "../../trait";
-import RebindableEntity from "../rebindable-entity";
+import { Trait } from "../../trait";
+import { RebindableEntity } from "../rebindable-entity";
 import { TraitSerializer } from "../serializer";
 
 export interface VerboseSerializedTrait {
@@ -22,7 +22,7 @@ export interface VerboseSerializedTrait {
 
 const REBINDABLE_ENTITY = new RebindableEntity();
 
-export default class VerboseAutomaticTraitSerializer<T extends Trait>
+export class VerboseAutomaticTraitSerializer<T extends Trait>
     implements TraitSerializer<T, VerboseSerializedTrait>
 {
     constructor(private readonly registryEntry: RegistryEntry<T>) {}

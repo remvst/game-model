@@ -20,8 +20,8 @@ import {
     PropertyConstraints,
     StringConstraints,
 } from "../properties/property-constraints";
-import World from "../world";
-import EntityIdConfigurable from "./entity-id-configurable";
+import { World } from "../world";
+import { EntityIdConfigurable } from "./entity-id-configurable";
 
 export function propertyValueConfigurable<T>(
     world: World | null,

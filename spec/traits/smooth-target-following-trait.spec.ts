@@ -1,8 +1,8 @@
 import { copyVec2, distance } from "@remvst/geometry";
-import Entity from "../../src/entity";
-import ScriptTrait from "../../src/traits/script-trait";
-import SmoothTargetFollowingTrait from "../../src/traits/smooth-target-following-trait";
-import World from "../../src/world";
+import { Entity } from "../../src/entity";
+import { ScriptTrait } from "../../src/traits/script-trait";
+import { SmoothTargetFollowingTrait } from "../../src/traits/smooth-target-following-trait";
+import { World } from "../../src/world";
 
 describe("smooth target following trait", () => {
     let world: World;

@@ -1,11 +1,12 @@
-import Entity from "../../../src/entity";
+import { Entity } from "../../../src/entity";
 import { EncoderSequence } from "../../../src/serialization/encoder";
 import { PackedWorldSerializer } from "../../../src/serialization/packed/packed-world-serializer";
-import SerializationOptions, {
+import {
+    SerializationOptions,
     SerializationType,
 } from "../../../src/serialization/serialization-options";
 import { EntitySerializer } from "../../../src/serialization/serializer";
-import World from "../../../src/world";
+import { World } from "../../../src/world";
 
 describe("packed world serializer", () => {
     let entitySerializer: EntitySerializer<EncoderSequence>;

@@ -1,13 +1,14 @@
-import Trait from "../../trait";
+import { Trait } from "../../trait";
 import { EncoderSequence } from "../encoder";
-import SerializationOptions, {
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization-options";
 import { AnySerialized, TraitSerializer } from "../serializer";
 
 type AnySerializedTrait = AnySerialized | EncoderSequence;
 
-export default class DualSupportTraitSerializer<T extends Trait>
+export class DualSupportTraitSerializer<T extends Trait>
     implements TraitSerializer<T, AnySerializedTrait>
 {
     constructor(

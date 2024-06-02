@@ -1,6 +1,6 @@
-import World from "../world";
+import { World } from "../world";
 
-export default class EntityIdMapping {
+export class EntityIdMapping {
     private readonly sourceToDestinationId = new Map<string, string>();
 
     constructor(world: World, sourceEntityIds: string[]) {

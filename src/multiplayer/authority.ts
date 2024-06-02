@@ -1,4 +1,4 @@
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { EntityEvent } from "../events/entity-event";
 import { WorldEvent } from "../events/world-event";
 

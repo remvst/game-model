@@ -1,11 +1,11 @@
 import { CompositeConfigurable } from "@remvst/configurable";
-import EntityIdConfigurable from "../configurable/entity-id-configurable";
-import TriggerEvent from "../events/trigger-event";
+import { EntityIdConfigurable } from "../configurable/entity-id-configurable";
+import { TriggerEvent } from "../events/trigger-event";
 import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import Trait from "../trait";
+import { Trait } from "../trait";
 
-export default class DependencyTrait extends Trait {
+export class DependencyTrait extends Trait {
     static readonly key = "dependency";
     readonly key = DependencyTrait.key;
     readonly disableChunking = true;

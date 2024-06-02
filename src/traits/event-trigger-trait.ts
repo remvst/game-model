@@ -1,12 +1,12 @@
 import { EntityEvent } from "../events/entity-event";
-import TriggerEvent from "../events/trigger-event";
+import { TriggerEvent } from "../events/trigger-event";
 import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import Trait from "../trait";
+import { Trait } from "../trait";
 import { rectangleSurface } from "../trait-surface-provider";
-import World from "../world";
+import { World } from "../world";
 
-export default class EventTriggerTrait extends Trait {
+export class EventTriggerTrait extends Trait {
     static readonly key = "event-trigger";
     readonly key = EventTriggerTrait.key;
 

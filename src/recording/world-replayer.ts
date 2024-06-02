@@ -1,14 +1,15 @@
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { FullAuthority } from "../multiplayer/authority";
-import WorldUpdatesReceiver from "../multiplayer/world-updates-receiver";
-import SerializationOptions, {
+import { WorldUpdatesReceiver } from "../multiplayer/world-updates-receiver";
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization/serialization-options";
-import World from "../world";
-import RecordedFrame from "./recorded-frame";
-import ReplayerAuthority from "./replayer-authority";
+import { World } from "../world";
+import { RecordedFrame } from "./recorded-frame";
+import { ReplayerAuthority } from "./replayer-authority";
 
-export default class WorldReplayer {
+export class WorldReplayer {
     readonly options = (() => {
         const options = new SerializationOptions();
         options.type = SerializationType.PACKED;

@@ -1,15 +1,15 @@
 import { resolveIds } from "../adapt-id";
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { PropertyType } from "../properties/property-constraints";
 import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,
 } from "../registry/world-event-registry";
-import World from "../world";
-import TriggerEvent from "./trigger-event";
+import { World } from "../world";
+import { TriggerEvent } from "./trigger-event";
 import { WorldEvent } from "./world-event";
 
-export default class Trigger implements WorldEvent {
+export class Trigger implements WorldEvent {
     static readonly key = "trigger";
     readonly key = Trigger.key;
 

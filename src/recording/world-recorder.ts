@@ -1,13 +1,14 @@
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { Authority } from "../multiplayer/authority";
-import WorldUpdatesCollector from "../multiplayer/world-updates-collector";
-import SerializationOptions, {
+import { WorldUpdatesCollector } from "../multiplayer/world-updates-collector";
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization/serialization-options";
-import World from "../world";
-import RecordedFrame from "./recorded-frame";
+import { World } from "../world";
+import { RecordedFrame } from "./recorded-frame";
 
-export default class WorldRecorder {
+export class WorldRecorder {
     readonly options = (() => {
         const options = new SerializationOptions();
         options.type = SerializationType.VERBOSE;

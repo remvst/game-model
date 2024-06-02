@@ -1,8 +1,8 @@
-import Entity, { EntityProperties } from "../../src/entity";
-import InterpolateProperty from "../../src/events/interpolate-property";
-import GameModelApp from "../../src/game-model-app";
-import SerializationOptions from "../../src/serialization/serialization-options";
-import World from "../../src/world";
+import { Entity, EntityProperties } from "../../src/entity";
+import { InterpolateProperty } from "../../src/events/interpolate-property";
+import { GameModelApp } from "../../src/game-model-app";
+import { SerializationOptions } from "../../src/serialization/serialization-options";
+import { World } from "../../src/world";
 
 describe("interpolate property event", () => {
     let app: GameModelApp;

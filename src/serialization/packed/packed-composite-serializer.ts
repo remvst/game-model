@@ -1,9 +1,9 @@
 import { KeyProvider } from "../../key-provider";
 import { ArrayDecoder, ArrayEncoder, EncoderSequence } from "../encoder";
-import SerializationOptions from "../serialization-options";
+import { SerializationOptions } from "../serialization-options";
 import { CompositeSerializer, Serializer } from "../serializer";
 
-export default class PackedCompositeSerializer<ObjectType extends KeyProvider>
+export class PackedCompositeSerializer<ObjectType extends KeyProvider>
     implements CompositeSerializer<ObjectType, EncoderSequence>
 {
     private readonly encoder = new ArrayEncoder();

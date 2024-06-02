@@ -1,5 +1,5 @@
 import { Vector2, roundToNearest } from "@remvst/geometry";
-import Entity from "../entity";
+import { Entity } from "../entity";
 
 export function repositionEntities(
     entities: Entity[],

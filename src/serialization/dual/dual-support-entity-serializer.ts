@@ -1,6 +1,7 @@
-import Entity from "../../entity";
+import { Entity } from "../../entity";
 import { EncoderSequence } from "../encoder";
-import SerializationOptions, {
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization-options";
 import { AnySerialized, EntitySerializer } from "../serializer";
@@ -8,7 +9,7 @@ import { VerboseSerializedEntity } from "../verbose/verbose-entity-serializer";
 
 export type AnySerializedEntity = VerboseSerializedEntity | EncoderSequence;
 
-export default class DualSupportEntitySerializer
+export class DualSupportEntitySerializer
     implements EntitySerializer<AnySerializedEntity>
 {
     constructor(

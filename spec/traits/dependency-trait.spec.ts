@@ -1,7 +1,7 @@
-import Entity from "../../src/entity";
-import GameModelApp from "../../src/game-model-app";
-import SerializationOptions from "../../src/serialization/serialization-options";
-import DependencyTrait from "../../src/traits/dependency-trait";
+import { Entity } from "../../src/entity";
+import { GameModelApp } from "../../src/game-model-app";
+import { SerializationOptions } from "../../src/serialization/serialization-options";
+import { DependencyTrait } from "../../src/traits/dependency-trait";
 
 describe("dependency trait", () => {
     let app: GameModelApp;

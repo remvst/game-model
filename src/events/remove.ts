@@ -4,10 +4,10 @@ import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,
 } from "../registry/world-event-registry";
-import World from "../world";
+import { World } from "../world";
 import { WorldEvent } from "./world-event";
 
-export default class Remove implements WorldEvent {
+export class Remove implements WorldEvent {
     static readonly key = "remove";
     readonly key = Remove.key;
 

@@ -1,13 +1,13 @@
 import { Subscription } from "rxjs";
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { WorldEvent } from "../events/world-event";
-import GameModelApp from "../game-model-app";
-import SerializationOptions from "../serialization/serialization-options";
-import World from "../world";
+import { GameModelApp } from "../game-model-app";
+import { SerializationOptions } from "../serialization/serialization-options";
+import { World } from "../world";
 import { Authority, AuthorityType } from "./authority";
 import { WorldUpdate } from "./world-update";
 
-export default class WorldUpdatesCollector {
+export class WorldUpdatesCollector {
     private queuedEvents: any[] = [];
     private watchedEntities = new Set<string>();
     private worldSubscriptions: Subscription[] = [];

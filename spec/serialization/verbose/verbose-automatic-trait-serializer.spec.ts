@@ -2,13 +2,14 @@ import {
     PropertyConstraints,
     PropertyType,
 } from "../../../src/properties/property-constraints";
-import TraitRegistry, {
+import {
+    TraitRegistry,
     traitRegistryEntry,
 } from "../../../src/registry/trait-registry";
-import SerializationOptions from "../../../src/serialization/serialization-options";
+import { SerializationOptions } from "../../../src/serialization/serialization-options";
 import { TraitSerializer } from "../../../src/serialization/serializer";
-import VerboseAutomaticTraitSerializer from "../../../src/serialization/verbose/verbose-automatic-trait-serializer";
-import Trait from "../../../src/trait";
+import { VerboseAutomaticTraitSerializer } from "../../../src/serialization/verbose/verbose-automatic-trait-serializer";
+import { Trait } from "../../../src/trait";
 
 describe("the automatic trait serializer", () => {
     class TestTrait extends Trait {

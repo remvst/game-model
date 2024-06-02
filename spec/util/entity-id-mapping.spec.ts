@@ -1,6 +1,6 @@
-import Entity from "../../src/entity";
-import EntityIdMapping from "../../src/util/entity-id-mapping";
-import World from "../../src/world";
+import { Entity } from "../../src/entity";
+import { EntityIdMapping } from "../../src/util/entity-id-mapping";
+import { World } from "../../src/world";
 
 describe("EntityIdMapping", () => {
     let world: World;

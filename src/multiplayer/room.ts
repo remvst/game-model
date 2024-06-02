@@ -1,12 +1,13 @@
-import GameModelApp from "../game-model-app";
-import SerializationOptions, {
+import { GameModelApp } from "../game-model-app";
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization/serialization-options";
-import World from "../world";
+import { World } from "../world";
 import { Authority } from "./authority";
 import { RoomPlayerJson, RoomUpdateJson } from "./room-update";
-import WorldUpdatesCollector from "./world-updates-collector";
-import WorldUpdatesReceiver from "./world-updates-receiver";
+import { WorldUpdatesCollector } from "./world-updates-collector";
+import { WorldUpdatesReceiver } from "./world-updates-receiver";
 
 export class Player {
     isMeta = false;
@@ -20,7 +21,7 @@ export class Player {
     constructor(readonly id: string) {}
 }
 
-export default class Room {
+export class Room {
     world: World;
 
     readonly players = new Map<string, Player>();

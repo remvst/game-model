@@ -1,15 +1,15 @@
 import { resolveIds } from "../adapt-id";
-import Entity, { EntityProperties } from "../entity";
+import { Entity, EntityProperties } from "../entity";
 import { PropertyType } from "../properties/property-constraints";
 import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,
 } from "../registry/world-event-registry";
-import InterpolatorTrait from "../traits/interpolator-trait";
-import World from "../world";
+import { InterpolatorTrait } from "../traits/interpolator-trait";
+import { World } from "../world";
 import { WorldEvent } from "./world-event";
 
-export default class MoveTo implements WorldEvent {
+export class MoveTo implements WorldEvent {
     static readonly key = "move-to";
     readonly key = MoveTo.key;
 

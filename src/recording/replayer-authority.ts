@@ -1,9 +1,9 @@
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { EntityEvent } from "../events/entity-event";
 import { WorldEvent } from "../events/world-event";
 import { Authority, AuthorityType } from "../multiplayer/authority";
 
-export default class ReplayerAuthority implements Authority {
+export class ReplayerAuthority implements Authority {
     entityAuthority(entity: Entity): AuthorityType {
         return AuthorityType.NONE;
     }

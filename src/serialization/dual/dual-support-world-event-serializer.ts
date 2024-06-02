@@ -1,13 +1,14 @@
 import { WorldEvent } from "../../events/world-event";
 import { EncoderSequence } from "../encoder";
-import SerializationOptions, {
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization-options";
 import { AnySerialized, WorldEventSerializer } from "../serializer";
 
 type AnySerializedWorldEvent = AnySerialized | EncoderSequence;
 
-export default class DualSupportWorldEventSerializer<T extends WorldEvent>
+export class DualSupportWorldEventSerializer<T extends WorldEvent>
     implements WorldEventSerializer<T, AnySerializedWorldEvent>
 {
     constructor(

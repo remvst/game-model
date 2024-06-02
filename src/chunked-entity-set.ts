@@ -1,11 +1,11 @@
 import { Rectangle, isBetween } from "@remvst/geometry";
-import ObjectSet from "./collections/object-set";
-import WatchableObjectSet from "./collections/watchable-object-set";
-import Entity from "./entity";
+import { ObjectSet } from "./collections/object-set";
+import { WatchableObjectSet } from "./collections/watchable-object-set";
+import { Entity } from "./entity";
 
 const REUSABLE_GEOMETRY_AREA = new Rectangle();
 
-export default class ChunkedEntitySet {
+export class ChunkedEntitySet {
     readonly entities = new WatchableObjectSet(
         new ObjectSet<Entity>(
             (entity) => entity.id,

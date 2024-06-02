@@ -1,10 +1,10 @@
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { Property } from "../properties/properties";
 import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import Trait from "../trait";
+import { Trait } from "../trait";
 
-export default class InterpolatorTrait extends Trait {
+export class InterpolatorTrait extends Trait {
     static readonly key = "mover";
     readonly key = InterpolatorTrait.key;
     readonly disableChunking = true;

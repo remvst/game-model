@@ -18,7 +18,7 @@ interface Serialized {
     [key: string]: any;
 }
 
-export default class VerboseAutomaticWorldEventSerializer<T extends WorldEvent>
+export class VerboseAutomaticWorldEventSerializer<T extends WorldEvent>
     implements WorldEventSerializer<T, Serialized>
 {
     constructor(private readonly registryEntry: WorldEventRegistryEntry<T>) {}

@@ -1,5 +1,5 @@
-import ObjectSet from "../../src/collections/object-set";
-import WatchableObjectSet from "../../src/collections/watchable-object-set";
+import { ObjectSet } from "../../src/collections/object-set";
+import { WatchableObjectSet } from "../../src/collections/watchable-object-set";
 
 type ObjectType = {
     key: string;

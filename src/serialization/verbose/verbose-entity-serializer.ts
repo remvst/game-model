@@ -1,8 +1,8 @@
-import Entity from "../../entity";
-import Trait from "../../trait";
-import SerializationOptions from "../serialization-options";
+import { Entity } from "../../entity";
+import { Trait } from "../../trait";
+import { SerializationOptions } from "../serialization-options";
 import { EntitySerializer } from "../serializer";
-import VerboseCompositeSerializer from "./verbose-composite-serializer";
+import { VerboseCompositeSerializer } from "./verbose-composite-serializer";
 
 export interface VerboseSerializedEntity {
     id: string;
@@ -19,7 +19,7 @@ interface VerboseSerializedEntityTraitItem {
     enabled: boolean;
 }
 
-export default class VerboseEntitySerializer<VerboseSerializedTrait>
+export class VerboseEntitySerializer<VerboseSerializedTrait>
     implements EntitySerializer<VerboseSerializedEntity>
 {
     constructor(

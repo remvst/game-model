@@ -1,11 +1,11 @@
-import GameModelApp from "../game-model-app";
+import { GameModelApp } from "../game-model-app";
 import { FullAuthority } from "../multiplayer/authority";
-import WorldUpdatesCollector from "../multiplayer/world-updates-collector";
-import WorldUpdatesReceiver from "../multiplayer/world-updates-receiver";
-import RecordedFrame from "../recording/recorded-frame";
-import ReplayerAuthority from "../recording/replayer-authority";
-import SerializationOptions from "../serialization/serialization-options";
-import World from "../world";
+import { WorldUpdatesCollector } from "../multiplayer/world-updates-collector";
+import { WorldUpdatesReceiver } from "../multiplayer/world-updates-receiver";
+import { RecordedFrame } from "../recording/recorded-frame";
+import { ReplayerAuthority } from "../recording/replayer-authority";
+import { SerializationOptions } from "../serialization/serialization-options";
+import { World } from "../world";
 
 export function modifyRecording(
     app: GameModelApp,

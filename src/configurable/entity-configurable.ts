@@ -1,8 +1,8 @@
 import { CompositeConfigurable } from "@remvst/configurable";
-import Entity from "../entity";
-import GameModelApp from "../game-model-app";
+import { Entity } from "../entity";
+import { GameModelApp } from "../game-model-app";
 
-export default function entityConfigurable(app: GameModelApp, entity: Entity) {
+export function entityConfigurable(app: GameModelApp, entity: Entity) {
     const entityConfigurable = new CompositeConfigurable();
 
     for (const trait of entity.traits.items()) {

@@ -1,7 +1,7 @@
-import Entity from "../entity";
+import { Entity } from "../entity";
 import { WorldEvent } from "../events/world-event";
 import { KeyProvider } from "../key-provider";
-import Trait from "../trait";
+import { Trait } from "../trait";
 import { PropertyConstraints, PropertyType } from "./property-constraints";
 
 export interface GenericProperty<OwnerType, ValueType> {

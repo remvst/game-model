@@ -4,13 +4,13 @@ import {
     WorldEventRegistryEntry,
     worldEventRegistryEntry,
 } from "../registry/world-event-registry";
-import InterpolatorTrait from "../traits/interpolator-trait";
+import { InterpolatorTrait } from "../traits/interpolator-trait";
 import { Vector3, vector3 } from "../vector3";
-import World from "../world";
-import Entity, { EntityProperties } from "./../entity";
+import { World } from "../world";
+import { Entity, EntityProperties } from "./../entity";
 import { WorldEvent } from "./world-event";
 
-export default class Shift implements WorldEvent {
+export class Shift implements WorldEvent {
     static readonly key = "shift";
     readonly key = Shift.key;
 

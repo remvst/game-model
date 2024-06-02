@@ -1,19 +1,20 @@
 import { KeyProvider } from "../../key-provider";
 import { EncoderSequence } from "../encoder";
-import PackedCompositeSerializer from "../packed/packed-composite-serializer";
-import SerializationOptions, {
+import { PackedCompositeSerializer } from "../packed/packed-composite-serializer";
+import {
+    SerializationOptions,
     SerializationType,
 } from "../serialization-options";
 import { AnySerialized, CompositeSerializer, Serializer } from "../serializer";
-import VerboseCompositeSerializer, {
+import {
     VerboseCompositeSerialized,
+    VerboseCompositeSerializer,
 } from "../verbose/verbose-composite-serializer";
 
 type AnySerializedItem = AnySerialized | EncoderSequence;
 
-export default class DualSupportCompositeSerializer<
-    ObjectType extends KeyProvider,
-> implements CompositeSerializer<ObjectType, AnySerializedItem>
+export class DualSupportCompositeSerializer<ObjectType extends KeyProvider>
+    implements CompositeSerializer<ObjectType, AnySerializedItem>
 {
     readonly serializers: Map<string, Serializer<ObjectType, AnySerialized>> =
         new Map();

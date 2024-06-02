@@ -1,6 +1,6 @@
 import { WorldEvent } from "../events/world-event";
-import GameModelApp from "../game-model-app";
-import Trait from "../trait";
+import { GameModelApp } from "../game-model-app";
+import { Trait } from "../trait";
 import { AnyTraitRegistryEntry } from "./trait-registry";
 import { AnyWorldEventRegistryEntry } from "./world-event-registry";
 

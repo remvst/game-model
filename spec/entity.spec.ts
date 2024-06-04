@@ -1,4 +1,4 @@
-import { Entity } from "../src/entity";
+import { Entity, entity } from "../src/entity";
 import { EntityEvent } from "../src/events/entity-event";
 import { EntityEventProcessed } from "../src/events/entity-event-processed";
 import { Trait } from "../src/trait";
@@ -195,5 +195,39 @@ describe("an entity", () => {
         entity.addEvent(entityEvent);
 
         expect(world.addEvent).toHaveBeenCalled();
+    });
+
+    describe("the entity function", () => {
+        it("can be used with no arguments", () => {
+            const ent = entity();
+            expect(ent.traits.size).toBe(0);
+        });
+
+        it("can be used with just an undefined ID", () => {
+            const ent = entity(undefined);
+            expect(ent.traits.size).toBe(0);
+        });
+
+        it("can be used with just an ID", () => {
+            const ent = entity("myid");
+            expect(ent.id).toBe("myid");
+            expect(ent.traits.size).toBe(0);
+        });
+
+        it("can be used with an ID and a list of traits", () => {
+            const ent = entity("myid", [new TestTrait()]);
+            expect(ent.id).toBe("myid");
+            expect(ent.traits.size).toBe(1);
+        });
+
+        it("can be used with an undefined ID and a list of traits", () => {
+            const ent = entity(undefined, [new TestTrait()]);
+            expect(ent.traits.size).toBe(1);
+        });
+
+        it("can be used with a null ID and a list of traits", () => {
+            const ent = entity(null, [new TestTrait()]);
+            expect(ent.traits.size).toBe(1);
+        });
     });
 });

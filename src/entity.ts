@@ -214,13 +214,13 @@ export class Entity {
     }
 }
 
-export function entity(arg0?: string | Trait[], arg1?: Trait[]) {
+export function entity(arg0?: string | Trait[] | null, arg1?: Trait[]) {
     let id: string;
     let traits: Trait[];
 
-    if (typeof arg0 === "string") {
-        id = arg0;
-        traits = arg1;
+    if (arg0 === null || arg0 === undefined || typeof arg0 === "string") {
+        id = (arg0 as string) || undefined;
+        traits = arg1 || [];
     } else {
         id = undefined;
         traits = arg0 || [];

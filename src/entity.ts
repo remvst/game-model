@@ -41,15 +41,34 @@ export class EntityProperties {
         (entity) => entity.z,
         (entity, z) => (entity.z = z),
     );
-    static readonly angle: Property<number> = getSet(
-        "angle",
+    static readonly rotationX: Property<number> = getSet(
+        "rotation.x",
         PropertyType.num(),
-        (entity) => entity.angle,
-        (entity, angle) => (entity.angle = angle),
+        (entity) => entity.rotation.x,
+        (entity, rotationX) => (entity.rotation.x = rotationX),
+    );
+    static readonly rotationY: Property<number> = getSet(
+        "rotation.y",
+        PropertyType.num(),
+        (entity) => entity.rotation.y,
+        (entity, rotationY) => (entity.rotation.y = rotationY),
+    );
+    static readonly rotationZ: Property<number> = getSet(
+        "rotation.z",
+        PropertyType.num(),
+        (entity) => entity.rotation.z,
+        (entity, rotationZ) => (entity.rotation.x = rotationZ),
     );
 
     static all() {
-        return [this.x, this.y, this.z, this.angle];
+        return [
+            this.x,
+            this.y,
+            this.z,
+            this.rotationX,
+            this.rotationY,
+            this.rotationZ,
+        ];
     }
 }
 
@@ -66,11 +85,12 @@ export class Entity {
     readonly traits = new ObjectSet<Trait>((trait) => trait.key);
     world: World | null = null;
 
-    position = vector3();
+    readonly position = vector3();
     private cycleStartPosition = vector3();
     cycleVelocity = vector3();
 
-    angle: number = 0;
+    readonly rotation = vector3();
+
     age: number = 0;
 
     constructor(id: string | undefined, traits: Trait[] = []) {
@@ -101,6 +121,14 @@ export class Entity {
     }
     set z(z: number) {
         this.position.z = z;
+    }
+
+    get angle() {
+        return this.rotation.z;
+    }
+
+    set angle(value: number) {
+        this.rotation.z = value;
     }
 
     bind(world: World) {

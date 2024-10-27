@@ -87,6 +87,7 @@ export * from "./util/hash-string";
 export * from "./util/modify-recording";
 export * from "./util/prefab-helper";
 export * from "./util/reposition-entities";
+export * from "./util/undo-redo-manager";
 export * from "./vector2";
 export * from "./vector3";
 export * from "./world";

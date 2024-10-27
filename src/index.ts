@@ -10,6 +10,7 @@ export * from "./configurable/entity-filter";
 export * from "./configurable/entity-id-configurable";
 export * from "./configurable/property-value-configurable";
 export * from "./entity";
+export * from "./events/change-performed";
 export * from "./events/entity-event";
 export * from "./events/entity-event-processed";
 export * from "./events/entity-removed";

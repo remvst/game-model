@@ -56,21 +56,23 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
             );
         });
 
-        this.configurable((trait: TraitType) => {
-            const autoConfigurable = new CompositeConfigurable();
-            for (const property of this._properties) {
-                autoConfigurable.add(
-                    property.identifier,
-                    propertyValueConfigurable(
-                        trait.entity!.world,
-                        property.type,
-                        () => property.get(trait.entity!),
-                        (value) => property.set(trait.entity!, value),
-                    ),
-                );
-            }
-            return autoConfigurable;
-        });
+        this.configurable((trait) => this.autoConfigurable(trait));
+    }
+
+    autoConfigurable(trait: TraitType): CompositeConfigurable {
+        const autoConfigurable = new CompositeConfigurable();
+        for (const property of this._properties) {
+            autoConfigurable.add(
+                property.identifier,
+                propertyValueConfigurable(
+                    trait.entity!.world,
+                    property.type,
+                    () => property.get(trait.entity!),
+                    (value) => property.set(trait.entity!, value),
+                ),
+            );
+        }
+        return autoConfigurable;
     }
 
     traitClass(traitClass: (new () => TraitType) & KeyProvider): void {

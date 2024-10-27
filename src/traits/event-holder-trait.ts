@@ -130,11 +130,7 @@ export class EventHolderTrait extends Trait {
             .add(
                 "event",
                 registryEntry?.configurable
-                    ? registryEntry.configurable(
-                          app,
-                          this.event,
-                          this.entity?.world,
-                      )
+                    ? registryEntry.configurable(this.event, this.entity?.world)
                     : new CompositeConfigurable(),
             );
     }

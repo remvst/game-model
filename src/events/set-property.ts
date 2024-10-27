@@ -49,73 +49,68 @@ export class SetProperty implements WorldEvent {
             builder.newEvent(() => new SetProperty("", EntityProperties.x, 0));
             builder.serializer(() => new Serializer(app.propertyRegistry));
             builder.simpleProp("entityId", PropertyType.id());
-            builder.configurable(
-                (app: GameModelApp, event: SetProperty, world: World) => {
-                    const property = new EnumConfigurable<Property<any>>({
-                        read: () => event.property,
-                        write: (property, configurable) => {
-                            event.property = property;
-                            configurable.invalidate();
-                        },
-                    });
+            builder.configurable((event: SetProperty, world: World) => {
+                const property = new EnumConfigurable<Property<any>>({
+                    read: () => event.property,
+                    write: (property, configurable) => {
+                        event.property = property;
+                        configurable.invalidate();
+                    },
+                });
 
-                    for (const identifier of propertyRegistry.keys()) {
-                        const split = identifier.split(".");
-                        const category = split.length > 0 ? split[0] : "";
+                for (const identifier of propertyRegistry.keys()) {
+                    const split = identifier.split(".");
+                    const category = split.length > 0 ? split[0] : "";
 
-                        property
-                            .category(category)
-                            .add(
-                                identifier,
-                                propertyRegistry.entry(identifier)!,
-                            );
-                    }
+                    property
+                        .category(category)
+                        .add(identifier, propertyRegistry.entry(identifier)!);
+                }
 
-                    return new CompositeConfigurable()
-                        .add(
-                            "entityId",
-                            new EntityIdConfigurable({
+                return new CompositeConfigurable()
+                    .add(
+                        "entityId",
+                        new EntityIdConfigurable({
+                            world,
+                            read: () => event.entityId,
+                            write: (entityId, configurable) => {
+                                event.entityId = entityId;
+                                configurable.invalidate();
+                            },
+                        }),
+                    )
+                    .add(
+                        "property",
+                        anyProperty({
+                            propertyRegistry: propertyRegistry,
+                            filter: onlyRelevantProperties(
+                                traitRegistry,
                                 world,
-                                read: () => event.entityId,
-                                write: (entityId, configurable) => {
-                                    event.entityId = entityId;
-                                    configurable.invalidate();
-                                },
-                            }),
-                        )
-                        .add(
-                            "property",
-                            anyProperty({
-                                propertyRegistry: propertyRegistry,
-                                filter: onlyRelevantProperties(
-                                    traitRegistry,
-                                    world,
-                                    () => event.entityId,
-                                ),
-                                read: () => event.property,
-                                write: (property, configurable) => {
-                                    event.property = property;
-
-                                    // Make sure we still have the correct value type
-                                    event.value = property.type.convert(
-                                        event.value,
-                                    );
-
-                                    configurable.invalidate();
-                                },
-                            }),
-                        )
-                        .add(
-                            "value",
-                            propertyValueConfigurable(
-                                world,
-                                event.property.type,
-                                () => event.value,
-                                (value) => (event.value = value),
+                                () => event.entityId,
                             ),
-                        );
-                },
-            );
+                            read: () => event.property,
+                            write: (property, configurable) => {
+                                event.property = property;
+
+                                // Make sure we still have the correct value type
+                                event.value = property.type.convert(
+                                    event.value,
+                                );
+
+                                configurable.invalidate();
+                            },
+                        }),
+                    )
+                    .add(
+                        "value",
+                        propertyValueConfigurable(
+                            world,
+                            event.property.type,
+                            () => event.value,
+                            (value) => (event.value = value),
+                        ),
+                    );
+            });
         });
     }
 }

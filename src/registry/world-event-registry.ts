@@ -41,11 +41,7 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
         entity: Entity,
         triggererId: string,
     ) => void;
-    configurable?: (
-        app: GameModelApp,
-        event: EventType,
-        world: World,
-    ) => Configurable;
+    configurable?: (event: EventType, world: World) => Configurable;
     properties?: WorldEventProperty<any>[];
 }
 
@@ -62,11 +58,7 @@ class WorldEventRegistryEntryBuilder<
     private _serializer: (
         app: GameModelApp,
     ) => WorldEventSerializer<EventType, AnySerialized> = null;
-    private _configurable: (
-        app: GameModelApp,
-        trait: EventType,
-        world: World,
-    ) => Configurable;
+    private _configurable: (trait: EventType, world: World) => Configurable;
     private _readjust: (
         event: EventType,
         world: World,
@@ -84,24 +76,25 @@ class WorldEventRegistryEntryBuilder<
             );
         });
 
-        this.configurable(
-            (app: GameModelApp, event: EventType, world: World) => {
-                const entry = app.worldEventRegistry.entry(this._key);
-                const autoConfigurable = new CompositeConfigurable();
-                for (const property of entry.properties || []) {
-                    autoConfigurable.add(
-                        property.identifier,
-                        propertyValueConfigurable(
-                            world,
-                            property.type,
-                            () => property.get(event),
-                            (value) => property.set(event, value),
-                        ),
-                    );
-                }
-                return autoConfigurable;
-            },
+        this.configurable((event: EventType, world: World) =>
+            this.autoConfigurable(event, world),
         );
+    }
+
+    autoConfigurable(event: EventType, world: World): CompositeConfigurable {
+        const autoConfigurable = new CompositeConfigurable();
+        for (const property of this._properties) {
+            autoConfigurable.add(
+                property.identifier,
+                propertyValueConfigurable(
+                    world,
+                    property.type,
+                    () => property.get(event),
+                    (value) => property.set(event, value),
+                ),
+            );
+        }
+        return autoConfigurable;
     }
 
     eventClass(eventClass: (new () => EventType) & KeyProvider): void {
@@ -158,11 +151,7 @@ class WorldEventRegistryEntryBuilder<
     }
 
     configurable(
-        configurable: (
-            app: GameModelApp,
-            event: EventType,
-            world: World,
-        ) => Configurable,
+        configurable: (event: EventType, world: World) => Configurable,
     ) {
         this._configurable = configurable;
     }
@@ -248,7 +237,7 @@ export class WorldEventRegistry
 
         // In case no configurable was defined, add a default one
         if (!manualEntry.configurable) {
-            manualEntry.configurable = (app, event, world) => {
+            manualEntry.configurable = (event, world) => {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of entry.properties || []) {
                     autoConfigurable.add(

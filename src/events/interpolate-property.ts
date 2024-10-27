@@ -75,7 +75,7 @@ export class InterpolateProperty implements WorldEvent {
             newEvent: () =>
                 new InterpolateProperty("", EntityProperties.x, 0, 1),
             serializer: () => new Serializer(propertyRegistry),
-            configurable: (app, event, world) => {
+            configurable: (event, world) => {
                 return new CompositeConfigurable()
                     .add(
                         "entityId",

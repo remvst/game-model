@@ -39,7 +39,7 @@ export class InterpolateProperty implements WorldEvent {
             // This might be limiting but helps prevent flickering when multiple movers are applied.
             for (const existingMover of world.entities.bucket(
                 InterpolatorTrait.key,
-            )) {
+            ) || []) {
                 const existingMoverTrait =
                     existingMover.traitOfType(InterpolatorTrait);
                 if (existingMoverTrait!.targetEntityId !== this.entityId) {

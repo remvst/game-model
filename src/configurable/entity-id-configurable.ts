@@ -102,7 +102,7 @@ export class EntityIdConfigurable extends GroupConfigurable {
                                 );
                                 for (const entitySelector of world.entities.bucket(
                                     EntitySelectorTrait.key,
-                                )) {
+                                ) || []) {
                                     entitySelector.addEvent(event);
                                 }
                             },

@@ -32,7 +32,7 @@ export class SmoothTargetFollowingTrait extends Trait {
         for (const traitKey of this.targetTraitKeys) {
             for (const targettedTrait of this.entity.world.entities.bucket(
                 traitKey,
-            )) {
+            ) || []) {
                 return targettedTrait;
             }
         }

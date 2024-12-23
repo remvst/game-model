@@ -41,7 +41,7 @@ export function* resolveIds(
 
     if (originalId?.startsWith(TRAIT_PREFIX)) {
         const traitKey = originalId.slice(TRAIT_PREFIX.length);
-        for (const entity of world.entities.bucket(traitKey)) {
+        for (const entity of world.entities.bucket(traitKey) || []) {
             yield entity;
         }
         return;

@@ -29,7 +29,7 @@ export class EventTriggerTrait extends Trait {
         const world = this.entity!.world;
         if (!world) return;
 
-        for (const entity of world.entities.bucket(this.triggerTrait)) {
+        for (const entity of world.entities.bucket(this.triggerTrait) || []) {
             const newContained =
                 Math.abs(entity.x - this.entity.x) <= this.radiusX &&
                 Math.abs(entity.y - this.entity.y) <= this.radiusY;

@@ -27,11 +27,11 @@ export class EntityGroupTrait extends Trait {
     *entities(world: World): Iterable<Entity> {
         for (const trait of this.traits) {
             if (this.radiusX === 0 || this.radiusY === 0) {
-                for (const entity of world.entities.bucket(trait)) {
+                for (const entity of world.entities.bucket(trait) || []) {
                     yield entity;
                 }
             } else {
-                for (const entity of world.entities.bucket(trait)) {
+                for (const entity of world.entities.bucket(trait) || []) {
                     if (
                         isBetween(
                             this.entity!.x - this.radiusX,

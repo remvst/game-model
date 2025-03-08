@@ -13,6 +13,7 @@ export class SmoothTargetFollowingTrait extends Trait {
 
     targetEntityIds: string[] = [];
     targetTraitKeys: string[] = [];
+    minSpeed = 0;
     maxSpeed = Number.MAX_SAFE_INTEGER;
     reachTargetFactor = 0.2;
     reachTargetLastPosition = false;
@@ -47,8 +48,16 @@ export class SmoothTargetFollowingTrait extends Trait {
     ) {
         const diffX = Math.abs(targetPosition.x - position.x);
         const diffY = Math.abs(targetPosition.y - position.y);
-        outSpeed.x = Math.min(this.maxSpeed, diffX / this.reachTargetFactor);
-        outSpeed.y = Math.min(this.maxSpeed, diffY / this.reachTargetFactor);
+        outSpeed.x = between(
+            this.minSpeed,
+            diffX / this.reachTargetFactor,
+            this.maxSpeed,
+        );
+        outSpeed.y = between(
+            this.minSpeed,
+            diffY / this.reachTargetFactor,
+            this.maxSpeed,
+        );
     }
 
     cycle(elapsed: number) {

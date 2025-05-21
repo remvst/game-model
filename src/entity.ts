@@ -2,7 +2,11 @@ import { v4 } from "uuid";
 import { KeyProvider } from "./key-provider";
 
 import { ObjectSet } from "./collections/object-set";
-import { EntityEvent } from "./events/entity-event";
+import {
+    EntityEvent,
+    EntityEventConstructor,
+    EntityEventListener,
+} from "./events/entity-event";
 import { EntityEventProcessed } from "./events/entity-event-processed";
 import { GameModelApp } from "./game-model-app";
 import { AuthorityType } from "./multiplayer/authority";
@@ -78,6 +82,11 @@ export class Entity {
     private readonly reusableEventProcessedEvent = new EntityEventProcessed(
         this,
     );
+    private readonly entityEventListeners = new Map<
+        EntityEventConstructor<EntityEvent>,
+        EntityEventListener<EntityEvent>[]
+    >();
+    private generalEventListeners: EntityEventListener<EntityEvent>[] = [];
 
     static createdCount = 0;
 
@@ -135,6 +144,13 @@ export class Entity {
         this.world = world;
 
         for (const trait of this.traits.items()) {
+            if (trait.processEvent === Trait.prototype.processEvent) continue;
+            this.generalEventListeners.push((event, world) =>
+                trait.processEvent(event, world),
+            );
+        }
+
+        for (const trait of this.traits.items()) {
             trait.bind(this);
         }
 
@@ -149,6 +165,20 @@ export class Entity {
 
     unbind() {
         this.world = null;
+        this.entityEventListeners.clear();
+        this.generalEventListeners = [];
+    }
+
+    onEvent<T extends EntityEvent>(
+        type: EntityEventConstructor<T>,
+        listener: EntityEventListener<T>,
+    ) {
+        const existingListeners = this.entityEventListeners.get(type);
+        if (!existingListeners) {
+            this.entityEventListeners.set(type, [listener]);
+        } else {
+            existingListeners.push(listener);
+        }
     }
 
     preCycle() {
@@ -220,10 +250,20 @@ export class Entity {
                 return;
         }
 
-        for (const trait of this.traits.items()) {
-            trait.processEvent(event, world);
+        // Call all the listeners for this event
+        const listeners = this.entityEventListeners.get(
+            event.constructor as EntityEventConstructor<EntityEvent>,
+        );
+        for (const listener of listeners || []) {
+            listener(event, world);
         }
 
+        // Process general event listeners
+        for (const listener of this.generalEventListeners) {
+            listener(event, world);
+        }
+
+        // Propagate to the world
         this.reusableEventProcessedEvent.event = event;
         world.addEvent(this.reusableEventProcessedEvent);
     }

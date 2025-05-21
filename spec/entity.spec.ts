@@ -177,6 +177,26 @@ describe("an entity", () => {
         expect(testTrait.processEvent).toHaveBeenCalledWith(event, world);
     });
 
+    it("can process a local event with a specific listener", () => {
+        const entity = new Entity(undefined, []);
+
+        const listener1 = jasmine.createSpy();
+        const listener2 = jasmine.createSpy();
+
+        entity.onEvent(TestEvent, listener1);
+        entity.onEvent(TestEvent, listener2);
+
+        const event = new TestEvent();
+
+        const world = new World();
+        world.entities.add(entity);
+
+        entity.addEvent(event);
+
+        expect(listener1).toHaveBeenCalledWith(event, world);
+        expect(listener2).toHaveBeenCalledWith(event, world);
+    });
+
     it("can process a local event and notify the world about it", () => {
         const testTrait = new TestTrait();
         spyOn(testTrait, "processEvent");

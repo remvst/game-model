@@ -76,6 +76,7 @@ export * from "./traits/entity-selector-trait";
 export * from "./traits/event-holder-trait";
 export * from "./traits/event-on-removal-trait";
 export * from "./traits/event-trigger-trait";
+export * from "./traits/expansion-trait";
 export * from "./traits/interpolator-trait";
 export * from "./traits/position-binding-trait";
 export * from "./traits/rectangle-bound-trait";

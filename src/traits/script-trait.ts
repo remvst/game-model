@@ -1,5 +1,4 @@
 import { Entity } from "../entity";
-import { EntityEvent } from "../events/entity-event";
 import { Trigger } from "../events/trigger";
 import { TriggerEvent } from "../events/trigger-event";
 import {
@@ -8,7 +7,6 @@ import {
 } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
 import { Trait } from "../trait";
-import { World } from "../world";
 import { DelayedActionTrait } from "./delayed-action-trait";
 
 interface ScriptStep {

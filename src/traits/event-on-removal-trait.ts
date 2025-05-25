@@ -1,5 +1,4 @@
 import { adaptId } from "../adapt-id";
-import { EntityEvent } from "../events/entity-event";
 import { EntityRemoved } from "../events/entity-removed";
 import { Remove } from "../events/remove";
 import { WorldEvent } from "../events/world-event";

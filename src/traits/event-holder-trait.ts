@@ -5,7 +5,6 @@ import {
 } from "@remvst/configurable";
 import { adaptId } from "../adapt-id";
 import { Entity } from "../entity";
-import { EntityEvent } from "../events/entity-event";
 import { Remove } from "../events/remove";
 import { TriggerEvent } from "../events/trigger-event";
 import { WorldEvent } from "../events/world-event";

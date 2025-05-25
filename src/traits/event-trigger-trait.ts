@@ -1,4 +1,3 @@
-import { EntityEvent } from "../events/entity-event";
 import { TriggerEvent } from "../events/trigger-event";
 import { PropertyType } from "../properties/property-constraints";
 import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";

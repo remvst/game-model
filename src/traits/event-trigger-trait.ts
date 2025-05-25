@@ -27,7 +27,7 @@ export class EventTriggerTrait extends Trait {
     postBind(): void {
         super.postBind();
         this.entity.onEvent(TriggerEvent, (event, world) => {
-            this.processEvent(event, world);
+            this.onEnter(event.triggererId, world);
         });
     }
 

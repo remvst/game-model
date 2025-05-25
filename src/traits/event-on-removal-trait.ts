@@ -29,10 +29,11 @@ export class EventOnRemovalTrait extends Trait {
         super();
     }
 
-    processEvent(event: EntityEvent, world: World) {
-        if (event instanceof EntityRemoved) {
+    postBind(): void {
+        super.postBind();
+        this.entity.onEvent(EntityRemoved, (event, world) => {
             this.trigger(world, this.entity.id);
-        }
+        });
     }
 
     private trigger(world: World, triggererId: string) {

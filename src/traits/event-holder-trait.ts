@@ -34,9 +34,10 @@ export class EventHolderTrait extends Trait {
         super();
     }
 
-    processEvent(event: EntityEvent) {
-        if (event instanceof TriggerEvent) {
-            this.entity.world.entities.add(
+    postBind(): void {
+        super.postBind();
+        this.entity.onEvent(TriggerEvent, (event, world) => {
+            world.entities.add(
                 new Entity(undefined, [
                     new DelayedActionTrait(this.delay, (world) => {
                         this.trigger(world, event.triggererId);
@@ -48,7 +49,7 @@ export class EventHolderTrait extends Trait {
             if (this.triggerCount === 0) {
                 this.entity.remove();
             }
-        }
+        });
     }
 
     private trigger(world: World, triggererId: string) {

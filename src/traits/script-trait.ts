@@ -23,8 +23,10 @@ export class ScriptTrait extends Trait {
     steps: ScriptStep[] = [];
     triggerCount: number = 1;
 
-    processEvent(event: EntityEvent, world: World) {
-        if (event instanceof TriggerEvent) {
+    postBind(): void {
+        super.postBind();
+
+        this.entity.onEvent(TriggerEvent, (event, world) => {
             for (const step of this.steps) {
                 world.entities.add(
                     new Entity(undefined, [
@@ -44,7 +46,7 @@ export class ScriptTrait extends Trait {
             if (this.triggerCount === 0) {
                 this.entity?.remove();
             }
-        }
+        });
     }
 
     static registryEntry(): RegistryEntry<ScriptTrait> {

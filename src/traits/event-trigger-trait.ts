@@ -25,6 +25,13 @@ export class EventTriggerTrait extends Trait {
         super();
     }
 
+    postBind(): void {
+        super.postBind();
+        this.entity.onEvent(TriggerEvent, (event, world) => {
+            this.processEvent(event, world);
+        });
+    }
+
     cycle(_: number) {
         const world = this.entity!.world;
         if (!world) return;
@@ -70,12 +77,6 @@ export class EventTriggerTrait extends Trait {
             if (entity) {
                 entity.addEvent(new TriggerEvent(triggererId));
             }
-        }
-    }
-
-    processEvent(event: EntityEvent, world: World) {
-        if (event instanceof TriggerEvent) {
-            this.onEnter(event.triggererId, world);
         }
     }
 

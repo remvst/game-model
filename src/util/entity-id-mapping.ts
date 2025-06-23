@@ -1,4 +1,5 @@
 import { World } from "../world";
+import { worldContainsId } from "./first-available-id";
 
 export class EntityIdMapping {
     private readonly sourceToDestinationId = new Map<string, string>();
@@ -12,7 +13,7 @@ export class EntityIdMapping {
 
             let suffix = 1;
             while (
-                world.entity(sourceId + suffix) ||
+                worldContainsId(world, sourceId + suffix) ||
                 this.sourceToDestinationId.has(sourceId + suffix)
             ) {
                 suffix++;

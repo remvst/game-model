@@ -8,6 +8,7 @@ import {
 } from "../registry/trait-registry";
 import { SerializationOptions } from "../serialization/serialization-options";
 import { Trait } from "../trait";
+import { EntityIdMapping } from "../util/entity-id-mapping";
 import { World } from "../world";
 
 export class ExpansionTrait extends Trait {
@@ -29,9 +30,15 @@ export class ExpansionTrait extends Trait {
     }
 
     expand(world: World): void {
+        const mapping = new EntityIdMapping(
+            world,
+            Array.from(this.expansion.entities.items()).map((e) => e.id),
+        );
+
         for (const entity of Array.from(this.expansion.entities.items())) {
             entity.remove();
 
+            (entity as any).id = mapping.destinationId(entity.id);
             entity.position.x += this.entity.position.x;
             entity.position.y += this.entity.position.y;
             world.entities.add(entity);

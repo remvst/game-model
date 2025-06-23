@@ -1,7 +1,8 @@
+import { ExpansionTrait } from "../traits/expansion-trait";
 import { World } from "../world";
 
 export function firstAvailableId(world: World, id: string): string {
-    if (!world.entity(id)) {
+    if (!worldContainsId(world, id)) {
         return id;
     }
 
@@ -19,6 +20,16 @@ export function firstAvailableId(world: World, id: string): string {
             ? parseInt(id.slice(id.length - numberSuffixLength))
             : 1;
     const prefix = id.slice(0, id.length - numberSuffixLength);
-    while (world.entity(prefix + suffix)) suffix++;
+    while (worldContainsId(world, prefix + suffix)) suffix++;
     return prefix + suffix;
+}
+
+export function worldContainsId(world: World, id: string): boolean {
+    if (world.entity(id)) return true;
+    for (const expansion of world.traitsOfType(ExpansionTrait)) {
+        if (worldContainsId(expansion.expansion, id)) {
+            return true;
+        }
+    }
+    return false;
 }

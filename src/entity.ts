@@ -141,6 +141,8 @@ export class Entity {
     }
 
     bind(world: World) {
+        this.unbind();
+
         this.world = world;
 
         for (const trait of this.traits.items()) {

@@ -183,13 +183,13 @@ describe("an entity", () => {
         const listener1 = jasmine.createSpy();
         const listener2 = jasmine.createSpy();
 
+        const world = new World();
+        world.entities.add(entity);
+
         entity.onEvent(TestEvent, listener1);
         entity.onEvent(TestEvent, listener2);
 
         const event = new TestEvent();
-
-        const world = new World();
-        world.entities.add(entity);
 
         entity.addEvent(event);
 

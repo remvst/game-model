@@ -1,6 +1,6 @@
 {
     "name": "@remvst/game-model",
-    "version": "4.27.3",
+    "version": "4.27.4",
     "description": "Game models",
     "main": "lib/cjs/index.js",
     "exports": {

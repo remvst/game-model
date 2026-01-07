@@ -31,4 +31,15 @@ describe("EntityIdMapping", () => {
         expect(mapping.destinationId("secondentity")).toBe("secondentity1");
         expect(mapping.destinationId("thirdentity")).toBe("thirdentity");
     });
+
+    it("will avoid conflicts both in the source IDs and final IDs", () => {
+        world.entities.add(new Entity("e2", []));
+        world.entities.add(new Entity("e3", []));
+
+        const mapping = new EntityIdMapping(world, ["e3", "e2", "e1"]);
+
+        expect(mapping.destinationId("e1")).toBe("e1");
+        expect(mapping.destinationId("e2")).toBe("e21");
+        expect(mapping.destinationId("e3")).toBe("e31");
+    });
 });

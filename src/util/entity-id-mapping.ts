@@ -5,12 +5,15 @@ export class EntityIdMapping {
     private readonly sourceToDestinationId = new Map<string, string>();
 
     constructor(world: World, sourceEntityIds: string[]) {
+        const remainingIds = new Set(sourceEntityIds);
         for (const sourceId of sourceEntityIds) {
             if (!world.entity(sourceId)) {
+                remainingIds.delete(sourceId);
                 this.sourceToDestinationId.set(sourceId, sourceId);
-                continue;
             }
+        }
 
+        for (const sourceId of remainingIds) {
             let suffix = 1;
             while (
                 worldContainsId(world, sourceId + suffix) ||

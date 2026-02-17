@@ -178,4 +178,47 @@ describe("smooth target following trait", () => {
         expect(follower.position.x).toBe(previousPosition.x);
         expect(follower.position.y).toBe(previousPosition.y);
     });
+
+    it("will snap to target if reachTargetFactor is <= 0", () => {
+        const follower = new Entity(undefined, [
+            new SmoothTargetFollowingTrait(),
+        ]);
+        follower.traitOfType(SmoothTargetFollowingTrait)!.targetEntityIds = [
+            target.id,
+        ];
+        follower.traitOfType(SmoothTargetFollowingTrait)!.reachTargetFactor = 0;
+        world.entities.add(follower);
+
+        target.position.x = 4500;
+        target.position.y = 440;
+
+        world.cycle(0.01);
+
+        expect(follower.position.x).toBe(target.position.x);
+        expect(follower.position.y).toBe(target.position.y);
+    });
+
+    it("can have a snap radius", () => {
+        const follower = new Entity(undefined, [
+            new SmoothTargetFollowingTrait(),
+        ]);
+        follower.traitOfType(SmoothTargetFollowingTrait)!.targetEntityIds = [
+            target.id,
+        ];
+        follower.traitOfType(SmoothTargetFollowingTrait)!.snapRadius.x = 5;
+        follower.traitOfType(SmoothTargetFollowingTrait)!.snapRadius.y = 5;
+        follower.traitOfType(SmoothTargetFollowingTrait)!.reachTargetFactor = 0.9;
+        world.entities.add(follower);
+
+        target.position.x = 200;
+        target.position.y = 400;
+
+        follower.position.x = target.position.x - 4;
+        follower.position.y = target.position.y - 4;
+
+        world.cycle(0.01);
+
+        expect(follower.position.x).toBe(target.position.x);
+        expect(follower.position.y).toBe(target.position.y);
+    });
 });

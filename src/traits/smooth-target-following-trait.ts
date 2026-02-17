@@ -18,6 +18,7 @@ export class SmoothTargetFollowingTrait extends Trait {
     reachTargetFactor = 0.2;
     reachTargetLastPosition = false;
     offset = new Vector2();
+    snapRadius = new Vector2();
 
     private foundTarget = false;
     private readonly lastTargetPosition = new Vector2();
@@ -48,16 +49,18 @@ export class SmoothTargetFollowingTrait extends Trait {
     ) {
         const diffX = Math.abs(targetPosition.x - position.x);
         const diffY = Math.abs(targetPosition.y - position.y);
-        outSpeed.x = between(
-            this.minSpeed,
-            diffX / this.reachTargetFactor,
-            this.maxSpeed,
-        );
-        outSpeed.y = between(
-            this.minSpeed,
-            diffY / this.reachTargetFactor,
-            this.maxSpeed,
-        );
+        outSpeed.x =
+            between(
+                this.minSpeed,
+                diffX / this.reachTargetFactor,
+                this.maxSpeed,
+            ) || 0;
+        outSpeed.y =
+            between(
+                this.minSpeed,
+                diffY / this.reachTargetFactor,
+                this.maxSpeed,
+            ) || 0;
     }
 
     cycle(elapsed: number) {
@@ -70,6 +73,26 @@ export class SmoothTargetFollowingTrait extends Trait {
 
         if (!this.foundTarget) return;
         if (!this.reachTargetLastPosition && !target) return;
+
+        // Snap if reachTargetFactor is zero or lower
+        if (this.reachTargetFactor <= 0) {
+            this.entity.position.x = this.lastTargetPosition.x;
+            this.entity.position.y = this.lastTargetPosition.y;
+        }
+
+        // Snap if within snap radius
+        if (
+            Math.abs(this.lastTargetPosition.x - this.entity.position.x) <=
+            this.snapRadius.x
+        ) {
+            this.entity.position.x = this.lastTargetPosition.x;
+        }
+        if (
+            Math.abs(this.lastTargetPosition.y - this.entity.position.y) <=
+            this.snapRadius.y
+        ) {
+            this.entity.position.y = this.lastTargetPosition.y;
+        }
 
         this.calculateSpeed(
             this.entity,
@@ -99,6 +122,34 @@ export class SmoothTargetFollowingTrait extends Trait {
             builder.simpleProp(
                 "targetTraitKeys",
                 PropertyType.list(PropertyType.str()),
+            );
+            builder.simpleProp("reachTargetFactor", PropertyType.num());
+            builder.simpleProp("reachTargetLastPosition", PropertyType.bool());
+            builder.simpleProp("minSpeed", PropertyType.num());
+            builder.simpleProp("maxSpeed", PropertyType.num());
+            builder.property(
+                "offsetX",
+                PropertyType.num(),
+                (t) => t.offset.x,
+                (t, x) => (t.offset.x = x),
+            );
+            builder.property(
+                "offsetY",
+                PropertyType.num(),
+                (t) => t.offset.y,
+                (t, y) => (t.offset.y = y),
+            );
+            builder.property(
+                "snapRadiusX",
+                PropertyType.num(),
+                (t) => t.snapRadius.x,
+                (t, x) => (t.snapRadius.x = x),
+            );
+            builder.property(
+                "snapRadiusY",
+                PropertyType.num(),
+                (t) => t.snapRadius.y,
+                (t, y) => (t.snapRadius.y = y),
             );
         });
     }

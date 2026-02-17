@@ -207,7 +207,8 @@ describe("smooth target following trait", () => {
         ];
         follower.traitOfType(SmoothTargetFollowingTrait)!.snapRadius.x = 5;
         follower.traitOfType(SmoothTargetFollowingTrait)!.snapRadius.y = 5;
-        follower.traitOfType(SmoothTargetFollowingTrait)!.reachTargetFactor = 0.9;
+        follower.traitOfType(SmoothTargetFollowingTrait)!.reachTargetFactor =
+            0.9;
         world.entities.add(follower);
 
         target.position.x = 200;

@@ -15,7 +15,7 @@ export class SmoothTargetFollowingTrait extends Trait {
     targetTraitKeys: string[] = [];
     minSpeed = 0;
     maxSpeed = Number.MAX_SAFE_INTEGER;
-    reachTargetFactor = 0.2;
+    reachTargetMultiplier = new Vector2(0.2, 0.2);
     reachTargetLastPosition = false;
     offset = new Vector2();
     snapRadius = new Vector2();
@@ -24,6 +24,15 @@ export class SmoothTargetFollowingTrait extends Trait {
     private readonly lastTargetPosition = new Vector2();
 
     private readonly reusableOutSpeed: Vector2 = new Vector2();
+
+    get reachTargetFactor() {
+        return this.reachTargetMultiplier.x;
+    }
+
+    set reachTargetFactor(factor: number) {
+        this.reachTargetMultiplier.x = factor;
+        this.reachTargetMultiplier.y = factor;
+    }
 
     get target(): Entity | null {
         for (const id of this.targetEntityIds) {
@@ -52,13 +61,13 @@ export class SmoothTargetFollowingTrait extends Trait {
         outSpeed.x =
             between(
                 this.minSpeed,
-                diffX / this.reachTargetFactor,
+                diffX / this.reachTargetMultiplier.x,
                 this.maxSpeed,
             ) || 0;
         outSpeed.y =
             between(
                 this.minSpeed,
-                diffY / this.reachTargetFactor,
+                diffY / this.reachTargetMultiplier.y,
                 this.maxSpeed,
             ) || 0;
     }
@@ -74,11 +83,11 @@ export class SmoothTargetFollowingTrait extends Trait {
         if (!this.foundTarget) return;
         if (!this.reachTargetLastPosition && !target) return;
 
-        // Snap if reachTargetFactor is zero or lower
-        if (this.reachTargetFactor <= 0) {
+        // Snap if reachTargetMultiplier is zero or lower
+        if (this.reachTargetMultiplier.x <= 0)
             this.entity.position.x = this.lastTargetPosition.x;
+        if (this.reachTargetMultiplier.y <= 0)
             this.entity.position.y = this.lastTargetPosition.y;
-        }
 
         // Snap if within snap radius
         if (
@@ -123,7 +132,18 @@ export class SmoothTargetFollowingTrait extends Trait {
                 "targetTraitKeys",
                 PropertyType.list(PropertyType.str()),
             );
-            builder.simpleProp("reachTargetFactor", PropertyType.num());
+            builder.property(
+                "reachTargetMultiplierX",
+                PropertyType.num(),
+                (t) => t.reachTargetMultiplier.x,
+                (t, x) => (t.reachTargetMultiplier.x = x),
+            );
+            builder.property(
+                "reachTargetMultiplierY",
+                PropertyType.num(),
+                (t) => t.reachTargetMultiplier.y,
+                (t, y) => (t.reachTargetMultiplier.y = y),
+            );
             builder.simpleProp("reachTargetLastPosition", PropertyType.bool());
             builder.simpleProp("minSpeed", PropertyType.num());
             builder.simpleProp("maxSpeed", PropertyType.num());

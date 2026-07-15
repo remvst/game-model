@@ -21,7 +21,7 @@
     "dependencies": {
         "@remvst/animate.js": "^3.0.0",
         "@remvst/configurable": "^1.5.1",
-        "@remvst/geometry": "^2.5.1",
+        "@remvst/geometry": "^2.9.0",
         "rxjs": "^7.8.0",
         "uuid": "^9.0.0"
     },

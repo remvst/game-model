@@ -10,7 +10,8 @@
         "moduleResolution": "node",
         "declaration": true,
         "outDir": "./lib/esm",
-        "allowJs": false
+        "allowJs": false,
+        "types": ["jasmine", "node", "uuid"]
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]

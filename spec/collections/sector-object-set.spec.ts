@@ -5,7 +5,9 @@ describe("a sector object set", () => {
     let set: SectorObjectSet<any>;
 
     beforeEach(() => {
-        set = new SectorObjectSet(50);
+        set = new SectorObjectSet();
+        set.area.setBounds(-1000, -1000, 1000, 1000);
+        set.clear();
     });
 
     it("can insert objects", () => {
@@ -26,30 +28,29 @@ describe("a sector object set", () => {
         expect(results).toEqual(["myobj"]);
     });
 
-    it("can sometimes return the same object multiple times", () => {
+    it("does not return the same object multiple times", () => {
         set.insert("myobj", new Rectangle(0, 0, 100, 100));
 
         const results = Array.from(set.query(new Rectangle(0, 0, 50, 10)));
-        expect(results).toEqual(["myobj", "myobj"]);
+        expect(results).toEqual(["myobj"]);
     });
 
-    it("can make a non repeating query", () => {
+    it("non repeating query returns same results as query", () => {
         set.insert("myobj", new Rectangle(0, 0, 100, 100));
 
         const results = Array.from(set.query(new Rectangle(0, 0, 50, 10)));
-        expect(results).toEqual(["myobj", "myobj"]);
-
         const nonRepeatingResults = Array.from(
             set.nonRepeatingQuery(new Rectangle(0, 0, 50, 10)),
         );
-        expect(nonRepeatingResults).toEqual(["myobj"]);
+        expect(nonRepeatingResults).toEqual(results);
     });
 
     it("can query areas with multiple objects", () => {
         set.insert("myobj", new Rectangle(5, 5, 10, 10));
         set.insert("myobj2", new Rectangle(20, 20, 10, 10));
 
-        const results = Array.from(set.query(new Rectangle(0, 0, 10, 10)));
-        expect(results).toEqual(["myobj", "myobj2"]);
+        const results = Array.from(set.query(new Rectangle(0, 0, 100, 100)));
+        expect(results).toContain("myobj");
+        expect(results).toContain("myobj2");
     });
 });

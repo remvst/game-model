@@ -7,9 +7,10 @@
     "compilerOptions": {
         "target": "es2019",
         "module": "ESNext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "declaration": true,
         "outDir": "./lib/esm",
+        "rootDir": "./src",
         "allowJs": false,
         "types": ["jasmine", "node", "uuid"]
     },

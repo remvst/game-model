@@ -1,5 +1,6 @@
 import { Subject } from "rxjs";
 
+import { Rectangle } from "@remvst/geometry";
 import { ChunkedEntitySet } from "./chunked-entity-set";
 import { ObjectSet } from "./collections/object-set";
 import { SectorObjectSet } from "./collections/sector-object-set";
@@ -15,6 +16,8 @@ import {
 } from "./multiplayer/authority";
 import { CyclePerformanceTracker } from "./performance-tracker";
 import { Trait } from "./trait";
+
+const REUSABLE_RECT = new Rectangle();
 
 export class World {
     readonly events: Subject<WorldEvent>;
@@ -61,11 +64,11 @@ export class World {
         this.events = new Subject();
     }
 
-    defineSectorSet(key: string, sectorSize: number) {
+    defineSectorSet(key: string) {
         if (this.sectorSets.has(key)) {
             return;
         }
-        const sectorSet = new SectorObjectSet<Entity>(sectorSize);
+        const sectorSet = new SectorObjectSet<Entity>();
         this.sectorSets.set(key, sectorSet);
     }
 
@@ -75,21 +78,31 @@ export class World {
 
         // Make sure the sector set is up to date
         if (sectorSet.version !== this.cycleCount) {
+            // Make sure the sector's area is reset
+            sectorSet.area.setBounds(0, 0, 1, 1);
+
+            // Update the size of the sector set
+            let i = 0;
+            for (const entity of this.entities.bucket(key)) {
+                const trait = entity.trait(key)!;
+                trait.surfaceProvider.surface(trait, REUSABLE_RECT);
+                if (i === 0) {
+                    sectorSet.area.copy(REUSABLE_RECT);
+                } else {
+                    sectorSet.area.combineBounds(REUSABLE_RECT);
+                }
+                i++;
+            }
+
             sectorSet.version = this.cycleCount;
             sectorSet.clear();
 
             for (const entity of this.entities.bucket(key)) {
-                entity.trait(key).makeQueriable(sectorSet);
+                entity.trait(key)!.makeQueriable(sectorSet);
             }
         }
 
         return sectorSet;
-    }
-
-    private resetSectors() {
-        for (const set of this.sectorSets.values()) {
-            set.clear();
-        }
     }
 
     cycle(elapsed: number) {

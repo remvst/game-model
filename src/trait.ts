@@ -21,7 +21,6 @@ export abstract class Trait implements KeyProvider {
 
     protected readonly lastEntityPosition = vector3();
 
-    readonly queriableSectorSize: number = 1000;
     readonly surfaceProvider: TraitSurfaceProvider = entityPositionSurface;
     readonly disableChunking: boolean = false;
     readonly queriable: boolean = false;
@@ -45,7 +44,7 @@ export abstract class Trait implements KeyProvider {
         this.lastEntityPosition.z = entity.position.z;
 
         if (this.queriable) {
-            entity.world?.defineSectorSet(this.key, this.queriableSectorSize);
+            entity.world?.defineSectorSet(this.key);
         }
     }
 
@@ -92,7 +91,7 @@ export abstract class Trait implements KeyProvider {
 
     makeQueriable(sectorSet: SectorObjectSet<Entity>) {
         this.surfaceProvider.surface(this, REUSABLE_GEOMETRY_AREA);
-        sectorSet.insert(this.entity, REUSABLE_GEOMETRY_AREA);
+        sectorSet.insert(this.entity!, REUSABLE_GEOMETRY_AREA);
     }
 
     processEvent(event: EntityEvent, world: World) {
@@ -105,8 +104,8 @@ export abstract class Trait implements KeyProvider {
         const entry = app.traitRegistry.entry(this.key);
         if (entry) {
             for (const property of entry.properties || []) {
-                const value = property.get(otherTrait.entity);
-                property.set(this.entity, value);
+                const value = property.get(otherTrait.entity!);
+                property.set(this.entity!, value);
             }
         }
     }

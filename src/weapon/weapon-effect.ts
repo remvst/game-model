@@ -22,9 +22,7 @@ export abstract class WeaponEffect {
         this.weapon = weapon;
     }
 
-    postBind() {
-
-    }
+    postBind() {}
 
     get owner(): Entity | null {
         return this.weapon?.owner || null;

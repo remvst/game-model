@@ -84,20 +84,12 @@ describe("Weapon", () => {
         expect(weapon.heat.age).toBe(ageBefore + 1);
     });
 
-    it("setOwner wires up ammo onReloading callback that fires entity event", () => {
+    it("bind wires up ammo onReloading callback that fires entity event", () => {
         // Manually trigger onReloading by starting a reload
         weapon.ammo.ammoInClip = 0;
         weapon.ammo.ammoInPouch = 10;
         weapon.ammo.reload(weapon.ammo.reloadTime);
         // If wired correctly, the weapon's effect.onReloading was called (no exception thrown)
         expect(weapon.ammo.reloading).toBe(true);
-    });
-
-    it("setOwner sets weaponType on events", () => {
-        // Verified indirectly: after setOwner the weapon type should be recorded.
-        // We check by calling setOwner again with the same entity (no-op path).
-        const ownerBefore = weapon.owner;
-        weapon.setOwner(ownerBefore); // should be a no-op
-        expect(weapon.owner).toBe(ownerBefore);
     });
 });

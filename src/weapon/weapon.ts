@@ -30,7 +30,7 @@ export abstract class Weapon implements KeyProvider {
         ammoDepleted: new WeaponAmmoDepleted(),
     };
 
-    setOwner(owner: Entity) {
+    bind(owner: Entity) {
         if (owner === this.owner) {
             return;
         }
@@ -52,6 +52,10 @@ export abstract class Weapon implements KeyProvider {
         this.events.ammoDepleted.weaponType = this.type;
         this.events.effectTriggered.weaponType = this.type;
         this.events.effectFailed.weaponType = this.type;
+    }
+
+    postBind() {
+
     }
 
     setTriggerPulled(pulled: boolean) {

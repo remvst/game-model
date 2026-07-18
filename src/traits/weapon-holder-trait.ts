@@ -24,7 +24,8 @@ export class WeaponHolderTrait extends Trait {
         super.postBind();
 
         for (const weapon of this.weapons) {
-            weapon?.setOwner(this.entity!);
+            weapon?.bind(this.entity!);
+            weapon?.postBind();
         }
 
         this.entity!.onEvent(EntityRemoved, () => {
@@ -54,7 +55,8 @@ export class WeaponHolderTrait extends Trait {
         }
         this.weapons[index] = weapon;
         if (weapon) {
-            weapon.setOwner(this.entity!);
+            weapon.bind(this.entity!);
+            weapon.postBind();
             this.entity?.addEvent(this.events.weaponSwitch);
         }
     }

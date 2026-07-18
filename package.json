@@ -10,7 +10,7 @@
     "scripts": {
         "prettier:fix": "prettier . --write",
         "prettier:check": "prettier . --check",
-        "unittest": "TS_NODE_PROJECT=tsconfig.spec.json ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
+        "unittest": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
         "test": "npm run prettier:check && npm run unittest",
         "coverage": "nyc npm test",
         "build": "rm -rf lib && tsc && tsc --project tsconfig.cjs.json",

@@ -54,9 +54,7 @@ export abstract class Weapon implements KeyProvider {
         this.events.effectFailed.weaponType = this.type;
     }
 
-    postBind() {
-
-    }
+    postBind() {}
 
     setTriggerPulled(pulled: boolean) {
         const action = pulled ? this.trigger.pull() : this.trigger.release();

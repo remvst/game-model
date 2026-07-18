@@ -38,6 +38,7 @@ export class WeaponHolderTrait extends Trait {
 
         if (existing) {
             existing.setTriggerPulled(false);
+            existing.trigger.reset();
         }
         this.weapons[index] = weapon;
         if (weapon) {

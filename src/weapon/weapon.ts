@@ -81,23 +81,17 @@ export abstract class Weapon implements KeyProvider {
     }
 
     cycle(elapsed: number) {
-        if (this.inHand) {
-            const action = this.trigger.cycle(elapsed);
-            switch (action) {
-                case TriggerAction.TRIGGER_EFFECT:
-                    this.maybeTriggerEffect(elapsed);
-                    break;
-                case TriggerAction.END_EFFECT:
-                    this.effect.endEffect();
-                    break;
-            }
-
-            this.effect.cycle(elapsed);
-        } else {
-            this.trigger.reset();
+        const action = this.trigger.cycle(elapsed);
+        switch (action) {
+            case TriggerAction.TRIGGER_EFFECT:
+                this.maybeTriggerEffect(elapsed);
+                break;
+            case TriggerAction.END_EFFECT:
+                this.effect.endEffect();
+                break;
         }
 
-        this.ammo.inHand = this.inHand;
+        this.effect.cycle(elapsed);
         this.ammo.cycle(elapsed);
         this.heat.cycle(elapsed);
     }

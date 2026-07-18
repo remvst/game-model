@@ -1,6 +1,7 @@
 import { WorldEvent } from "../events/world-event";
 import { KeyProvider } from "../key-provider";
 import { Trait } from "../trait";
+import { Weapon } from "../weapon/weapon";
 import { World } from "../world";
 import { DualSupportCompositeSerializer } from "./dual/dual-support-composite-serializer";
 import { DualSupportEntitySerializer } from "./dual/dual-support-entity-serializer";
@@ -26,18 +27,21 @@ export interface AllSerializers {
         EncoderSequence,
         EncoderSequence,
         EncoderSequence,
+        EncoderSequence,
         EncoderSequence
     >;
     verbose: Serializers<
         VerboseSerializedTrait,
         VerboseSerializedEntity,
         VerboseSerializedWorld,
+        AnySerialized,
         AnySerialized
     >;
     dual: Serializers<
         VerboseSerializedTrait | EncoderSequence,
         VerboseSerializedEntity | EncoderSequence,
         VerboseSerializedWorld | EncoderSequence,
+        AnySerialized | EncoderSequence,
         AnySerialized | EncoderSequence
     >;
 }
@@ -62,12 +66,19 @@ export function allSerializers(): AllSerializers {
     const packedWorld = new PackedWorldSerializer(packedEntity);
     const verboseWorld = new VerboseWorldSerializer(verboseEntity);
 
+    const packedWeapon = new PackedCompositeSerializer<Weapon>();
+    const verboseWeapon = new VerboseCompositeSerializer<
+        Weapon,
+        AnySerialized
+    >();
+
     return {
         packed: {
             trait: packedTrait,
             entity: packedEntity,
             world: packedWorld,
             worldEvent: packedWorldEvent,
+            weapon: packedWeapon,
         },
 
         verbose: {
@@ -75,6 +86,7 @@ export function allSerializers(): AllSerializers {
             entity: verboseEntity,
             world: verboseWorld,
             worldEvent: verboseWorldEvent,
+            weapon: verboseWeapon,
         },
 
         dual: {
@@ -90,6 +102,10 @@ export function allSerializers(): AllSerializers {
             worldEvent: new DualSupportCompositeSerializer(
                 verboseWorldEvent,
                 packedWorldEvent,
+            ),
+            weapon: new DualSupportCompositeSerializer(
+                verboseWeapon,
+                packedWeapon,
             ),
         },
     };

@@ -2,15 +2,18 @@ import { EntityProperties } from "./entity";
 import { Property } from "./properties/properties";
 import { PropertyRegistry } from "./registry/property-registry";
 import { TraitRegistry } from "./registry/trait-registry";
+import { WeaponRegistry } from "./registry/weapon-registry";
 import { WorldEventRegistry } from "./registry/world-event-registry";
 import { allSerializers } from "./serialization/all-serializers";
 import { DualSupportTraitSerializer } from "./serialization/dual/dual-support-trait-serializer";
+import { DualSupportWeaponSerializer } from "./serialization/dual/dual-support-weapon-serializer";
 import { DualSupportWorldEventSerializer } from "./serialization/dual/dual-support-world-event-serializer";
 import { hashString } from "./util/hash-string";
 
 export class GameModelApp {
     readonly traitRegistry = new TraitRegistry();
     readonly worldEventRegistry = new WorldEventRegistry();
+    readonly weaponRegistry = new WeaponRegistry();
     readonly propertyRegistry = new PropertyRegistry<Property<any>>();
     readonly serializers = allSerializers();
 
@@ -26,7 +29,7 @@ export class GameModelApp {
         }
 
         for (const key of Array.from(this.traitRegistry.keys()).sort()) {
-            const entry = this.traitRegistry.entry(key);
+            const entry = this.traitRegistry.entry(key)!;
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
                 if (serializer instanceof DualSupportTraitSerializer) {
@@ -56,7 +59,7 @@ export class GameModelApp {
         }
 
         for (const key of Array.from(this.worldEventRegistry.keys()).sort()) {
-            const entry = this.worldEventRegistry.entry(key);
+            const entry = this.worldEventRegistry.entry(key)!;
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
                 if (serializer instanceof DualSupportWorldEventSerializer) {
@@ -85,6 +88,31 @@ export class GameModelApp {
             for (const property of entry.properties || []) {
                 hashStrings.push(property.identifier);
             }
+        }
+
+        for (const key of Array.from(this.weaponRegistry.keys()).sort()) {
+            const entry = this.weaponRegistry.entry(key)!;
+            if (entry.serializer) {
+                const serializer = entry.serializer(this);
+                if (serializer instanceof DualSupportWeaponSerializer) {
+                    this.serializers.packed.weapon.add(
+                        entry.key,
+                        serializer.packed,
+                    );
+                    this.serializers.verbose.weapon.add(
+                        entry.key,
+                        serializer.verbose,
+                    );
+                } else {
+                    this.serializers.packed.weapon.add(
+                        entry.key,
+                        serializer as any,
+                    );
+                    this.serializers.verbose.weapon.add(entry.key, serializer);
+                }
+            }
+
+            hashStrings.push(key);
         }
 
         this.hash = hashString(hashStrings.join(""));

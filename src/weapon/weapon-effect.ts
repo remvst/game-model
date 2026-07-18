@@ -18,8 +18,12 @@ export abstract class WeaponEffect {
 
     weapon: Weapon | null = null;
 
-    setWeapon(weapon: Weapon) {
+    bind(weapon: Weapon) {
         this.weapon = weapon;
+    }
+
+    postBind() {
+
     }
 
     get owner(): Entity | null {
@@ -57,9 +61,9 @@ export class CompositeWeaponEffect extends WeaponEffect {
         this.effects.forEach((effect) => effect.cycle(elapsed));
     }
 
-    setWeapon(weapon: Weapon) {
-        super.setWeapon(weapon);
-        this.effects.forEach((effect) => effect.setWeapon(weapon));
+    bind(weapon: Weapon) {
+        super.bind(weapon);
+        this.effects.forEach((effect) => effect.bind(weapon));
     }
 }
 

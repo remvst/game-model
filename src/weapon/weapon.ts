@@ -36,7 +36,8 @@ export abstract class Weapon implements KeyProvider {
         }
 
         this.owner = owner;
-        this.effect.setWeapon(this);
+        this.effect.bind(this);
+        this.effect.postBind();
 
         this.ammo.bind({
             onReloading: () => {

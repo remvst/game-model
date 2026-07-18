@@ -5,6 +5,7 @@ import { TraitRegistry } from "./registry/trait-registry";
 import { WorldEventRegistry } from "./registry/world-event-registry";
 import { allSerializers } from "./serialization/all-serializers";
 import { DualSupportTraitSerializer } from "./serialization/dual/dual-support-trait-serializer";
+import { DualSupportWeaponSerializer } from "./serialization/dual/dual-support-weapon-serializer";
 import { DualSupportWorldEventSerializer } from "./serialization/dual/dual-support-world-event-serializer";
 import { hashString } from "./util/hash-string";
 import { WeaponRegistry } from "./registry/weapon-registry";
@@ -87,6 +88,31 @@ export class GameModelApp {
             for (const property of entry.properties || []) {
                 hashStrings.push(property.identifier);
             }
+        }
+
+        for (const key of Array.from(this.weaponRegistry.keys()).sort()) {
+            const entry = this.weaponRegistry.entry(key)!;
+            if (entry.serializer) {
+                const serializer = entry.serializer(this);
+                if (serializer instanceof DualSupportWeaponSerializer) {
+                    this.serializers.packed.weapon.add(
+                        entry.key,
+                        serializer.packed,
+                    );
+                    this.serializers.verbose.weapon.add(
+                        entry.key,
+                        serializer.verbose,
+                    );
+                } else {
+                    this.serializers.packed.weapon.add(
+                        entry.key,
+                        serializer as any,
+                    );
+                    this.serializers.verbose.weapon.add(entry.key, serializer);
+                }
+            }
+
+            hashStrings.push(key);
         }
 
         this.hash = hashString(hashStrings.join(""));

@@ -1,4 +1,4 @@
-export interface Trigger {
+export interface WeaponTrigger {
     pull(): TriggerAction;
     release(): TriggerAction;
     cycle(elapsed: number): TriggerAction;
@@ -11,7 +11,7 @@ export enum TriggerAction {
     END_EFFECT = 2,
 }
 
-export class SemiAutomaticTrigger implements Trigger {
+export class SemiAutomaticTrigger implements WeaponTrigger {
     private pulled = false;
     private cooldown: number = 0;
 
@@ -49,7 +49,7 @@ export class SemiAutomaticTrigger implements Trigger {
     }
 }
 
-export class AutomaticTrigger implements Trigger {
+export class AutomaticTrigger implements WeaponTrigger {
     private pulled = false;
     private cooldown: number = 0;
 
@@ -86,7 +86,7 @@ export class AutomaticTrigger implements Trigger {
     }
 }
 
-export class HoldTrigger implements Trigger {
+export class HoldTrigger implements WeaponTrigger {
     private pulled = false;
 
     reset(): void {}
@@ -108,7 +108,7 @@ export class HoldTrigger implements Trigger {
     }
 }
 
-export class BurstTrigger implements Trigger {
+export class BurstTrigger implements WeaponTrigger {
     private cooldown: number = 0;
     private remainingBurstShots: number = 0;
     private released = false;
@@ -170,7 +170,7 @@ export class BurstTrigger implements Trigger {
     }
 }
 
-export class HoldAndReleaseTrigger implements Trigger {
+export class HoldAndReleaseTrigger implements WeaponTrigger {
     pulled = false;
 
     reset(): void {}

@@ -1,4 +1,4 @@
-import { EntityEvent } from "@remvst/game-model";
+import { EntityEvent } from "./entity-event";
 
 export class WeaponEffectTriggered implements EntityEvent {
     weaponType: string | null = null;

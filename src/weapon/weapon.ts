@@ -1,12 +1,14 @@
-import { Decoder, Encoder, Entity, KeyProvider } from "@remvst/game-model";
+import { Entity } from "../entity";
+import { Decoder, Encoder } from "../serialization/encoder";
+import { KeyProvider } from "../key-provider";
 import { WeaponEffectFailed, WeaponEffectTriggered, WeaponReloadStarted, WeaponAmmoDepleted } from "../events/weapon-events";
 import { AmmoController } from "./ammo-controller";
 import { WeaponEffect } from "./weapon-effect";
 import { HeatController } from "./heat-controller";
-import { Trigger, TriggerAction } from "./trigger";
+import { WeaponTrigger, TriggerAction } from "./trigger";
 
 export abstract class Weapon implements KeyProvider {
-    abstract readonly trigger: Trigger;
+    abstract readonly trigger: WeaponTrigger;
     abstract readonly effect: WeaponEffect;
     readonly ammo: AmmoController = new AmmoController({});
     readonly heat: HeatController = new HeatController({});
@@ -96,11 +98,11 @@ export abstract class Weapon implements KeyProvider {
         this.heat.cycle(elapsed);
     }
 
-    encode(encoder: Encoder) {
+    encode(_encoder: Encoder) {
         // TODO
     }
 
-    decode(decoder: Decoder) {
+    decode(_decoder: Decoder) {
         // TODO
     }
 }

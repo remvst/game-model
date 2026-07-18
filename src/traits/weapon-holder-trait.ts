@@ -1,6 +1,11 @@
-import { EntityRemoved, Trait } from "@remvst/game-model";
-import { Weapon } from "../weapon/weapon";
+import { EntityRemoved } from "../events/entity-removed";
 import { WeaponSwitched } from "../events/weapon-events";
+import { GameModelApp } from "../game-model-app";
+import { PropertyType } from "../properties/property-constraints";
+import { TraitRegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
+import { SerializationOptions } from "../serialization/serialization-options";
+import { Trait } from "../trait";
+import { Weapon } from "../weapon/weapon";
 
 export class WeaponHolderTrait extends Trait {
     private weapons: (Weapon | null)[] = [];
@@ -19,11 +24,15 @@ export class WeaponHolderTrait extends Trait {
             weapon?.setOwner(this.entity!);
         }
 
-        this.entity!.onEvent(EntityRemoved, (event) => {
+        this.entity!.onEvent(EntityRemoved, () => {
             for (const weapon of this.weapons) {
                 weapon?.effect?.destroy();
             }
         });
+    }
+
+    get weaponCount(): number {
+        return this.weapons.length;
     }
 
     getWeapon(index: number): Weapon | null {
@@ -31,7 +40,7 @@ export class WeaponHolderTrait extends Trait {
     }
 
     setWeapon(weapon: Weapon | null, index: number) {
-        weapon = weapon || null; // Make sure we use null instead of undefined and such
+        weapon = weapon || null;
 
         const existing = this.weapons[index];
         if (weapon === existing) return;
@@ -53,7 +62,43 @@ export class WeaponHolderTrait extends Trait {
         }
     }
 
-    static registryEntry() {
-        // TODO add the weapon property, serializing and such
+    static registryEntry(app: GameModelApp): TraitRegistryEntry<WeaponHolderTrait> {
+        return traitRegistryEntry<WeaponHolderTrait>((builder) => {
+            builder.traitClass(WeaponHolderTrait);
+            builder.property(
+                "weapons",
+                PropertyType.str(),
+                (trait) =>
+                    JSON.stringify(
+                        Array.from({ length: trait.weaponCount }, (_, i) => {
+                            const weapon = trait.getWeapon(i);
+                            return weapon
+                                ? app.serializers.verbose.weapon.serialize(
+                                      weapon,
+                                      new SerializationOptions(),
+                                  )
+                                : null;
+                        }),
+                    ),
+                (trait, serialized) => {
+                    const weapons = JSON.parse(serialized) as (object | null)[];
+                    for (let i = 0; i < trait.weaponCount; i++) {
+                        trait.setWeapon(null, i);
+                    }
+                    for (let i = 0; i < weapons.length; i++) {
+                        const data = weapons[i];
+                        trait.setWeapon(
+                            data
+                                ? app.serializers.verbose.weapon.deserialize(
+                                      data,
+                                      new SerializationOptions(),
+                                  )
+                                : null,
+                            i,
+                        );
+                    }
+                },
+            );
+        });
     }
 }

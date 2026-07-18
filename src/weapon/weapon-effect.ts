@@ -1,4 +1,4 @@
-import { Entity } from "@remvst/game-model";
+import { Entity } from "../entity";
 import { Weapon } from "./weapon";
 
 export abstract class WeaponEffect {

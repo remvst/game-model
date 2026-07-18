@@ -1,6 +1,7 @@
 import { WorldEvent } from "../events/world-event";
 import { KeyProvider } from "../key-provider";
 import { Trait } from "../trait";
+import { Weapon } from "../weapon/weapon";
 import { World } from "../world";
 import { DualSupportCompositeSerializer } from "./dual/dual-support-composite-serializer";
 import { DualSupportEntitySerializer } from "./dual/dual-support-entity-serializer";
@@ -65,8 +66,8 @@ export function allSerializers(): AllSerializers {
     const packedWorld = new PackedWorldSerializer(packedEntity);
     const verboseWorld = new VerboseWorldSerializer(verboseEntity);
 
-    const packedWeapon = new PackedWeeaponSerializer(packedEntity);
-    const verboseWeapon = new VerboseWeaponSerializer(verboseEntity);
+    const packedWeapon = new PackedCompositeSerializer<Weapon>();
+    const verboseWeapon = new VerboseCompositeSerializer<Weapon, AnySerialized>();
 
     return {
         packed: {

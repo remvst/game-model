@@ -1,6 +1,7 @@
 import { Entity } from "../entity";
 import { WorldEvent } from "../events/world-event";
 import { Trait } from "../trait";
+import { Weapon } from "../weapon/weapon";
 import { World } from "../world";
 import { WorldSetup } from "./all-serializers";
 import { SerializationOptions } from "./serialization-options";
@@ -43,13 +44,15 @@ export interface CompositeSerializer<ObjectType, SerializedType>
 }
 
 export interface Serializers<
-    SerializedTrait,
-    SerializedEntity,
-    SerializedWorld,
-    SerializedWorldEvent,
+    SerializedTrait extends AnySerialized,
+    SerializedEntity extends AnySerialized,
+    SerializedWorld extends AnySerialized,
+    SerializedWorldEvent extends AnySerialized,
+    SerializedWeapon extends AnySerialized,
 > {
     trait: CompositeSerializer<Trait, SerializedTrait>;
     entity: EntitySerializer<SerializedEntity>;
     world: WorldSerializer<SerializedWorld>;
     worldEvent: CompositeSerializer<WorldEvent, SerializedWorldEvent>;
+    weapon: CompositeSerializer<Weapon, SerializedWeapon>;
 }

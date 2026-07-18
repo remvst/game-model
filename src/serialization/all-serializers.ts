@@ -26,18 +26,21 @@ export interface AllSerializers {
         EncoderSequence,
         EncoderSequence,
         EncoderSequence,
+        EncoderSequence,
         EncoderSequence
     >;
     verbose: Serializers<
         VerboseSerializedTrait,
         VerboseSerializedEntity,
         VerboseSerializedWorld,
+        AnySerialized,
         AnySerialized
     >;
     dual: Serializers<
         VerboseSerializedTrait | EncoderSequence,
         VerboseSerializedEntity | EncoderSequence,
         VerboseSerializedWorld | EncoderSequence,
+        AnySerialized | EncoderSequence,
         AnySerialized | EncoderSequence
     >;
 }
@@ -62,12 +65,16 @@ export function allSerializers(): AllSerializers {
     const packedWorld = new PackedWorldSerializer(packedEntity);
     const verboseWorld = new VerboseWorldSerializer(verboseEntity);
 
+    const packedWeapon = new PackedWeeaponSerializer(packedEntity);
+    const verboseWeapon = new VerboseWeaponSerializer(verboseEntity);
+
     return {
         packed: {
             trait: packedTrait,
             entity: packedEntity,
             world: packedWorld,
             worldEvent: packedWorldEvent,
+            weapon: packedWeapon,
         },
 
         verbose: {
@@ -75,6 +82,7 @@ export function allSerializers(): AllSerializers {
             entity: verboseEntity,
             world: verboseWorld,
             worldEvent: verboseWorldEvent,
+            weapon: verboseWeapon,
         },
 
         dual: {
@@ -90,6 +98,10 @@ export function allSerializers(): AllSerializers {
             worldEvent: new DualSupportCompositeSerializer(
                 verboseWorldEvent,
                 packedWorldEvent,
+            ),
+            weapon: new DualSupportCompositeSerializer(
+                verboseWeapon,
+                packedWeapon,
             ),
         },
     };

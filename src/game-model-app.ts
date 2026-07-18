@@ -7,10 +7,12 @@ import { allSerializers } from "./serialization/all-serializers";
 import { DualSupportTraitSerializer } from "./serialization/dual/dual-support-trait-serializer";
 import { DualSupportWorldEventSerializer } from "./serialization/dual/dual-support-world-event-serializer";
 import { hashString } from "./util/hash-string";
+import { WeaponRegistry } from "./weapon/weapon-registry";
 
 export class GameModelApp {
     readonly traitRegistry = new TraitRegistry();
     readonly worldEventRegistry = new WorldEventRegistry();
+    readonly weaponRegistry = new WeaponRegistry();
     readonly propertyRegistry = new PropertyRegistry<Property<any>>();
     readonly serializers = allSerializers();
 
@@ -26,7 +28,7 @@ export class GameModelApp {
         }
 
         for (const key of Array.from(this.traitRegistry.keys()).sort()) {
-            const entry = this.traitRegistry.entry(key);
+            const entry = this.traitRegistry.entry(key)!;
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
                 if (serializer instanceof DualSupportTraitSerializer) {
@@ -56,7 +58,7 @@ export class GameModelApp {
         }
 
         for (const key of Array.from(this.worldEventRegistry.keys()).sort()) {
-            const entry = this.worldEventRegistry.entry(key);
+            const entry = this.worldEventRegistry.entry(key)!;
             if (entry.serializer) {
                 const serializer = entry.serializer(this);
                 if (serializer instanceof DualSupportWorldEventSerializer) {

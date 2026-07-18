@@ -15,7 +15,6 @@ export abstract class Weapon implements KeyProvider {
     abstract readonly type: string;
     owner!: Entity;
 
-    inHand: boolean = false;
     lastEffectFail: number = Number.MIN_SAFE_INTEGER;
 
     private readonly events = {

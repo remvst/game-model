@@ -15,3 +15,5 @@ export class WeaponReloadStarted implements EntityEvent {
 export class WeaponAmmoDepleted implements EntityEvent {
     weaponType: string | null = null;
 }
+
+export class WeaponSwitched implements EntityEvent {}

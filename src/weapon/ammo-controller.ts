@@ -26,8 +26,6 @@ export class AmmoController {
     reloadEnd = 0;
     age = 0;
     reloading = false;
-    autoReload = false;
-    inHand = false;
 
     // Params
     readonly ammoConsumption: AmmoConsumption;

@@ -7,7 +7,7 @@ import { allSerializers } from "./serialization/all-serializers";
 import { DualSupportTraitSerializer } from "./serialization/dual/dual-support-trait-serializer";
 import { DualSupportWorldEventSerializer } from "./serialization/dual/dual-support-world-event-serializer";
 import { hashString } from "./util/hash-string";
-import { WeaponRegistry } from "./weapon/weapon-registry";
+import { WeaponRegistry } from "./registry/weapon-registry";
 
 export class GameModelApp {
     readonly traitRegistry = new TraitRegistry();

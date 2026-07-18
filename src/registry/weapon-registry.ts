@@ -3,7 +3,7 @@ import {
     KeyProvider,
     Serializer,
 } from "@remvst/game-model";
-import { Weapon } from "./weapon";
+import { Weapon } from "../weapon/weapon";
 
 export interface WeaponRegistryEntry<WeaponType extends Weapon> {
     key: string;

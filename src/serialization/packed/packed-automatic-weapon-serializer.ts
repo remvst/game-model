@@ -44,7 +44,10 @@ export class PackedAutomaticWeaponSerializer<T extends Weapon>
             return;
         }
 
-        if (type instanceof NumberConstraints || type instanceof ColorConstraints) {
+        if (
+            type instanceof NumberConstraints ||
+            type instanceof ColorConstraints
+        ) {
             this.encoder.appendNumber(value, options.maxNumberDecimals);
             return;
         }
@@ -89,7 +92,10 @@ export class PackedAutomaticWeaponSerializer<T extends Weapon>
             return res;
         }
 
-        if (type instanceof NumberConstraints || type instanceof ColorConstraints) {
+        if (
+            type instanceof NumberConstraints ||
+            type instanceof ColorConstraints
+        ) {
             return this.decoder.nextNumber();
         }
 
@@ -120,7 +126,10 @@ export class PackedAutomaticWeaponSerializer<T extends Weapon>
         return this.encoder.getResult();
     }
 
-    deserialize(serialized: EncoderSequence, _options: SerializationOptions): T {
+    deserialize(
+        serialized: EncoderSequence,
+        _options: SerializationOptions,
+    ): T {
         const weapon = this.registryEntry.newWeapon();
         this.decoder.setEncoded(serialized);
         for (const property of this.registryEntry.properties || []) {

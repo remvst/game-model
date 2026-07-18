@@ -24,7 +24,10 @@ export class VerboseAutomaticWeaponSerializer<T extends Weapon>
 {
     constructor(private readonly registryEntry: WeaponRegistryEntry<T>) {}
 
-    serialize(weapon: T, _options: SerializationOptions): VerboseSerializedWeapon {
+    serialize(
+        weapon: T,
+        _options: SerializationOptions,
+    ): VerboseSerializedWeapon {
         const serialized: VerboseSerializedWeapon = {};
         for (const property of this.registryEntry.properties || []) {
             serialized[property.localIdentifier] = this.serializeValue(
@@ -41,12 +44,20 @@ export class VerboseAutomaticWeaponSerializer<T extends Weapon>
     ): T {
         const weapon = this.registryEntry.newWeapon();
         for (const property of this.registryEntry.properties || []) {
-            if (!Object.prototype.hasOwnProperty.call(serialized, property.localIdentifier)) {
+            if (
+                !Object.prototype.hasOwnProperty.call(
+                    serialized,
+                    property.localIdentifier,
+                )
+            ) {
                 continue;
             }
             property.set(
                 weapon,
-                this.deserializeValue(property.type, serialized[property.localIdentifier]),
+                this.deserializeValue(
+                    property.type,
+                    serialized[property.localIdentifier],
+                ),
             );
         }
         return weapon;
@@ -91,7 +102,10 @@ export class VerboseAutomaticWeaponSerializer<T extends Weapon>
         throw new Error(`Unknown property type: ${type}`);
     }
 
-    private deserializeValue(type: PropertyConstraints<any>, serialized: any): any {
+    private deserializeValue(
+        type: PropertyConstraints<any>,
+        serialized: any,
+    ): any {
         if (type instanceof ListConstraints) {
             return (serialized as any[]).map((item) =>
                 this.deserializeValue(type.itemType, item),

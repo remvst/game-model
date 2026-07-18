@@ -2,13 +2,13 @@ import { EntityProperties } from "./entity";
 import { Property } from "./properties/properties";
 import { PropertyRegistry } from "./registry/property-registry";
 import { TraitRegistry } from "./registry/trait-registry";
+import { WeaponRegistry } from "./registry/weapon-registry";
 import { WorldEventRegistry } from "./registry/world-event-registry";
 import { allSerializers } from "./serialization/all-serializers";
 import { DualSupportTraitSerializer } from "./serialization/dual/dual-support-trait-serializer";
 import { DualSupportWeaponSerializer } from "./serialization/dual/dual-support-weapon-serializer";
 import { DualSupportWorldEventSerializer } from "./serialization/dual/dual-support-world-event-serializer";
 import { hashString } from "./util/hash-string";
-import { WeaponRegistry } from "./registry/weapon-registry";
 
 export class GameModelApp {
     readonly traitRegistry = new TraitRegistry();

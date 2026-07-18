@@ -14,7 +14,10 @@ export class DualSupportWeaponSerializer<T extends Weapon>
         readonly packed: Serializer<T, EncoderSequence>,
     ) {}
 
-    serialize(weapon: T, options: SerializationOptions): AnySerialized | EncoderSequence {
+    serialize(
+        weapon: T,
+        options: SerializationOptions,
+    ): AnySerialized | EncoderSequence {
         if (options.type === SerializationType.PACKED) {
             return this.packed.serialize(weapon, options);
         } else {
@@ -27,7 +30,10 @@ export class DualSupportWeaponSerializer<T extends Weapon>
         options: SerializationOptions,
     ): T {
         if (options.type === SerializationType.PACKED) {
-            return this.packed.deserialize(serialized as EncoderSequence, options);
+            return this.packed.deserialize(
+                serialized as EncoderSequence,
+                options,
+            );
         } else {
             return this.verbose.deserialize(serialized, options);
         }

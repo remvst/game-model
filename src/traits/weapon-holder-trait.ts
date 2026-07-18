@@ -2,7 +2,10 @@ import { EntityRemoved } from "../events/entity-removed";
 import { WeaponSwitched } from "../events/weapon-events";
 import { GameModelApp } from "../game-model-app";
 import { PropertyType } from "../properties/property-constraints";
-import { TraitRegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
+import {
+    TraitRegistryEntry,
+    traitRegistryEntry,
+} from "../registry/trait-registry";
 import { SerializationOptions } from "../serialization/serialization-options";
 import { Trait } from "../trait";
 import { Weapon } from "../weapon/weapon";
@@ -62,7 +65,9 @@ export class WeaponHolderTrait extends Trait {
         }
     }
 
-    static registryEntry(app: GameModelApp): TraitRegistryEntry<WeaponHolderTrait> {
+    static registryEntry(
+        app: GameModelApp,
+    ): TraitRegistryEntry<WeaponHolderTrait> {
         return traitRegistryEntry<WeaponHolderTrait>((builder) => {
             builder.traitClass(WeaponHolderTrait);
             builder.property(

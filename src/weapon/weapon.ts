@@ -1,11 +1,16 @@
 import { Entity } from "../entity";
-import { Decoder, Encoder } from "../serialization/encoder";
+import {
+    WeaponAmmoDepleted,
+    WeaponEffectFailed,
+    WeaponEffectTriggered,
+    WeaponReloadStarted,
+} from "../events/weapon-events";
 import { KeyProvider } from "../key-provider";
-import { WeaponEffectFailed, WeaponEffectTriggered, WeaponReloadStarted, WeaponAmmoDepleted } from "../events/weapon-events";
+import { Decoder, Encoder } from "../serialization/encoder";
 import { AmmoController } from "./ammo-controller";
-import { WeaponEffect } from "./weapon-effect";
 import { HeatController } from "./heat-controller";
-import { WeaponTrigger, TriggerAction } from "./trigger";
+import { TriggerAction, WeaponTrigger } from "./trigger";
+import { WeaponEffect } from "./weapon-effect";
 
 export abstract class Weapon implements KeyProvider {
     abstract readonly trigger: WeaponTrigger;
@@ -24,7 +29,7 @@ export abstract class Weapon implements KeyProvider {
         effectTriggered: new WeaponEffectTriggered(),
         effectFailed: new WeaponEffectFailed(),
         ammoDepleted: new WeaponAmmoDepleted(),
-    }
+    };
 
     setOwner(owner: Entity) {
         if (owner === this.owner) {
@@ -106,4 +111,3 @@ export abstract class Weapon implements KeyProvider {
         // TODO
     }
 }
-

@@ -1,8 +1,11 @@
 import { GameModelApp } from "../game-model-app";
 import { KeyProvider } from "../key-provider";
-import { PropertyConstraints, PropertyType } from "../properties/property-constraints";
-import { PackedAutomaticWeaponSerializer } from "../serialization/packed/packed-automatic-weapon-serializer";
+import {
+    PropertyConstraints,
+    PropertyType,
+} from "../properties/property-constraints";
 import { DualSupportWeaponSerializer } from "../serialization/dual/dual-support-weapon-serializer";
+import { PackedAutomaticWeaponSerializer } from "../serialization/packed/packed-automatic-weapon-serializer";
 import { AnySerialized, Serializer } from "../serialization/serializer";
 import { VerboseAutomaticWeaponSerializer } from "../serialization/verbose/verbose-automatic-weapon-serializer";
 import { Weapon } from "../weapon/weapon";
@@ -78,7 +81,9 @@ class WeaponRegistryEntryBuilder<WeaponType extends Weapon> {
         this._newWeapon = newWeapon;
     }
 
-    serializer(serializer: (app: GameModelApp) => WeaponSerializer<WeaponType>): void {
+    serializer(
+        serializer: (app: GameModelApp) => WeaponSerializer<WeaponType>,
+    ): void {
         this._serializer = serializer;
     }
 

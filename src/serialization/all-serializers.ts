@@ -67,7 +67,10 @@ export function allSerializers(): AllSerializers {
     const verboseWorld = new VerboseWorldSerializer(verboseEntity);
 
     const packedWeapon = new PackedCompositeSerializer<Weapon>();
-    const verboseWeapon = new VerboseCompositeSerializer<Weapon, AnySerialized>();
+    const verboseWeapon = new VerboseCompositeSerializer<
+        Weapon,
+        AnySerialized
+    >();
 
     return {
         packed: {

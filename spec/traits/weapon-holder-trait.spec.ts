@@ -3,13 +3,13 @@ import { GameModelApp } from "../../src/game-model-app";
 import { weaponRegistryEntry } from "../../src/registry/weapon-registry";
 import { SerializationOptions } from "../../src/serialization/serialization-options";
 import { WeaponHolderTrait } from "../../src/traits/weapon-holder-trait";
+import { Weapon } from "../../src/weapon/weapon";
+import { WeaponEffect } from "../../src/weapon/weapon-effect";
 import {
     AutomaticTrigger,
     SemiAutomaticTrigger,
     WeaponTrigger,
-} from "../../src/weapon/trigger";
-import { Weapon } from "../../src/weapon/weapon";
-import { WeaponEffect } from "../../src/weapon/weapon-effect";
+} from "../../src/weapon/weapon-trigger";
 import { World } from "../../src/world";
 
 class TestWeapon extends Weapon {

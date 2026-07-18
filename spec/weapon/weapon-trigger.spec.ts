@@ -4,7 +4,7 @@ import {
     HoldAndReleaseTrigger,
     SemiAutomaticTrigger,
     TriggerAction,
-} from "../../src/weapon/trigger";
+} from "../../src/weapon/weapon-trigger";
 
 describe("SemiAutomaticTrigger", () => {
     let trigger: SemiAutomaticTrigger;

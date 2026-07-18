@@ -2,13 +2,13 @@
 // HeatController
 // ---------------------------------------------------------------------------
 
-import { HeatController } from "../../src/weapon/heat-controller";
+import { WeaponHeatController } from "../../src/weapon/weapon-heat-controller";
 
 describe("HeatController", () => {
-    let heat: HeatController;
+    let heat: WeaponHeatController;
 
     beforeEach(() => {
-        heat = new HeatController({
+        heat = new WeaponHeatController({
             heatPerShot: 0.25,
             decreaseDelay: 1,
             decreasePerSecond: 0.5,
@@ -43,7 +43,7 @@ describe("HeatController", () => {
     });
 
     it("heat is clamped to 1 (does not exceed 1)", () => {
-        const bigHeat = new HeatController({ heatPerShot: 2 });
+        const bigHeat = new WeaponHeatController({ heatPerShot: 2 });
         bigHeat.onTriggerEffect(0);
         expect(bigHeat.heat).toBe(1);
     });

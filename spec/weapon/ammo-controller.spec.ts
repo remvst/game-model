@@ -4,15 +4,15 @@
 
 import {
     AlwaysReloadingAmmoController,
-    AmmoController,
-} from "../../src/weapon/ammo-controller";
+    WeaponAmmoController,
+} from "../../src/weapon/weapon-ammo-controller";
 
 describe("AmmoController", () => {
     describe("with default params", () => {
-        let ammo: AmmoController;
+        let ammo: WeaponAmmoController;
 
         beforeEach(() => {
-            ammo = new AmmoController({ clipSize: 5, reloadTime: 2 });
+            ammo = new WeaponAmmoController({ clipSize: 5, reloadTime: 2 });
         });
 
         it("starts with a full clip", () => {
@@ -111,7 +111,10 @@ describe("AmmoController", () => {
     describe("with limited pouch", () => {
         it("initializes ammoInPouch minus the initial clip load", () => {
             // Constructor deducts clipSize from pouch on init
-            const ammo = new AmmoController({ clipSize: 3, ammoInPouch: 10 });
+            const ammo = new WeaponAmmoController({
+                clipSize: 3,
+                ammoInPouch: 10,
+            });
             // ammoInPouch is passed as 10 but constructor does ammoInPouch - 1 (documentation quirk).
             // Let's just verify the clip starts full and pouch is smaller.
             expect(ammo.ammoInClip).toBe(3);

@@ -18,7 +18,7 @@ export interface AmmoParams {
     readonly ammoInPouch?: number;
 }
 
-export class AmmoController {
+export class WeaponAmmoController {
     // State
     ammoInClip = 1;
     ammoInPouch = Number.MAX_SAFE_INTEGER;
@@ -110,7 +110,7 @@ export class AmmoController {
     }
 }
 
-export class AlwaysReloadingAmmoController extends AmmoController {
+export class AlwaysReloadingAmmoController extends WeaponAmmoController {
     // Params
     private nextReload = 0;
 

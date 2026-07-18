@@ -6,7 +6,7 @@ export interface HeatParams {
     readonly heatPerShot?: number;
 }
 
-export class HeatController {
+export class WeaponHeatController {
     // Params
     readonly decreaseDelay: number = 0;
     readonly decreasePerSecond: number = 1;

@@ -6,17 +6,16 @@ import {
     WeaponReloadStarted,
 } from "../events/weapon-events";
 import { KeyProvider } from "../key-provider";
-import { Decoder, Encoder } from "../serialization/encoder";
-import { AmmoController } from "./ammo-controller";
-import { HeatController } from "./heat-controller";
-import { TriggerAction, WeaponTrigger } from "./trigger";
+import { WeaponAmmoController } from "./weapon-ammo-controller";
 import { WeaponEffect } from "./weapon-effect";
+import { WeaponHeatController } from "./weapon-heat-controller";
+import { TriggerAction, WeaponTrigger } from "./weapon-trigger";
 
 export abstract class Weapon implements KeyProvider {
     abstract readonly trigger: WeaponTrigger;
     abstract readonly effect: WeaponEffect;
-    readonly ammo: AmmoController = new AmmoController({});
-    readonly heat: HeatController = new HeatController({});
+    readonly ammo: WeaponAmmoController = new WeaponAmmoController({});
+    readonly heat: WeaponHeatController = new WeaponHeatController({});
     abstract key: string;
 
     abstract readonly type: string;
@@ -101,13 +100,5 @@ export abstract class Weapon implements KeyProvider {
         this.effect.cycle(elapsed);
         this.ammo.cycle(elapsed);
         this.heat.cycle(elapsed);
-    }
-
-    encode(_encoder: Encoder) {
-        // TODO
-    }
-
-    decode(_decoder: Decoder) {
-        // TODO
     }
 }

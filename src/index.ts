@@ -86,6 +86,8 @@ export * from "./traits/position-binding-trait";
 export * from "./traits/rectangle-bound-trait";
 export * from "./traits/script-trait";
 export * from "./traits/smooth-target-following-trait";
+export * from "./traits/spawn-map-trait";
+export * from "./traits/spawn-trait";
 export * from "./traits/weapon-holder-trait";
 export * from "./util/duplicate-entities";
 export * from "./util/entity-id-mapping";

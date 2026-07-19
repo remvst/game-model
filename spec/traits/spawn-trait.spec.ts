@@ -23,7 +23,7 @@ describe("spawn trait", () => {
         spawnMap.define("enemy", () => [new SpawnedTrait()]);
         world.entities.add(entity([spawnMap]));
 
-        spawnTrait = new SpawnTrait("enemy", null, false, 0, 1);
+        spawnTrait = new SpawnTrait("enemy", null, false, 1);
         spawner = entity([spawnTrait]);
         spawner.position.x = 10;
         spawner.position.y = 20;
@@ -102,27 +102,13 @@ describe("spawn trait", () => {
         );
     });
 
-    it("delays spawning by the configured delay", () => {
-        spawnTrait.delay = 2;
-
-        spawner.addEvent(new TriggerEvent(spawner.id));
-
-        // delay entity is cycled immediately: 2→1, no fire yet
-        world.cycle(1);
-        expect(Array.from(world.traitsOfType(SpawnedTrait)).length).toBe(0);
-
-        // delay entity: 1→0, fires
-        world.cycle(1);
-        expect(Array.from(world.traitsOfType(SpawnedTrait)).length).toBe(1);
-    });
-
     it("throws when no SpawnMapTrait exists in the world", () => {
         const emptyWorld = new World();
         const loneSpawner = entity([new SpawnTrait("enemy")]);
         emptyWorld.entities.add(loneSpawner);
 
-        loneSpawner.addEvent(new TriggerEvent(loneSpawner.id));
-
-        expect(() => emptyWorld.cycle(1)).toThrowError(/No spawn map entity/);
+        expect(() => {
+            loneSpawner.addEvent(new TriggerEvent(loneSpawner.id));
+        }).toThrowError(/No spawn map entity/);
     });
 });

@@ -1,4 +1,4 @@
-import { entity, Entity } from "../entity";
+import { Entity } from "../entity";
 import { TriggerEvent } from "../events/trigger-event";
 import { PropertyType } from "../properties/property-constraints";
 import {
@@ -10,7 +10,6 @@ import { rectangleSurface } from "../trait-surface-provider";
 import { firstItem } from "../util/first";
 import { firstAvailableId } from "../util/first-available-id";
 import { World } from "../world";
-import { DelayedActionTrait } from "./delayed-action-trait";
 import { SpawnExtra, SpawnMapTrait } from "./spawn-map-trait";
 
 export type SpawnType = string;
@@ -18,7 +17,13 @@ export type SpawnType = string;
 export class SpawnTrait extends Trait {
     static readonly key = "spawn";
     readonly key = SpawnTrait.key;
-    readonly disableChunking = true;
+
+    private static readonly surfaceProvider = rectangleSurface(
+        (trait, rect) => {
+            rect.centerAround(trait.entity!.x, trait.entity!.y, 0, 0);
+        },
+    );
+    readonly surfaceProvider = SpawnTrait.surfaceProvider;
 
     extra: SpawnExtra = {};
 
@@ -26,7 +31,6 @@ export class SpawnTrait extends Trait {
         public type: SpawnType = "",
         public spawnedEntityId: string | null = null,
         public autoActivate: boolean = true,
-        public delay: number = 0,
         public spawnCount: number = 1,
     ) {
         super();
@@ -36,14 +40,8 @@ export class SpawnTrait extends Trait {
         super.postBind();
 
         this.entity!.onEvent(TriggerEvent, (event, world) => {
-            world.entities.add(
-                entity([
-                    new DelayedActionTrait(this.delay, (world) => {
-                        if (this.spawnCount <= 0) return;
-                        this.spawn(world, event);
-                    }),
-                ]),
-            );
+            if (this.spawnCount <= 0) return;
+            this.spawn(world, event);
         });
     }
 
@@ -91,7 +89,6 @@ export class SpawnTrait extends Trait {
             builder.simpleProp("type", PropertyType.str());
             builder.simpleProp("spawnedEntityId", PropertyType.id());
             builder.simpleProp("autoActivate", PropertyType.bool());
-            builder.simpleProp("delay", PropertyType.num(0, 60, 0.1));
             builder.simpleProp("spawnCount", PropertyType.num(-1, 60, 1));
             builder.property(
                 "extra",
@@ -101,11 +98,4 @@ export class SpawnTrait extends Trait {
             );
         });
     }
-
-    private static readonly surfaceProvider = rectangleSurface(
-        (trait, rect) => {
-            rect.centerAround(trait.entity!.x, trait.entity!.y, 0, 0);
-        },
-    );
-    readonly surfaceProvider = SpawnTrait.surfaceProvider;
 }

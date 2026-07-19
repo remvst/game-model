@@ -1,4 +1,4 @@
-import { Trait } from "@remvst/game-model";
+import { Trait } from "../trait";
 import { Vector2Like } from "@remvst/geometry";
 import { SpawnType } from "./spawn-trait";
 

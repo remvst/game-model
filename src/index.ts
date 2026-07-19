@@ -85,6 +85,7 @@ export * from "./traits/interpolator-trait";
 export * from "./traits/poolable-trait";
 export * from "./traits/position-binding-trait";
 export * from "./traits/rectangle-bound-trait";
+export * from "./traits/periodically-enable-trait";
 export * from "./traits/script-trait";
 export * from "./traits/smooth-target-following-trait";
 export * from "./traits/spawn-map-trait";

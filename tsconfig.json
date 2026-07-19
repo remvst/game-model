@@ -9,11 +9,10 @@
         "module": "ESNext",
         "moduleResolution": "bundler",
         "declaration": true,
-        "outDir": "./lib/esm",
-        "rootDir": "./src",
         "allowJs": false,
+        "noEmit": true,
         "types": ["jasmine", "node", "uuid"]
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "spec/**/*"],
     "exclude": ["node_modules"]
 }

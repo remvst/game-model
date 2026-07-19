@@ -1,4 +1,5 @@
-import { ExpansionTrait, World } from "@remvst/game-model";
+import { ExpansionTrait } from "../traits/expansion-trait";
+import { World } from "../world";
 
 export function* allWorlds(world: World): Iterable<World> {
     yield world;

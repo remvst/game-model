@@ -11,7 +11,7 @@
         "prettier:fix": "prettier . --write",
         "prettier:check": "prettier . --check",
         "unittest": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
-        "test": "npm run prettier:check && npm run unittest",
+        "test": "npm run prettier:check && npm run unittest && npm run build",
         "coverage": "nyc npm test",
         "build": "rm -rf lib && tsc && tsc --project tsconfig.cjs.json",
         "prepublishOnly": "npm i && npm run build"

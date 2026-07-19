@@ -91,6 +91,7 @@ export * from "./traits/smooth-target-following-trait";
 export * from "./traits/spawn-map-trait";
 export * from "./traits/spawn-trait";
 export * from "./traits/weapon-holder-trait";
+export * from "./traits/input-trait";
 export * from "./util/all-worlds";
 export * from "./util/duplicate-entities";
 export * from "./util/entity-id-mapping";

@@ -1,6 +1,9 @@
 import { EntityEvent } from "../events/entity-event";
 import { PropertyType } from "../properties/property-constraints";
-import { TraitRegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
+import {
+    TraitRegistryEntry,
+    traitRegistryEntry,
+} from "../registry/trait-registry";
 import { Trait } from "../trait";
 
 export class TraitEnabledChange implements EntityEvent {

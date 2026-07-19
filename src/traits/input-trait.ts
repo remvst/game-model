@@ -1,5 +1,8 @@
 import { PropertyType } from "../properties/property-constraints";
-import { TraitRegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
+import {
+    TraitRegistryEntry,
+    traitRegistryEntry,
+} from "../registry/trait-registry";
 import { Trait } from "../trait";
 
 export class InputTrait extends Trait {
@@ -26,11 +29,16 @@ export class InputTrait extends Trait {
     }
 
     static registryEntry(): TraitRegistryEntry<InputTrait> {
-        return traitRegistryEntry<InputTrait>(builder => {
+        return traitRegistryEntry<InputTrait>((builder) => {
             builder.traitClass(InputTrait);
-            builder.property("nums", PropertyType.json({}), trait => Object.fromEntries(trait.nums), (trait, nums) => {
-                trait.nums = new Map(Object.entries(nums))
-            });
+            builder.property(
+                "nums",
+                PropertyType.json({}),
+                (trait) => Object.fromEntries(trait.nums),
+                (trait, nums) => {
+                    trait.nums = new Map(Object.entries(nums));
+                },
+            );
         });
     }
 }

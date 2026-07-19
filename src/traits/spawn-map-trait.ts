@@ -1,5 +1,5 @@
-import { Trait } from "../trait";
 import { Vector2Like } from "@remvst/geometry";
+import { Trait } from "../trait";
 import { SpawnType } from "./spawn-trait";
 
 export interface SpawnExtra {

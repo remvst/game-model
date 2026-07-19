@@ -22,9 +22,9 @@ describe("spawn map trait", () => {
     });
 
     it("throws when the spawn type is not registered", () => {
-        expect(() => spawnMap.traitsFor("unknown", {}, { x: 0, y: 0 })).toThrowError(
-            /No definition for spawn type unknown/,
-        );
+        expect(() =>
+            spawnMap.traitsFor("unknown", {}, { x: 0, y: 0 }),
+        ).toThrowError(/No definition for spawn type unknown/);
     });
 
     it("define is chainable", () => {
@@ -39,7 +39,9 @@ describe("spawn map trait", () => {
         spawnMap.define("enemy", () => enemyTraits);
         spawnMap.define("boss", () => bossTraits);
 
-        expect(spawnMap.traitsFor("enemy", {}, { x: 0, y: 0 })).toBe(enemyTraits);
+        expect(spawnMap.traitsFor("enemy", {}, { x: 0, y: 0 })).toBe(
+            enemyTraits,
+        );
         expect(spawnMap.traitsFor("boss", {}, { x: 0, y: 0 })).toBe(bossTraits);
     });
 });

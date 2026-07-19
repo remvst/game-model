@@ -88,7 +88,9 @@ describe("spawn trait", () => {
     });
 
     it("passes extra to the spawn function", () => {
-        const spawnFunc = jasmine.createSpy("spawnFunc").and.returnValue([new SpawnedTrait()]);
+        const spawnFunc = jasmine
+            .createSpy("spawnFunc")
+            .and.returnValue([new SpawnedTrait()]);
         spawnMap.define("special", spawnFunc);
         spawnTrait.type = "special";
         spawnTrait.extra = { power: 42 };

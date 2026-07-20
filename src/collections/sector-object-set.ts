@@ -5,7 +5,7 @@ export class SectorObjectSet<ObjectType> {
     readonly area = new Rectangle();
     private readonly tree = new QuadTree<ObjectType>();
 
-    version = 0;
+    version = -1;
 
     insert(object: ObjectType, area: Rectangle) {
         this.tree.insert(object, area);
@@ -20,6 +20,7 @@ export class SectorObjectSet<ObjectType> {
     }
 
     clear() {
+        this.version = -1;
         this.tree.reset(this.area);
     }
 }

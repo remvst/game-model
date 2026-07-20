@@ -94,8 +94,8 @@ export class World {
                 i++;
             }
 
-            sectorSet.version = this.cycleCount;
             sectorSet.clear();
+            sectorSet.version = this.cycleCount;
 
             for (const entity of this.entities.bucket(key)) {
                 entity.trait(key)!.makeQueriable(sectorSet);

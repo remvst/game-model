@@ -67,6 +67,23 @@ export abstract class Trait implements KeyProvider {
         return trait as TraitType;
     }
 
+    dependencyOfType<T extends Trait>(
+        keyProvider: (new (...params: any) => T) & KeyProvider,
+    ): T | null {
+        const trait = this.entity!.trait(keyProvider.key);
+        if (!trait) {
+            throw new Error(
+                "Trait " +
+                    this.key +
+                    " depends on trait " +
+                    keyProvider.key +
+                    " but trait was not found",
+            );
+        }
+
+        return trait as T;
+    }
+
     abstract get key(): string;
 
     maybeCycle(elapsed: number) {

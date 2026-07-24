@@ -76,6 +76,7 @@ export * from "./traits/delayed-action-trait";
 export * from "./traits/dependency-trait";
 export * from "./traits/disappearing-trait";
 export * from "./traits/entity-group-trait";
+export * from "./traits/entity-limiter-trait";
 export * from "./traits/entity-selector-trait";
 export * from "./traits/event-holder-trait";
 export * from "./traits/event-on-removal-trait";

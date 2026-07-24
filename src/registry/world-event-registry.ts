@@ -19,12 +19,12 @@ import { Registry } from "./registry";
 export interface AutoWorldEventRegistryEntry<EventType extends WorldEvent> {
     readonly eventType: (new () => EventType) & KeyProvider;
     readonly category?: string;
-    readjust?: (
+    readjust?(
         event: EventType,
         world: World,
         entity: Entity,
         triggererId: string,
-    ) => void;
+    ): void;
     properties?: WorldEventProperty<any>[];
 }
 

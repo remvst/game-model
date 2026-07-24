@@ -1,10 +1,10 @@
+import { Entity } from "../entity";
+import { PropertyType } from "../properties/property-constraints";
 import {
-    Entity,
-    PropertyType,
-    Trait,
     TraitRegistryEntry,
     traitRegistryEntry,
-} from "@remvst/game-model";
+} from "../registry/trait-registry";
+import { Trait } from "../trait";
 
 export class EntityLimiterTrait extends Trait {
     static readonly key = "entity-limiter";

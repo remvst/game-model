@@ -27,16 +27,6 @@ export interface TraitRegistryEntry<TraitType extends Trait> {
 export type RegistryEntry<TraitType extends Trait> =
     TraitRegistryEntry<TraitType>;
 
-export interface AutoRegistryEntry<TraitType extends Trait> {
-    readonly traitType: (new () => TraitType) & KeyProvider;
-    readonly properties?: Property<any>[];
-    readonly category?: string;
-}
-
-export type AnyTraitRegistryEntry<TraitType extends Trait> =
-    | TraitRegistryEntry<TraitType>
-    | AutoRegistryEntry<TraitType>;
-
 class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
     private _key?: string;
     private _newTrait?: () => TraitType;
@@ -167,48 +157,21 @@ export function traitRegistryEntry<TraitType extends Trait>(
     return builder.build();
 }
 
-export class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
+export class TraitRegistry implements Registry<TraitRegistryEntry<Trait>> {
     private readonly entries = new Map<string, TraitRegistryEntry<any>>();
 
-    add<T extends Trait>(
-        entry: AnyTraitRegistryEntry<T>,
-    ): AnyTraitRegistryEntry<T> {
-        const autoEntry = entry as AutoRegistryEntry<T>;
-        const manualEntry = entry as TraitRegistryEntry<T>;
-
-        if (autoEntry.traitType) {
-            return this.add(
-                traitRegistryEntry<T>((builder) => {
-                    builder.traitClass(autoEntry.traitType);
-                    if (autoEntry.category) {
-                        builder.category(autoEntry.category);
-                    }
-
-                    for (const property of autoEntry.properties || []) {
-                        if (!property.localIdentifier) continue;
-                        builder.property(
-                            property.localIdentifier,
-                            property.type,
-                            (trait) => property.get(trait.entity!),
-                            (trait, value) =>
-                                property.set(trait.entity!, value),
-                        );
-                    }
-                }),
-            );
+    add<T extends Trait>(entry: TraitRegistryEntry<T>): TraitRegistryEntry<T> {
+        if (this.entries.has(entry.key)) {
+            throw new Error(`Entry conflict for key ${entry.key}`);
         }
+        this.entries.set(entry.key, entry);
 
-        if (this.entries.has(manualEntry.key)) {
-            throw new Error(`Entry conflict for key ${manualEntry.key}`);
-        }
-        this.entries.set(manualEntry.key, manualEntry);
-
-        const properties = manualEntry.properties || [];
-        properties.push(traitEnabledProperty(manualEntry.key));
+        const properties = entry.properties || [];
+        properties.push(traitEnabledProperty(entry.key));
 
         // In case no configurable was defined, add a default one
-        if (!manualEntry.configurable) {
-            manualEntry.configurable = (trait: Trait) => {
+        if (!entry.configurable) {
+            entry.configurable = (trait: Trait) => {
                 const autoConfigurable = new CompositeConfigurable();
                 for (const property of properties) {
                     autoConfigurable.add(
@@ -225,7 +188,7 @@ export class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
             };
         }
 
-        return manualEntry;
+        return entry;
     }
 
     entry(key: string): TraitRegistryEntry<any> | null {

@@ -41,7 +41,7 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
         entity: Entity,
         triggererId: string,
     ) => void;
-    configurable?: (event: EventType, world: World) => Configurable;
+    configurable?(event: EventType, world: World): Configurable;
     properties?: WorldEventProperty<any>[];
 }
 
@@ -174,7 +174,9 @@ class WorldEventRegistryEntryBuilder<
 
     build(): WorldEventRegistryEntry<EventType> {
         if (!this._key || !this._newEvent || !this._serializer) {
-            throw new Error('Cannot build registry. Did you call key() or eventClass()');
+            throw new Error(
+                "Cannot build registry. Did you call key() or eventClass()",
+            );
         }
 
         return {
@@ -214,16 +216,18 @@ export class WorldEventRegistry
             return this.add(
                 worldEventRegistryEntry<T>((builder) => {
                     builder.eventClass(autoEntry.eventType);
-                    if (autoEntry.category) builder.category(autoEntry.category);
+                    if (autoEntry.category)
+                        builder.category(autoEntry.category);
 
                     if (autoEntry.readjust) {
-                        builder.readjust((event, world, entity, triggererID) =>
-                            autoEntry.readjust?.(
-                                event,
-                                world,
-                                entity,
-                                triggererID,
-                            ),
+                        builder.readjust(
+                            (event, world, entity, triggererID) =>
+                                autoEntry.readjust?.(
+                                    event,
+                                    world,
+                                    entity,
+                                    triggererID,
+                                ),
                         );
                     }
 

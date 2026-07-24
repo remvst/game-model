@@ -138,10 +138,6 @@ export function weaponRegistryEntry<WeaponType extends Weapon>(
     return builder.build();
 }
 
-export interface WeaponRegistryEntryProvider {
-    registryEntry(app: GameModelApp): WeaponRegistryEntry<Weapon>;
-}
-
 export class WeaponRegistry {
     private readonly entries = new Map<string, WeaponRegistryEntry<Weapon>>();
 

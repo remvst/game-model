@@ -23,12 +23,12 @@ export interface WorldEventRegistryEntry<EventType extends WorldEvent> {
     serializer(
         app: GameModelApp,
     ): WorldEventSerializer<EventType, AnySerialized>;
-    readjust?: (
+    readjust?(
         event: EventType,
         world: World,
         entity: Entity,
         triggererId: string,
-    ) => void;
+    ): void;
     configurable?(event: EventType, world: World): Configurable;
     properties?: WorldEventProperty<any>[];
 }

@@ -4,14 +4,14 @@ import { Trait } from "../trait";
 import { Weapon } from "../weapon/weapon";
 import { TraitRegistryEntry } from "./trait-registry";
 import { WeaponRegistryEntry } from "./weapon-registry";
-import { AnyWorldEventRegistryEntry } from "./world-event-registry";
+import { WorldEventRegistryEntry } from "./world-event-registry";
 
 export interface TraitRegistryEntryProvider<T extends Trait> {
     registryEntry(app: GameModelApp): TraitRegistryEntry<T>;
 }
 
 export interface WorldEventRegistryEntryProvider<T extends WorldEvent> {
-    registryEntry(app: GameModelApp): AnyWorldEventRegistryEntry<T>;
+    registryEntry(app: GameModelApp): WorldEventRegistryEntry<T>;
 }
 
 export interface WeaponRegistryEntryProvider {

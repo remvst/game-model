@@ -20,7 +20,7 @@ export interface TraitRegistryEntry<TraitType extends Trait> {
     readonly category?: string;
     newTrait?(): TraitType;
     serializer?(app: GameModelApp): TraitSerializer<TraitType, AnySerialized>;
-    configurable?: (trait: TraitType) => Configurable;
+    configurable?(trait: TraitType): Configurable;
     properties?: Property<any>[];
 }
 
@@ -38,18 +38,23 @@ export type AnyTraitRegistryEntry<TraitType extends Trait> =
     | AutoRegistryEntry<TraitType>;
 
 class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
-    private _key: string = null;
-    private _newTrait: () => TraitType = null;
-    private _category: string = null;
-    private _serializer: (
+    private _key?: string;
+    private _newTrait?: () => TraitType;
+    private _category?: string;
+    private _serializer?: (
         app: GameModelApp,
-    ) => TraitSerializer<TraitType, AnySerialized> = null;
-    private _configurable: (trait: TraitType) => Configurable;
+    ) => TraitSerializer<TraitType, AnySerialized>;
+    private _configurable?: (trait: TraitType) => Configurable;
     private readonly _properties: Property<any>[] = [];
 
     constructor() {
         this.serializer((app: GameModelApp) => {
-            const entry = app.traitRegistry.entry(this._key);
+            const entry = app.traitRegistry.entry(this._key!);
+            if (!entry) {
+                throw new Error(
+                    "Unable to create automatic serializer (no entry found)",
+                );
+            }
             return new DualSupportTraitSerializer<TraitType>(
                 new VerboseAutomaticTraitSerializer(entry),
                 new PackedAutomaticTraitSerializer(entry),
@@ -99,6 +104,9 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
         set: (trait: TraitType, value: PropertyType) => void,
     ): void {
         const traitKey = this._key;
+        if (!traitKey) {
+            throw new Error("Must define trait key before calling property()");
+        }
         this._properties.push({
             identifier: traitKey + "." + identifier,
             localIdentifier: identifier,
@@ -135,6 +143,11 @@ class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
     }
 
     build(): TraitRegistryEntry<TraitType> {
+        if (!this._key) {
+            throw new Error(
+                "Cannot build trait registry entry without a key. Did you call key() or traitClass()?",
+            );
+        }
         return {
             key: this._key,
             category: this._category,
@@ -167,14 +180,18 @@ export class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
             return this.add(
                 traitRegistryEntry<T>((builder) => {
                     builder.traitClass(autoEntry.traitType);
-                    builder.category(autoEntry.category);
+                    if (autoEntry.category) {
+                        builder.category(autoEntry.category);
+                    }
 
                     for (const property of autoEntry.properties || []) {
+                        if (!property.localIdentifier) continue;
                         builder.property(
                             property.localIdentifier,
                             property.type,
-                            (trait) => property.get(trait.entity),
-                            (trait, value) => property.set(trait.entity, value),
+                            (trait) => property.get(trait.entity!),
+                            (trait, value) =>
+                                property.set(trait.entity!, value),
                         );
                     }
                 }),
@@ -207,6 +224,8 @@ export class TraitRegistry implements Registry<AnyTraitRegistryEntry<any>> {
                 return autoConfigurable;
             };
         }
+
+        return manualEntry;
     }
 
     entry(key: string): TraitRegistryEntry<any> | null {

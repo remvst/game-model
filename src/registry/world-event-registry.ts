@@ -52,14 +52,14 @@ export type AnyWorldEventRegistryEntry<EventType extends WorldEvent> =
 class WorldEventRegistryEntryBuilder<
     EventType extends WorldEvent & KeyProvider,
 > {
-    private _key: string = null;
-    private _newEvent: () => EventType = null;
-    private _category: string = null;
-    private _serializer: (
+    private _key?: string;
+    private _newEvent?: () => EventType;
+    private _category?: string;
+    private _serializer?: (
         app: GameModelApp,
-    ) => WorldEventSerializer<EventType, AnySerialized> = null;
-    private _configurable: (trait: EventType, world: World) => Configurable;
-    private _readjust: (
+    ) => WorldEventSerializer<EventType, AnySerialized>;
+    private _configurable?: (trait: EventType, world: World) => Configurable;
+    private _readjust?: (
         event: EventType,
         world: World,
         entity: Entity,
@@ -69,7 +69,12 @@ class WorldEventRegistryEntryBuilder<
 
     constructor() {
         this.serializer((app: GameModelApp) => {
-            const entry = app.worldEventRegistry.entry(this._key);
+            const entry = app.worldEventRegistry.entry(this._key!);
+            if (!entry) {
+                throw new Error(
+                    "Unable to create automatic serializer (no entry found)",
+                );
+            }
             return new DualSupportWorldEventSerializer<EventType>(
                 new VerboseAutomaticWorldEventSerializer(entry),
                 new PackedAutomaticWorldEventSerializer(entry),
@@ -168,6 +173,10 @@ class WorldEventRegistryEntryBuilder<
     }
 
     build(): WorldEventRegistryEntry<EventType> {
+        if (!this._key || !this._newEvent || !this._serializer) {
+            throw new Error('Cannot build registry. Did you call key() or eventClass()');
+        }
+
         return {
             key: this._key,
             category: this._category,
@@ -197,7 +206,7 @@ export class WorldEventRegistry
 
     add<T extends WorldEvent & KeyProvider>(
         entry: AnyWorldEventRegistryEntry<T>,
-    ) {
+    ): WorldEventRegistryEntry<T> {
         const autoEntry = entry as AutoWorldEventRegistryEntry<T>;
         const manualEntry = entry as WorldEventRegistryEntry<T>;
 
@@ -205,11 +214,11 @@ export class WorldEventRegistry
             return this.add(
                 worldEventRegistryEntry<T>((builder) => {
                     builder.eventClass(autoEntry.eventType);
-                    builder.category(autoEntry.category);
+                    if (autoEntry.category) builder.category(autoEntry.category);
 
                     if (autoEntry.readjust) {
                         builder.readjust((event, world, entity, triggererID) =>
-                            autoEntry.readjust(
+                            autoEntry.readjust?.(
                                 event,
                                 world,
                                 entity,
@@ -219,6 +228,7 @@ export class WorldEventRegistry
                     }
 
                     for (const property of autoEntry.properties || []) {
+                        if (!property.localIdentifier) continue;
                         builder.property(
                             property.localIdentifier,
                             property.type,

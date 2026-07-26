@@ -5,7 +5,7 @@ import { ChunkedEntitySet } from "./chunked-entity-set";
 import { ObjectSet } from "./collections/object-set";
 import { SectorObjectSet } from "./collections/sector-object-set";
 import { WatchableObjectSet } from "./collections/watchable-object-set";
-import { Entity } from "./entity";
+import { entity, Entity } from "./entity";
 import { EntityRemoved } from "./events/entity-removed";
 import { WorldEvent } from "./events/world-event";
 import { KeyProvider } from "./key-provider";
@@ -16,6 +16,7 @@ import {
 } from "./multiplayer/authority";
 import { CyclePerformanceTracker } from "./performance-tracker";
 import { Trait } from "./trait";
+import { ReusablePool } from "@remvst/optimization";
 
 const REUSABLE_RECT = new Rectangle();
 
@@ -27,6 +28,8 @@ export class World {
 
     private readonly reusableRemoveEvent = new EntityRemoved();
     private readonly sectorSets = new Map<string, SectorObjectSet<Entity>>();
+
+    private readonly entityPools = new Map<string, ReusablePool<Entity>>();
 
     private cycleCount = 0;
 
@@ -154,5 +157,12 @@ export class World {
         for (const value of this.entities.bucket(key)) {
             yield value.traitOfType(keyProvider)!;
         }
+    }
+
+    entityPool(key: string, traits: () => Trait[]) {
+        if (!this.entityPools.has(key)) {
+            this.entityPools.set(key, new ReusablePool(() => entity(traits())));
+        }
+        return this.entityPools.get(key);
     }
 }

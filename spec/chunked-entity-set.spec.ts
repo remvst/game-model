@@ -29,7 +29,7 @@ describe("a chunked entity set", () => {
 
         disableChunking: boolean = false;
 
-        constructor(readonly rectangle: Rectangle) {
+        constructor(public readonly rectangle: Rectangle) {
             super();
         }
 

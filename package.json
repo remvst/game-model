@@ -1,6 +1,6 @@
 {
     "name": "@remvst/game-model",
-    "version": "5.0.3",
+    "version": "5.1.0",
     "description": "Game models",
     "main": "lib/cjs/index.js",
     "exports": {
@@ -10,7 +10,7 @@
     "scripts": {
         "prettier:fix": "prettier . --write",
         "prettier:check": "prettier . --check",
-        "unittest": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
+        "unittest": "tsx node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
         "test": "npm run prettier:check && npm run unittest && npm run build",
         "coverage": "nyc npm test",
         "build": "rm -rf lib && tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
@@ -24,17 +24,18 @@
         "@remvst/geometry": "^2.9.0",
         "@remvst/optimization": "^1.8.0",
         "rxjs": "^7.8.0",
-        "uuid": "^9.0.0"
+        "uuid": "^14.0.1"
     },
     "devDependencies": {
-        "@types/jasmine": "^4.3.0",
+        "@types/jasmine": "^6.0.0",
         "@types/node": "^18.11.5",
         "@types/uuid": "^8.3.0",
-        "jasmine": "^4.4.0",
-        "nyc": "^15.1.0",
+        "jasmine": "^6.3.0",
+        "nyc": "^18.0.0",
         "prettier": "3.1.1",
         "prettier-plugin-organize-imports": "^3.2.4",
         "ts-node": "^10.9.1",
+        "tsx": "^4.23.1",
         "typescript": "^5.3.3"
     }
 }

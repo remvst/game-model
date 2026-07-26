@@ -5,7 +5,7 @@ import { GameModelApp } from "../../src/game-model-app";
 import { SerializationOptions } from "../../src/serialization/serialization-options";
 import { World } from "../../src/world";
 
-describe("move to event", () => {
+describe("trigger event", () => {
     let app: GameModelApp;
 
     beforeEach(() => {

@@ -1,6 +1,7 @@
 import { Subject } from "rxjs";
 
 import { Rectangle } from "@remvst/geometry";
+import { ReusablePool } from "@remvst/optimization";
 import { ChunkedEntitySet } from "./chunked-entity-set";
 import { ObjectSet } from "./collections/object-set";
 import { SectorObjectSet } from "./collections/sector-object-set";
@@ -16,7 +17,6 @@ import {
 } from "./multiplayer/authority";
 import { CyclePerformanceTracker } from "./performance-tracker";
 import { Trait } from "./trait";
-import { ReusablePool } from "@remvst/optimization";
 
 const REUSABLE_RECT = new Rectangle();
 

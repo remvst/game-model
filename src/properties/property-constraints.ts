@@ -39,8 +39,8 @@ export class PropertyType {
     static color() {
         return new ColorConstraints();
     }
-    static json<Format>(defVal: Format) {
-        return new JsonConstraints(defVal);
+    static json<Format extends object>(defVal: Format) {
+        return new JsonConstraints<Format>(defVal);
     }
 }
 
@@ -49,7 +49,9 @@ export abstract class PropertyConstraints<T> {
     abstract convert(value: any): T;
 }
 
-export class JsonConstraints<Format> extends PropertyConstraints<Format> {
+export class JsonConstraints<
+    Format extends object,
+> extends PropertyConstraints<Format> {
     private readonly stringifiedDefault = JSON.stringify(this.defVal);
 
     constructor(readonly defVal: any) {

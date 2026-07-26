@@ -90,6 +90,7 @@ export * from "./traits/position-binding-trait";
 export * from "./traits/rectangle-bound-trait";
 export * from "./traits/script-trait";
 export * from "./traits/shakable-trait";
+export * from "./traits/simple-trait";
 export * from "./traits/smooth-target-following-trait";
 export * from "./traits/spawn-map-trait";
 export * from "./traits/spawn-trait";

@@ -1,11 +1,18 @@
 import { ReusablePoolBindable } from "@remvst/optimization";
 import { EntityRemoved } from "../events/entity-removed";
-import { traitRegistryEntry } from "../registry/trait-registry";
-import { Trait } from "../trait";
+import {
+    DefinitionsOfProps,
+    SimpleTrait,
+    simpleTraitRegistryEntry,
+} from "./simple-trait";
 
-export class PoolableTrait extends Trait {
+export class PoolableTrait extends SimpleTrait<{}> {
     static readonly key = "poolable";
     readonly key = PoolableTrait.key;
+
+    definitions(): DefinitionsOfProps<{}> {
+        return {};
+    }
 
     postBind(): void {
         super.postBind();
@@ -16,8 +23,6 @@ export class PoolableTrait extends Trait {
     }
 
     static registryEntry() {
-        return traitRegistryEntry((builder) => {
-            builder.traitClass(PoolableTrait);
-        });
+        return simpleTraitRegistryEntry(PoolableTrait);
     }
 }

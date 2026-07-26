@@ -1,52 +1,50 @@
 import { Entity } from "../entity";
 import { TriggerEvent } from "../events/trigger-event";
 import { PropertyType } from "../properties/property-constraints";
-import {
-    TraitRegistryEntry,
-    traitRegistryEntry,
-} from "../registry/trait-registry";
-import { Trait } from "../trait";
-import { rectangleSurface } from "../trait-surface-provider";
+import { TraitRegistryEntry } from "../registry/trait-registry";
 import { firstItem } from "../util/first";
 import { firstAvailableId } from "../util/first-available-id";
 import { World } from "../world";
+import {
+    DefinitionsOfProps,
+    SimpleTrait,
+    simpleTraitRegistryEntry,
+} from "./simple-trait";
 import { SpawnExtra, SpawnMapTrait } from "./spawn-map-trait";
 
 export type SpawnType = string;
 
-export class SpawnTrait extends Trait {
+export class SpawnTrait extends SimpleTrait<{
+    type: string;
+    spawnedEntityId: string;
+    extra: SpawnExtra;
+    autoActivate: boolean;
+    spawnCount: number;
+}> {
     static readonly key = "spawn";
     readonly key = SpawnTrait.key;
 
-    private static readonly surfaceProvider = rectangleSurface(
-        (trait, rect) => {
-            rect.centerAround(trait.entity!.x, trait.entity!.y, 0, 0);
-        },
-    );
-    readonly surfaceProvider = SpawnTrait.surfaceProvider;
-
-    extra: SpawnExtra = {};
-
-    constructor(
-        public type: SpawnType = "",
-        public spawnedEntityId: string | null = null,
-        public autoActivate: boolean = true,
-        public spawnCount: number = 1,
-    ) {
-        super();
+    definitions(): DefinitionsOfProps<SpawnTrait["props"]> {
+        return {
+            type: PropertyType.str(),
+            spawnedEntityId: PropertyType.str(),
+            extra: PropertyType.json<SpawnExtra>({}),
+            autoActivate: PropertyType.bool(),
+            spawnCount: PropertyType.num(),
+        };
     }
 
     postBind(): void {
         super.postBind();
 
-        this.entity!.onEvent(TriggerEvent, (event, world) => {
-            if (this.spawnCount <= 0) return;
-            this.spawn(world, event);
+        this.entity!.onEvent(TriggerEvent, (_, world) => {
+            if (this.props.spawnCount <= 0) return;
+            this.spawn(world);
         });
     }
 
     cycle(_: number) {
-        if (this.autoActivate && this.spawnCount > 0) {
+        if (this.props.autoActivate && this.props.spawnCount > 0) {
             this.entity!.addEvent(new TriggerEvent(this.entity!.id));
         }
     }
@@ -57,13 +55,13 @@ export class SpawnTrait extends Trait {
 
         const id = firstAvailableId(
             world,
-            this.spawnedEntityId || this.entity!.id,
+            this.props.spawnedEntityId || this.entity!.id,
         );
         const entity = new Entity(
             id,
             spawnMapTrait.traitsFor(
-                this.type,
-                this.extra,
+                this.props.type,
+                this.props.extra,
                 this.entity!.position,
             ),
         );
@@ -73,9 +71,9 @@ export class SpawnTrait extends Trait {
         return entity;
     }
 
-    private spawn(world: World, event: TriggerEvent) {
-        this.spawnCount--;
-        if (this.spawnCount === 0) {
+    private spawn(world: World) {
+        this.props.spawnCount--;
+        if (this.props.spawnCount === 0) {
             this.entity?.remove();
         }
 
@@ -84,18 +82,6 @@ export class SpawnTrait extends Trait {
     }
 
     static registryEntry(): TraitRegistryEntry<SpawnTrait> {
-        return traitRegistryEntry((builder) => {
-            builder.traitClass(SpawnTrait);
-            builder.simpleProp("type", PropertyType.str());
-            builder.simpleProp("spawnedEntityId", PropertyType.id());
-            builder.simpleProp("autoActivate", PropertyType.bool());
-            builder.simpleProp("spawnCount", PropertyType.num(-1, 60, 1));
-            builder.property(
-                "extra",
-                PropertyType.str(),
-                (trait) => JSON.stringify(trait.extra),
-                (trait, extra) => (trait.extra = JSON.parse(extra)),
-            );
-        });
+        return simpleTraitRegistryEntry(SpawnTrait);
     }
 }

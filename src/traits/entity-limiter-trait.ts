@@ -1,34 +1,40 @@
 import { Entity } from "../entity";
 import { PropertyType } from "../properties/property-constraints";
+import { TraitRegistryEntry } from "../registry/trait-registry";
 import {
-    TraitRegistryEntry,
-    traitRegistryEntry,
-} from "../registry/trait-registry";
-import { Trait } from "../trait";
+    DefinitionsOfProps,
+    SimpleTrait,
+    simpleTraitRegistryEntry,
+} from "./simple-trait";
 
-export class EntityLimiterTrait extends Trait {
+export class EntityLimiterTrait extends SimpleTrait<{
+    targetTraitKey: string;
+    maxEntities: number;
+}> {
     static readonly key = "entity-limiter";
     readonly key = EntityLimiterTrait.key;
 
     readonly disableChunking = true;
 
-    constructor(
-        public targetTraitKey: string = "",
-        public maxEntities: number = 10,
-    ) {
-        super();
+    definitions(): DefinitionsOfProps<EntityLimiterTrait["props"]> {
+        return {
+            targetTraitKey: PropertyType.str(),
+            maxEntities: PropertyType.num(),
+        };
     }
 
     cycle(): void {
         if (
-            this.world!.entities.bucketSize(this.targetTraitKey) <
-            this.maxEntities
+            this.world!.entities.bucketSize(this.props.targetTraitKey) <
+            this.props.maxEntities
         ) {
             return;
         }
 
         let oldest: Entity | null = null;
-        for (const entity of this.world!.entities.bucket(this.targetTraitKey)) {
+        for (const entity of this.world!.entities.bucket(
+            this.props.targetTraitKey,
+        )) {
             if (!oldest || entity.age > oldest.age) {
                 oldest = entity;
             }
@@ -38,10 +44,6 @@ export class EntityLimiterTrait extends Trait {
     }
 
     static registryEntry(): TraitRegistryEntry<EntityLimiterTrait> {
-        return traitRegistryEntry((builder) => {
-            builder.traitClass(EntityLimiterTrait);
-            builder.simpleProp("targetTraitKey", PropertyType.str());
-            builder.simpleProp("maxEntities", PropertyType.num(1, 1000, 1));
-        });
+        return simpleTraitRegistryEntry(EntityLimiterTrait);
     }
 }

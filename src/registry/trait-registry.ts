@@ -27,7 +27,7 @@ export interface TraitRegistryEntry<TraitType extends Trait> {
 export type RegistryEntry<TraitType extends Trait> =
     TraitRegistryEntry<TraitType>;
 
-class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
+export class TraitRegistryEntryBuilder<TraitType extends Trait & KeyProvider> {
     private _key?: string;
     private _newTrait?: () => TraitType;
     private _category?: string;

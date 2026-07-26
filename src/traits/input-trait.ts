@@ -1,13 +1,20 @@
 import { PropertyType } from "../properties/property-constraints";
+import { TraitRegistryEntry } from "../registry/trait-registry";
 import {
-    TraitRegistryEntry,
-    traitRegistryEntry,
-} from "../registry/trait-registry";
-import { Trait } from "../trait";
+    DefinitionsOfProps,
+    SimpleTrait,
+    simpleTraitRegistryEntry,
+} from "./simple-trait";
 
-export class InputTrait extends Trait {
+export class InputTrait extends SimpleTrait<{ nums: Record<string, number> }> {
     static readonly key = "input";
     readonly key = InputTrait.key;
+
+    definitions(): DefinitionsOfProps<InputTrait["props"]> {
+        return {
+            nums: PropertyType.json<Record<string, number>>({}),
+        };
+    }
 
     private nums = new Map<string, number>();
 
@@ -29,16 +36,6 @@ export class InputTrait extends Trait {
     }
 
     static registryEntry(): TraitRegistryEntry<InputTrait> {
-        return traitRegistryEntry<InputTrait>((builder) => {
-            builder.traitClass(InputTrait);
-            builder.property(
-                "nums",
-                PropertyType.json({}),
-                (trait) => Object.fromEntries(trait.nums),
-                (trait, nums) => {
-                    trait.nums = new Map(Object.entries(nums));
-                },
-            );
-        });
+        return simpleTraitRegistryEntry(InputTrait);
     }
 }

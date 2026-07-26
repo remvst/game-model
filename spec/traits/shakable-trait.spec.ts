@@ -22,7 +22,7 @@ describe("shakable trait", () => {
 
     it("displaces the entity while shaking", () => {
         shakable.shake(10, 1);
-        shakable.interval = 0; // update every cycle
+        shakable.props.interval = 0; // update every cycle
 
         spyOn(Math, "random").and.returnValue(1); // always max displacement
 
@@ -34,7 +34,7 @@ describe("shakable trait", () => {
 
     it("resets displacement to zero when duration expires", () => {
         shakable.shake(10, 0.5);
-        shakable.interval = 0;
+        shakable.props.interval = 0;
 
         world.cycle(0.6); // duration expires
 
@@ -45,25 +45,25 @@ describe("shakable trait", () => {
     it("shake keeps the higher power when called multiple times", () => {
         shakable.shake(5, 1);
         shakable.shake(10, 1);
-        expect(shakable.power).toBe(10);
+        expect(shakable.props.power).toBe(10);
 
         shakable.shake(3, 1);
-        expect(shakable.power).toBe(10);
+        expect(shakable.props.power).toBe(10);
     });
 
     it("shake keeps the longer duration when called multiple times", () => {
         shakable.shake(1, 2);
         shakable.shake(1, 5);
-        expect(shakable.duration).toBe(5);
+        expect(shakable.props.duration).toBe(5);
 
         shakable.shake(1, 1);
-        expect(shakable.duration).toBe(5);
+        expect(shakable.props.duration).toBe(5);
     });
 
     it("respects the interval between shake updates", () => {
         shakable.shake(10, 10);
-        shakable.interval = 1;
-        shakable.nextUpdate = 0;
+        shakable.props.interval = 1;
+        shakable.props.nextUpdate = 0;
 
         spyOn(Math, "random").and.returnValue(1);
 

@@ -20,10 +20,11 @@ describe("periodically enable trait", () => {
     beforeEach(() => {
         world = new World();
 
-        periodicallyEnable = new PeriodicallyEnableTrait();
-        periodicallyEnable.enabledTraitKey = TargetTrait.key;
-        periodicallyEnable.enabledDuration = 2;
-        periodicallyEnable.disabledDuration = 3;
+        periodicallyEnable = new PeriodicallyEnableTrait({
+            enabledTraitKey: TargetTrait.key,
+            enabledDuration: 2,
+            disabledDuration: 3,
+        });
 
         target = new TargetTrait();
 
@@ -89,12 +90,12 @@ describe("periodically enable trait", () => {
     });
 
     it("does nothing when the target trait key does not exist", () => {
-        periodicallyEnable.enabledTraitKey = "nonexistent";
+        periodicallyEnable.props.enabledTraitKey = "nonexistent";
         expect(() => world.cycle(1)).not.toThrow();
     });
 
     it("respects the offset", () => {
-        periodicallyEnable.offset = 2; // shift by 2 → at age 0: (0+2)%5=2 >= 2 → disabled
+        periodicallyEnable.props.offset = 2; // shift by 2 → at age 0: (0+2)%5=2 >= 2 → disabled
 
         target.enabled = true;
         world.cycle(0.5); // age=0.5, (0.5+2)%5=2.5 >= 2 → disable

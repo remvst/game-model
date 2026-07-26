@@ -159,9 +159,12 @@ export class World {
         }
     }
 
-    entityPool(key: string, traits: () => Trait[]) {
+    entityPool(key: string, traits: (pool: ReusablePool<Entity>) => Trait[]) {
         if (!this.entityPools.has(key)) {
-            this.entityPools.set(key, new ReusablePool(() => entity(traits())));
+            this.entityPools.set(
+                key,
+                new ReusablePool((pool) => entity(traits(pool))),
+            );
         }
         return this.entityPools.get(key);
     }

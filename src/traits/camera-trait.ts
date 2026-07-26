@@ -97,8 +97,10 @@ export class CameraTrait extends SimpleTrait<{
 
     positionOnScreen(x: number, y: number): Vector2 {
         const { visibleRectangle } = this;
-        this.reusablePositionOnScreen.x = (x - visibleRectangle.x) * this.props.zoom;
-        this.reusablePositionOnScreen.y = (y - visibleRectangle.y) * this.props.zoom;
+        this.reusablePositionOnScreen.x =
+            (x - visibleRectangle.x) * this.props.zoom;
+        this.reusablePositionOnScreen.y =
+            (y - visibleRectangle.y) * this.props.zoom;
         return this.reusablePositionOnScreen;
     }
 

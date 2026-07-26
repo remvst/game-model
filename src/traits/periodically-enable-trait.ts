@@ -1,10 +1,11 @@
 import { EntityEvent } from "../events/entity-event";
 import { PropertyType } from "../properties/property-constraints";
+import { TraitRegistryEntry } from "../registry/trait-registry";
 import {
-    TraitRegistryEntry,
-    traitRegistryEntry,
-} from "../registry/trait-registry";
-import { Trait } from "../trait";
+    DefinitionsOfProps,
+    SimpleTrait,
+    simpleTraitRegistryEntry,
+} from "./simple-trait";
 
 export class TraitEnabledChange implements EntityEvent {
     constructor(
@@ -13,46 +14,49 @@ export class TraitEnabledChange implements EntityEvent {
     ) {}
 }
 
-export class PeriodicallyEnableTrait extends Trait {
+export class PeriodicallyEnableTrait extends SimpleTrait<{
+    enabledTraitKey: string;
+    enabledDuration: number;
+    disabledDuration: number;
+    offset: number;
+}> {
     static readonly key = "periodically-enable";
     readonly key = PeriodicallyEnableTrait.key;
 
-    enabledTraitKey: string = "";
-    enabledDuration: number = 2;
-    disabledDuration: number = 3;
-    offset: number = 0;
+    definitions(): DefinitionsOfProps<PeriodicallyEnableTrait["props"]> {
+        return {
+            enabledTraitKey: PropertyType.str(),
+            enabledDuration: PropertyType.num(),
+            disabledDuration: PropertyType.num(),
+            offset: PropertyType.num(),
+        };
+    }
 
     private get cycleDuration(): number {
-        return this.enabledDuration + this.disabledDuration;
+        return this.props.enabledDuration + this.props.disabledDuration;
     }
 
     private get shouldEnable(): boolean {
         return (
-            (this.entity!.age + this.offset) % this.cycleDuration <
-            this.enabledDuration
+            (this.entity!.age + this.props.offset) % this.cycleDuration <
+            this.props.enabledDuration
         );
     }
 
     cycle(): void {
-        const trait = this.entity!.trait(this.enabledTraitKey);
+        const trait = this.entity!.trait(this.props.enabledTraitKey);
         if (!trait) return;
 
         const enabled = this.shouldEnable;
         if (trait.enabled !== enabled) {
             trait.enabled = enabled;
             this.entity!.addEvent(
-                new TraitEnabledChange(this.enabledTraitKey, enabled),
+                new TraitEnabledChange(this.props.enabledTraitKey, enabled),
             );
         }
     }
 
     static registryEntry(): TraitRegistryEntry<PeriodicallyEnableTrait> {
-        return traitRegistryEntry((builder) => {
-            builder.traitClass(PeriodicallyEnableTrait);
-            builder.simpleProp("enabledTraitKey", PropertyType.str());
-            builder.simpleProp("enabledDuration", PropertyType.num());
-            builder.simpleProp("disabledDuration", PropertyType.num());
-            builder.simpleProp("offset", PropertyType.num());
-        });
+        return simpleTraitRegistryEntry(PeriodicallyEnableTrait);
     }
 }

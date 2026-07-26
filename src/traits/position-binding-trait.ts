@@ -1,25 +1,34 @@
 import { PropertyType } from "../properties/property-constraints";
-import { RegistryEntry, traitRegistryEntry } from "../registry/trait-registry";
-import { Trait } from "../trait";
+import { RegistryEntry } from "../registry/trait-registry";
+import {
+    DefinitionsOfProps,
+    SimpleTrait,
+    simpleTraitRegistryEntry,
+} from "./simple-trait";
 
-export class PositionBindingTrait extends Trait {
+export class PositionBindingTrait extends SimpleTrait<{
+    followedId: string;
+    followerIds: string[];
+    absolute: boolean;
+    removeWhenIrrelevant: boolean;
+}> {
     static readonly key = "position-binding";
     readonly key = PositionBindingTrait.key;
     readonly disableChunking = true;
 
-    constructor(
-        public followedId: string = "",
-        public followerIds: string[] = [],
-        public absolute: boolean = false,
-        public removeWhenIrrelevant: boolean = false,
-    ) {
-        super();
+    definitions(): DefinitionsOfProps<PositionBindingTrait["props"]> {
+        return {
+            followedId: PropertyType.id(),
+            followerIds: PropertyType.list(PropertyType.id()),
+            absolute: PropertyType.bool(),
+            removeWhenIrrelevant: PropertyType.bool(),
+        };
     }
 
     cycle(_: number) {
-        const followed = this.entity?.world?.entity(this.followedId);
+        const followed = this.entity?.world?.entity(this.props.followedId);
         if (!followed) {
-            if (this.removeWhenIrrelevant) {
+            if (this.props.removeWhenIrrelevant) {
                 this.entity!.remove();
             }
 
@@ -27,7 +36,7 @@ export class PositionBindingTrait extends Trait {
         }
 
         let hasFollower = false;
-        for (const followerId of this.followerIds) {
+        for (const followerId of this.props.followerIds) {
             const follower = this.entity!.world!.entity(followerId);
             if (!follower) {
                 continue;
@@ -35,7 +44,7 @@ export class PositionBindingTrait extends Trait {
 
             hasFollower = true;
 
-            if (this.absolute) {
+            if (this.props.absolute) {
                 follower.x = followed.x;
                 follower.y = followed.y;
             } else {
@@ -44,22 +53,14 @@ export class PositionBindingTrait extends Trait {
             }
         }
 
-        if (!hasFollower && this.removeWhenIrrelevant) {
+        if (!hasFollower && this.props.removeWhenIrrelevant) {
             this.entity!.remove();
         }
     }
 
     static registryEntry(): RegistryEntry<PositionBindingTrait> {
-        return traitRegistryEntry((builder) => {
-            builder.traitClass(PositionBindingTrait);
+        return simpleTraitRegistryEntry(PositionBindingTrait, (builder) => {
             builder.category("movement");
-            builder.simpleProp("followedId", PropertyType.id());
-            builder.simpleProp(
-                "followerIds",
-                PropertyType.list(PropertyType.id()),
-            );
-            builder.simpleProp("absolute", PropertyType.bool());
-            builder.simpleProp("removeWhenIrrelevant", PropertyType.bool());
         });
     }
 }

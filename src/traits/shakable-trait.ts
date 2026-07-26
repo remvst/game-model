@@ -1,29 +1,39 @@
 import { Vector2 } from "@remvst/geometry";
 import { PropertyType } from "../properties/property-constraints";
+import { RegistryEntry } from "../registry/trait-registry";
 import {
-    traitRegistryEntry,
-    TraitRegistryEntry,
-} from "../registry/trait-registry";
-import { Trait } from "../trait";
+    DefinitionsOfProps,
+    SimpleTrait,
+    simpleTraitRegistryEntry,
+} from "./simple-trait";
 
-export class ShakableTrait extends Trait {
+export class ShakableTrait extends SimpleTrait<{
+    interval: number;
+    duration: number;
+    power: number;
+    nextUpdate: number;
+}> {
     static readonly key = "shakable";
     readonly key = ShakableTrait.key;
 
-    interval: number = 1 / 60;
-    duration: number = 0;
-    power: number = 0;
-    nextUpdate: number = 0;
-
     private readonly shakeOffset = new Vector2();
 
+    definitions(): DefinitionsOfProps<ShakableTrait["props"]> {
+        return {
+            interval: PropertyType.num(1 / 60),
+            duration: PropertyType.num(),
+            power: PropertyType.num(),
+            nextUpdate: PropertyType.num(),
+        };
+    }
+
     cycle(elapsed: number): void {
-        this.duration -= elapsed;
-        this.nextUpdate -= elapsed;
-        if (this.duration > 0 && this.nextUpdate < 0) {
-            this.nextUpdate = this.interval;
-            this.shakeOffset.x += (Math.random() * 2 - 1) * this.power;
-            this.shakeOffset.y += (Math.random() * 2 - 1) * this.power;
+        this.props.duration -= elapsed;
+        this.props.nextUpdate -= elapsed;
+        if (this.props.duration > 0 && this.props.nextUpdate < 0) {
+            this.props.nextUpdate = this.props.interval;
+            this.shakeOffset.x += (Math.random() * 2 - 1) * this.props.power;
+            this.shakeOffset.y += (Math.random() * 2 - 1) * this.props.power;
         } else {
             this.shakeOffset.x = 0;
             this.shakeOffset.y = 0;
@@ -34,17 +44,11 @@ export class ShakableTrait extends Trait {
     }
 
     shake(power: number, duration: number) {
-        this.power = Math.max(this.power, power);
-        this.duration = Math.max(this.duration, duration);
+        this.props.power = Math.max(this.props.power, power);
+        this.props.duration = Math.max(this.props.duration, duration);
     }
 
-    static registryEntry(): TraitRegistryEntry<ShakableTrait> {
-        return traitRegistryEntry<ShakableTrait>((builder) => {
-            builder.traitClass(ShakableTrait);
-            builder.simpleProp("interval", PropertyType.num());
-            builder.simpleProp("duration", PropertyType.num());
-            builder.simpleProp("power", PropertyType.num());
-            builder.simpleProp("nextUpdate", PropertyType.num());
-        });
+    static registryEntry(): RegistryEntry<ShakableTrait> {
+        return simpleTraitRegistryEntry(ShakableTrait);
     }
 }

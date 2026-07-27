@@ -15,6 +15,7 @@ import {
     CompositeConstraints,
     EntityIdConstraints,
     EnumConstraints,
+    JsonConstraints,
     ListConstraints,
     NumberConstraints,
     PropertyConstraints,
@@ -149,6 +150,20 @@ export function propertyValueConfigurable<T>(
         }
 
         return configurable;
+    }
+
+    if (type instanceof JsonConstraints) {
+        return new StringConfigurable({
+            read: () => JSON.stringify(read() || {}),
+            write: (value, configurable) => {
+                try {
+                    write(JSON.parse(value), configurable)
+                } catch (e) {
+                    console.warn('Invalid JSON', e);
+                }
+                configurable.invalidate();
+            },
+        });
     }
 
     throw new Error(`Unknown property type: ${type}`);
